@@ -1,0 +1,30 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 15
+VisualStudioVersion = 15.0.27004.2010
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Unosquare.LedEmotion.Controller", "Unosquare.LedEmotion.Controller\Unosquare.LedEmotion.Controller.csproj", "{9093EF2E-633C-4E72-9ED6-25164129507C}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{B7596B5C-4FC2-4145-9AF8-6EC673E325C7}"
+	ProjectSection(SolutionItems) = preProject
+		StyleCop.Analyzers.ruleset = StyleCop.Analyzers.ruleset
+	EndProjectSection
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{9093EF2E-633C-4E72-9ED6-25164129507C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9093EF2E-633C-4E72-9ED6-25164129507C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9093EF2E-633C-4E72-9ED6-25164129507C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9093EF2E-633C-4E72-9ED6-25164129507C}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {919D4939-8F18-42B6-8708-993BEE0ECB9C}
+	EndGlobalSection
+EndGlobal

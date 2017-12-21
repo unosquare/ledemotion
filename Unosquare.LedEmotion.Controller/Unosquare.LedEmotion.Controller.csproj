@@ -1,0 +1,68 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net46</TargetFramework>
+    <CodeAnalysisRuleSet>..\StyleCop.Analyzers.ruleset</CodeAnalysisRuleSet>
+    <RunPostBuildEvent>OnBuildSuccess</RunPostBuildEvent>
+    <SshDeployHost>172.16.17.54</SshDeployHost>
+    <SshDeployTargetPath>/home/pi/ledemotion</SshDeployTargetPath>
+    <SshDeployUsername>pi</SshDeployUsername>
+    <SshDeployPassword>raspberry</SshDeployPassword>
+  </PropertyGroup>
+  
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.ComponentModel.DataAnnotations" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.ServiceProcess" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Net.Http" />
+    <Reference Include="System.Xml" />
+    <PackageReference Include="EmbedIO" Version="1.11.3" />
+    <PackageReference Include="StyleCop.Analyzers" Version="1.0.2" />
+    <PackageReference Include="Unosquare.Raspberry.IO" Version="0.12.0" />
+    <DotNetCliToolReference Include="dotnet-sshdeploy" Version="0.1.6-r1" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="wwwroot\**">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>    
+  <ItemGroup>
+    <DotNetCliToolReference Include="dotnet-sshdeploy" Version="0.1.6-r1" />
+  </ItemGroup>
+
+  <Target Name="NpmInstall" BeforeTargets="Build" Condition="!Exists('.\package-lock.json') AND '$(Configuration)' == 'Debug'">
+    <!-- Ensure Node.js is installed -->
+    <Exec Command="node --version" ContinueOnError="true">
+      <Output TaskParameter="ExitCode" PropertyName="ErrorCode" />
+    </Exec>
+    <Error Condition="'$(ErrorCode)' != '0'" Text="Node.js is required to build and run this project. To continue, please install Node.js from https://nodejs.org/, and then restart your command prompt or IDE." />
+    <!-- Running npm install -->
+    <Message Importance="high" Text="Performing first-run npm install..." />
+    <Exec Command="npm install" />
+  </Target>
+
+  <Target Name="WebpackDebug" DependsOnTargets="NpmInstall" BeforeTargets="Build" Condition="'$(Configuration)' == 'Debug'">
+    <!-- Running webpack -->
+    <Message Importance="high" Text="Performing run webpack debug build..." />
+    <Exec Command="npm run build" />
+  </Target>
+
+  <Target Name="WebpackRelease" DependsOnTargets="NpmInstall" BeforeTargets="Build" Condition="'$(Configuration)' == 'Release'">
+    <!-- Running webpack -->
+    <Message Importance="high" Text="Performing run webpack release build..." />
+    <Exec Command="npm run build:prod" />
+  </Target>
+
+  <!--<Target Condition="$(BuildingInsideSshDeploy) ==''" Name="PostBuild" AfterTargets="PostBuildEvent">
+    <Exec Command="cd $(ProjectDir)" />
+    <Exec Command="dotnet sshdeploy push" />
+  </Target>-->
+</Project>
