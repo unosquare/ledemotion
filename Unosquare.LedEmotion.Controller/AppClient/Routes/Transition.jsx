@@ -138,16 +138,6 @@ class Transition extends Component {
 
     return (
       <div className = { classes.root }>
-        {/* Paper */}
-        <div>
-          <Paper className = { classes.paperStyle } elevation = { 4 }>
-            <Typography type = "headline" component = "h3" className = { classes.typographyStyle }>
-              <Info className = { classes.iconStyle } /> Pick several colors!
-            </Typography>              
-          </Paper>
-        </div>
-        <br />
-
         {/* Display color selected */}
         <div className = { classes.inputSelectedColorStyle }>
           <Input className = { classes.inputStyle } value = { Object.keys(selectedColor).length === 0 ? "" : "\xa0\xa0" + selectedColor.toUpperCase() } style = {{ backgroundColor : selectedColor, color : "#FFFFFF" }} disabled disableUnderline></Input>

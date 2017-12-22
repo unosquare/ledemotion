@@ -107,7 +107,7 @@ class App extends Component {
             <div>
                 <div>
                     <div className={classes.drawerHeader} style={{ display: 'flex', justifyContent: 'center' }} >
-                        <Typography style = {{overflow : 'visible', margin: 'auto', width: 'auto', display: 'block'}} type='title' noWrap><WbSunny /> LED Controller</Typography>
+                        <Typography style = {{overflow : 'visible', margin: 'auto', width: 'auto', display: 'block'}} type='title' noWrap><WbSunny /> LED Emotion</Typography>
                     </div>
                     <Divider />
                     <List>
