@@ -3,7 +3,6 @@ import Typography from 'material-ui/Typography';
 import Paper from 'material-ui/Paper';
 import PropTypes from 'prop-types';
 import { withStyles } from 'material-ui/styles';
-import Info from 'material-ui-icons/Info';
 import { PhotoshopPicker, SketchPicker, HuePicker } from 'react-color';
 import Card, { CardActions, CardContent } from 'material-ui/Card';
 import Slider, { Range } from 'rc-slider';
@@ -11,15 +10,14 @@ import 'rc-slider/assets/index.css';
 import Button from 'material-ui/Button';
 import Grid from 'material-ui/Grid';
 import IconButton from 'material-ui/IconButton';
-import DeleteIcon from 'material-ui-icons/Delete';
-import Input from 'material-ui/Input';
-import TextField from 'material-ui/TextField';
 import Axios from 'axios';
 import CustomPicker from '../Components/CustomPicker.jsx'
-
 import AddIcon from 'material-ui-icons/Add';
-import { ChromePicker } from 'react-color';
 import reactCSS from 'reactCSS';
+import Tooltip from 'material-ui/Tooltip';
+import FlashOn from 'material-ui-icons/FlashOn';
+import Input from 'material-ui/Input';
+import TextField from 'material-ui/TextField';
 
 const styles = theme => ({
   root : {
@@ -74,8 +72,19 @@ const styles = theme => ({
     width : 60,
     height : 60,
   },
-  buttonStyle : {
-    margin : theme.spacing.unit,
+  divRCSliderStyle : {
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  rcSliderStyle : {
+    width : 500,
+  },
+  fabButtonAbsoluteStyle: {
+    flip: false,
+    position: 'absolute',
+    bottom: 32,
+    right: 32,
   },
 });
 
@@ -172,8 +181,9 @@ class Transition extends Component {
 
     return (
       <div className = { classes.root }>
-        {/* Color picker */}
-        
+        <div className = { classes.inputSelectedColorStyle }>
+          <Input className = { classes.inputStyle } value = { Object.keys(selectedColor).length === 0 ? "" : "\xa0\xa0" + selectedColor.toUpperCase() } style = {{ backgroundColor : selectedColor, color : "#FFFFFF" }} disabled disableUnderline></Input>
+          </div>
         <br /><br />
 
         {/* Array of colors */}
@@ -201,40 +211,40 @@ class Transition extends Component {
                       </Grid>
                     )
               }
-          <div>
-            <Button fab color="primary" aria-label="add" className = { classes.button } onClick = { this.handleClick } >
-              <AddIcon />
-            </Button>
-          </div>
-          {
-            displayColorPicker 
-              ? 
-                <div style = { styles.popover }>
-                  <div style = { styles.cover } onClick = { this.handleClose } />
-                    <CustomPicker fields = { false } presetColors = { [] } disableAlpha color = { selectedColor } onChangeComplete = { this.handleChange } />
-                  </div>
-              :
-                null
-          }    
+              <div>
+                <Button fab color="primary" aria-label="add" className = { classes.button } onClick = { this.handleClick } >
+                  <AddIcon />
+                </Button>
+              </div>
+              {
+                displayColorPicker 
+                  ? 
+                    <div style = { styles.popover }>
+                      <div style = { styles.cover } onClick = { this.handleClose } />
+                        <CustomPicker fields = { false } presetColors = { [] } disableAlpha color = { selectedColor } onChangeComplete = { this.handleChange } />
+                      </div>
+                  :
+                    null
+              }
               </Grid>
             </Grid>
           </Grid>
         </div>
-        <br />
+        <br /><br />
 
         {/* Slider */}
-        <div>
-          <Slider min = { 1 } max = { 300 } onChange = { this.handleValueSliderChange } />
+        <div className = { classes.divRCSliderStyle }>
+          <Slider min = { 1 } max = { 300 } onChange = { this.handleValueSliderChange } className = { classes.rcSliderStyle } />
         </div>
         <br />
 
         {/* Button */}
         <div>
-          <div> 
-            <Button raised  disabled = { colors.length == 0 } className = { classes.buttonStyle } style = {{ width : "-webkit-fill-available" }} onClick = { this.setTransition }>
-                Animate { colors.length } colors over { seconds } seconds
+          <Tooltip placement = "bottom" title = {"Animate " + colors.length + " colors over " + seconds + " seconds" }>
+            <Button fab color = "accent" disabled = { colors.length == 0 } onClick = { this.setTransition } className = { classes.fabButtonAbsoluteStyle }>
+              <FlashOn />
             </Button>
-          </div>
+          </Tooltip>
         </div>
         <br />
 
