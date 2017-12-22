@@ -17,6 +17,10 @@ import TextField from 'material-ui/TextField';
 import Axios from 'axios';
 import CustomPicker from '../Components/CustomPicker.jsx'
 
+import AddIcon from 'material-ui-icons/Add';
+import { ChromePicker } from 'react-color';
+import reactCSS from 'reactCSS';
+
 const styles = theme => ({
   root : {
     flexgrow : 1,
@@ -79,7 +83,9 @@ class Transition extends Component {
   state = {
     colors : [],
     selectedColor : {},
-    seconds : 1
+    seconds : 1,
+
+    displayColorPicker: false,
   };
 
   /** Adds the color */
@@ -131,23 +137,43 @@ class Transition extends Component {
     });
   }
 
+  handleClick = () => {
+    this.setState({
+      displayColorPicker : !this.state.displayColorPicker
+    });
+  }
+
+  handleClose = () => {
+    this.setState({
+      displayColorPicker : false
+    });
+  }
+
   render() {
 
     const { classes } = this.props;
-    const { colors, selectedColor, seconds } = this.state;
+    const { colors, selectedColor, seconds, displayColorPicker } = this.state;
+
+    const styles = reactCSS({
+      'default': {
+        popover: {
+          position: 'absolute',
+          zIndex: '2',
+        },
+        cover: {
+          position: 'fixed',
+          top: '0px',
+          right: '0px',
+          bottom: '0px',
+          left: '0px',
+        },
+      },
+    });
 
     return (
       <div className = { classes.root }>
-        {/* Display color selected */}
-        <div className = { classes.inputSelectedColorStyle }>
-          <Input className = { classes.inputStyle } value = { Object.keys(selectedColor).length === 0 ? "" : "\xa0\xa0" + selectedColor.toUpperCase() } style = {{ backgroundColor : selectedColor, color : "#FFFFFF" }} disabled disableUnderline></Input>
-        </div>
-        <br />
-
         {/* Color picker */}
-        <div className = { classes.divSketchPickerStyle }>
-          <CustomPicker fields = { false } presetColors = { [] } width = { 400 } height = { 1 } disableAlpha color = { selectedColor } onChangeComplete = { this.handleChange } />
-        </div>
+        
         <br /><br />
 
         {/* Array of colors */}
@@ -160,7 +186,7 @@ class Transition extends Component {
                   ?
                     <Paper className = { classes.paperInfoStyle } elevation = { 0 }>
                       <Typography type = "caption" component = "p">
-                        Pick multiple colors. Remove a color by taping on the colored squares appearing here
+                        Pick multiple colors. Click the button to open de color picker, click outside to close it. Remove a color by taping on the colored circles appearing here
                       </Typography>              
                     </Paper>
                   :
@@ -175,6 +201,21 @@ class Transition extends Component {
                       </Grid>
                     )
               }
+          <div>
+            <Button fab color="primary" aria-label="add" className = { classes.button } onClick = { this.handleClick } >
+              <AddIcon />
+            </Button>
+          </div>
+          {
+            displayColorPicker 
+              ? 
+                <div style = { styles.popover }>
+                  <div style = { styles.cover } onClick = { this.handleClose } />
+                    <CustomPicker fields = { false } presetColors = { [] } disableAlpha color = { selectedColor } onChangeComplete = { this.handleChange } />
+                  </div>
+              :
+                null
+          }    
               </Grid>
             </Grid>
           </Grid>
@@ -188,16 +229,12 @@ class Transition extends Component {
         <br />
 
         {/* Button */}
-        <div> 
-          <Button 
-            raised 
-            disabled = { colors.length == 0 } 
-            className = { classes.buttonStyle } 
-            style = {{ width : "-webkit-fill-available" }}
-            onClick = { this.setTransition }
-            >
-              Animate { colors.length } colors over { seconds } seconds
-          </Button>
+        <div>
+          <div> 
+            <Button raised  disabled = { colors.length == 0 } className = { classes.buttonStyle } style = {{ width : "-webkit-fill-available" }} onClick = { this.setTransition }>
+                Animate { colors.length } colors over { seconds } seconds
+            </Button>
+          </div>
         </div>
         <br />
 
