@@ -14,13 +14,24 @@ import Card, { CardActions, CardContent } from 'material-ui/Card';
 import List, { ListItem, ListItemIcon, ListItemSecondaryAction, ListItemText, ListSubheader, } from 'material-ui/List';
 import CustomPicker from '../Components/CustomPicker.jsx';
 import Avatar from 'material-ui/Avatar';
+import { CirclePicker } from 'react-color';
+
 
 const styles = theme => ({
     root: {
         flexgrow: 1,
-        marginTop: 20,
+        height: '380px',
+        /* position: 'absolute', */
+        top: '0px',
+        /*right: '0px',
+        left: '0px', */
+        bottom: '0px',
+        width: '100%'
+        
+
+        /* marginTop: 20,
         paddingLeft: 50,
-        paddingRight: 50,
+        paddingRight: 50, */
     },
     typographyStyle: {
         color: '#FFF'
@@ -218,14 +229,14 @@ class SingleColor extends Component {
         const { textColor, selectedColor, background } = this.state;
 
         return (
-            <div className={classes.root}>
+            <div className={classes.root} style={{ backgroundColor: this.state.background }} >
                 {/* Paper */}
-                <div>
-                    <Paper className={classes.paperStyle} elevation={4}>
+                <div >
+                    {/* <Paper className={classes.paperStyle} elevation={4}>
                         <Typography type="headline" component="h3" className={classes.typographyStyle}>
                             <Info className={classes.iconStyle} /> Pick and drag to set a solid color. You can save your selection as a preset
                         </Typography>
-                    </Paper>
+                    </Paper> */}
                 </div>
                 <br />
 
@@ -249,7 +260,14 @@ class SingleColor extends Component {
 
                 {/* Color picker */}
                 <div className={classes.divSketchPickerStyle}>
-                    <CustomPicker
+                    <CirclePicker
+                        backgroundColor={"#311342"}
+                        color={background}
+                        onChangeComplete={this.handleChange}
+                        width={400}
+                        circleSize={54}
+                    />
+                    {/* <CustomPicker
                         presetColors={[]}
                         width={400}
                         height={1}
@@ -257,7 +275,7 @@ class SingleColor extends Component {
                         color={background}
                         onChangeComplete={this.handleChange}
                         fields={false}
-                    />
+                    /> */}
                 </div>
 
                 {/* List of colors */}
