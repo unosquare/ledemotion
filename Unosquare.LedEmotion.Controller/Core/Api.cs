@@ -11,16 +11,14 @@
     using Swan.Formatters;
     using Unosquare.Labs.EmbedIO.Constants;
     using Unosquare.Net;
-    using Unosquare.Swan.Abstractions;
     using Unosquare.LedEmotion.Controller.Models;
-    using Unosquare.Swan.Reflection;
 
     public class Api : WebApiController
     {
         private const string RelativePath = "/api/";
 
-        [WebApiHandler(HttpVerbs.Get, RelativePath + "status")]
-        public Task<bool> GetStatus(WebServer server, HttpListenerContext context)
+        [WebApiHandler(HttpVerbs.Post, RelativePath + "status")]
+        public Task<bool> PostStatus(WebServer server, HttpListenerContext context)
         {
             // http://localhost:9696/api/status?r=10&g=245&b=96
             LedStripWorker.Instance.SetColor(new[]
@@ -30,7 +28,17 @@
                 byte.Parse(context.Request.QueryString["b"])
             }, TimeSpan.FromMilliseconds(LedStripWorker.Instance.MillisecondsPerFrame * 10));
 
-            return context.JsonResponseAsync(new {Name = "STATUS GET"});
+            return context.JsonResponseAsync(new {Name = "STATUS POST"});
+        }
+
+        [WebApiHandler(HttpVerbs.Get, RelativePath + "status")]
+        public Task<bool> GetStatus(WebServer server, HttpListenerContext context)
+        {
+            return context.JsonResponseAsync(new
+            {
+                PublicIP = Network.GetPublicIPAddress(),
+                LocalIPs = Network.GetIPv4Addresses()
+            });
         }
 
         [WebApiHandler(HttpVerbs.Get, RelativePath + "appstate")]
@@ -160,7 +168,7 @@
                 });
             }
         }
-
+        
         [WebApiHandler(HttpVerbs.Post, RelativePath + "settings")]
         public Task<bool> PostSettings(WebServer server, HttpListenerContext context)
         {
