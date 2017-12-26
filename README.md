@@ -128,7 +128,7 @@ exit 0
 #### A. Proposed diagram
 
 <p align = "center">
-  <img src = "https://i.imgur.com/1xW8pXM.png" alt = "Diagram" width = "1100" height = "600">
+  <img src = "https://i.imgur.com/1xW8pXM.png" alt = "Diagram" width = "1200" height = "600">
 </p>
 
 What do you need?
