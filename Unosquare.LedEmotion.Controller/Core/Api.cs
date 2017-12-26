@@ -11,13 +11,14 @@
     using Swan.Formatters;
     using Unosquare.Labs.EmbedIO.Constants;
     using Unosquare.Net;
+    using Unosquare.LedEmotion.Controller.Models;
 
     public class Api : WebApiController
     {
         private const string RelativePath = "/api/";
 
-        [WebApiHandler(HttpVerbs.Get, RelativePath + "status")]
-        public Task<bool> GetStatus(WebServer server, HttpListenerContext context)
+        [WebApiHandler(HttpVerbs.Post, RelativePath + "status")]
+        public Task<bool> PostStatus(WebServer server, HttpListenerContext context)
         {
             // http://localhost:9696/api/status?r=10&g=245&b=96
             LedStripWorker.Instance.SetColor(new[]
@@ -27,7 +28,16 @@
                 byte.Parse(context.Request.QueryString["b"])
             }, TimeSpan.FromMilliseconds(LedStripWorker.Instance.MillisecondsPerFrame * 10));
 
-            return context.JsonResponseAsync(new {Name = "STATUS GET"});
+            return context.JsonResponseAsync(new {Name = "STATUS POST"});
+        }
+
+        [WebApiHandler(HttpVerbs.Get, RelativePath + "status")]
+        public Task<bool> GetStatus(WebServer server, HttpListenerContext context)
+        {
+            return context.JsonResponseAsync(new {
+                PublicIP = Network.GetPublicIPAddress(),
+                LocalIPs = Network.GetIPv4Addresses()
+            });
         }
 
         [WebApiHandler(HttpVerbs.Get, RelativePath + "appstate")]
@@ -118,6 +128,58 @@
 
                 Program.SaveState();
                 return context.JsonResponseAsync(Program.State);
+            }
+            catch (Exception ex)
+            {
+                context.Response.StatusCode = 400;
+
+                return context.JsonResponseAsync(new
+                {
+                    ErrorType = ex.GetType().ToString(),
+                    ex.Message
+                });
+            }
+        }
+
+        [WebApiHandler(HttpVerbs.Get, RelativePath + "settings")]
+        public Task<bool> GetSettings(WebServer server, HttpListenerContext context)
+        {
+            try
+            { 
+                var settings = new AppSettings
+                {
+                    FramesPerSecond = LedStripWorker.Instance.FramesPerSecond,
+                    LedCount = LedStripWorker.Instance.LedCount,
+                    SpiChannel = LedStripWorker.Instance.SpiChannel,
+                    SpiFrequency = LedStripWorker.Instance.SpiFrequency,
+                };
+
+                return context.JsonResponseAsync(settings);
+            }
+            catch (Exception ex)
+            {
+                context.Response.StatusCode = 400;
+
+                return context.JsonResponseAsync(new
+                {
+                    ErrorType = ex.GetType().ToString(),
+                    ex.Message
+                });
+            }
+        }
+        
+        [WebApiHandler(HttpVerbs.Post, RelativePath + "settings")]
+        public Task<bool> PostSettings(WebServer server, HttpListenerContext context)
+        {
+            try
+            {
+                var data = Json.Deserialize<AppSettings>(context.RequestBody());
+                LedStripWorker.Instance.Restart(data.LedCount, data.SpiChannel, data.SpiFrequency, data.FramesPerSecond);
+
+                return context.JsonResponseAsync(new
+                {
+                    Status = "ok"
+                });
             }
             catch (Exception ex)
             {
