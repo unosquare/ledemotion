@@ -37,10 +37,8 @@ export default class SettingsDialog extends React.Component {
     });
   }
   saveSettings = () => {
-    this.setState({saveSettings:true});
-    Axios.post("api/settings", {
-      ...this.state.settings
-    })
+    this.setState({savingSettings:true});
+    Axios.post("api/settings", this.state.settings)
     .then( response => {
       if(response.data.Status === 'ok')
       {
