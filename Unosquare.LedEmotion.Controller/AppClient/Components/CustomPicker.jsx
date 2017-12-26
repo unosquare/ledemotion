@@ -152,7 +152,7 @@ export const CustomPicker = ({ width, rgb, hex, hsv, hsl, onChange, onSwatchHove
 function AddButton(props) {
   if (props.action != null) {
     return (
-      <div>
+      <div style={{ textAlign: 'right' }}>
         <IconButton
           onClick={() => props.action(props.rgb)}
           color='default'>

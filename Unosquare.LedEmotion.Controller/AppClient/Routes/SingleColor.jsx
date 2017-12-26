@@ -2,7 +2,6 @@ import React, { Component } from 'react';
 import Axios from 'axios';
 import IconButton from 'material-ui/IconButton';
 import DeleteIcon from 'material-ui-icons/Delete';
-import DoneIcon from 'material-ui-icons/Done';
 import { SketchPicker } from 'react-color';
 import Typography from 'material-ui/Typography';
 import { HuePickerProps } from 'react-color';
@@ -19,6 +18,7 @@ import Grid from 'material-ui/Grid';
 import Dialog, { DialogActions, DialogContent, DialogContentText, DialogTitle, } from 'material-ui/Dialog';
 import Button from 'material-ui/Button';
 import TextField from 'material-ui/TextField';
+import AddIcon from 'material-ui-icons/Add';
 
 const styles = theme => ({
     root: {
@@ -55,14 +55,6 @@ const styles = theme => ({
     typographyStyle: {
         color: '#FFF'
     },
-    inputSelectedColorStyle: {
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "center",
-    },
-    inputStyle: {
-        borderRadius: 6,
-    },
     divStyle: {
         display: "flex",
         alignItems: "center",
@@ -73,43 +65,11 @@ const styles = theme => ({
         width: 50,
         height: 50,
         borderRadius: '50%',
-        boxShadow: '4px 6px 20px grey'
-    },
-    shadowIconButtonStyle: {
-        alignItems: "center",
-        justifyContent: "center",
+        boxShadow: '2px 4px 5px #bbbbbb'
     },
     iconButtonStyle: {
-        width: 60,
-        height: 60,
-    },
-    rowColorStyle: {
-        display: 'inline-block',
-        margin: '0 auto'
-    },
-    rowTextStyle: {
-        width: '50%',
-        display: 'inline-block'
-    },
-    rowDeleteStyle: {
-        width: '10%',
-        display: 'inline-block',
-        margin: '0 auto'
-    },
-    listItemStyle: {
-        margin: '0 auto',
-        width: '80%'
-    },
-    popover: {
-        position: 'absolute',
-        zIndex: '2'
-    },
-    cover: {
-        position: 'fixed',
-        top: '0px',
-        right: '0px',
-        bottom: '0px',
-        left: '0px'
+        height: '100%',
+        width: '100%'
     },
     colorPicker: {
         position: 'relative',
@@ -214,7 +174,6 @@ class SingleColor extends Component {
     handleChange = (color, event) => {
         this.ChangeTextColor(color.rgb)
         this.ChangeBackgroundColor(color.hex)
-        this.SetColor(color.rgb, true)
     }
 
     SelectColor = (color) => {
@@ -273,7 +232,7 @@ class SingleColor extends Component {
             R: this.state.color.r,
             G: this.state.color.g,
             B: this.state.color.b
-        }).then(() => { this.GetColors() }, this.HandleDialogClose() );
+        }).then(() => { this.GetColors() }, this.HandleDialogClose());
     }
 
     ResetValues = () => {
@@ -314,26 +273,30 @@ class SingleColor extends Component {
                 margin: "0 auto"
             }}
             >
+                <Dialog
+                    open={this.state.displayColorPicker}
+                    onClose={this.handleClose}
+                    aria-labelledby="form-dialog-title"
+                >
+                    <CustomPicker
+                        action={this.HandleDialogOpen}
+                        presetColors={[]}
+                        disableAlpha
+                        width={250}
+                        color={props.background}
+                        onChangeComplete={this.handleChange}
+                    />
+                </Dialog>
+
                 <div className={props.classes.colorPicker} style={{ width: colorPickerWidth, marginBottom: '40px' }}>
                     <Typography style={{ color: props.textColor, textAlign: 'center' }} type="headline" component="h3">
                         Pick and drag to set a solid color. You can save your selection as a preset
-                        </Typography>
+                    </Typography>
                     <br />
 
-                    <div style={{ textAlign: 'center' }}> 
-                        <Button raised onClick={this.handleClick} style={{ /* backgroundColor: '#4A90E2',  */height:'40px', width: '60%' }}>Pick Color</Button>
+                    <div style={{ textAlign: 'center' }}>
+                        <Button raised onClick={this.handleClick} style={{ height: '40px', width: '60%' }}>Pick Color</Button>
                     </div>
-
-                    {this.state.displayColorPicker ? <div className={props.classes.popover}>
-                        <div className={props.classes.cover} onClick={this.handleClose} />
-                        <CustomPicker
-                            action={this.HandleDialogOpen}
-                            presetColors={[]}
-                            disableAlpha
-                            color={props.background}
-                            onChangeComplete={this.handleChange}
-                        />
-                    </div> : null}
                 </div>
 
                 <div className={props.classes.presetColorStyle} style={{ width: presetColorWidth, marginBottom: '40px' }}>
@@ -344,16 +307,25 @@ class SingleColor extends Component {
                                     this.state.colors.map((color, key) =>
                                         <Grid key={key} item>
                                             <Card aria-label="Recipe" className={props.classes.cardStyle} style={{ backgroundColor: color.color }} title={color.title}>
-                                                <CardActions className={props.classes.shadowIconButtonStyle}>
-                                                    <IconButton
-                                                        className={props.classes.iconButtonStyle}
-                                                        aria-label="Select"
-                                                        onClick={() => this.SelectColor(color.color)} />
-                                                </CardActions>
+                                                <IconButton
+                                                    className={props.classes.iconButtonStyle}
+                                                    aria-label="Select"
+                                                    onClick={() => this.SelectColor(color.color)} />
                                             </Card>
+                                            
                                         </Grid>
                                     )
                                 }
+
+                                <Card aria-label="Recipe" className={props.classes.cardStyle} style={{ backgroundColor: 'white' }} title='Add Color'>
+                                    <IconButton
+                                        className={props.classes.iconButtonStyle}
+                                        aria-label="Select"
+                                        onClick={() => this.setState({ displayColorPicker: true })} >
+                                        <AddIcon />
+                                    </IconButton>
+                                </Card>
+
                             </Grid>
                         </Grid>
                     </Grid>
@@ -406,7 +378,7 @@ class SingleColor extends Component {
                 <br />
 
                 {/* Color picker */}
-                <this.ColorPickerCom classes={classes} background={background} textColor={textColor}/>
+                <this.ColorPickerCom classes={classes} background={background} textColor={textColor} />
 
                 <br />
             </div>
