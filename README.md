@@ -16,6 +16,8 @@ You will need a fairly powerful power supply to drive a 4m strip of 60 LEDs per 
  - [SWAN](https://github.com/unosquare/swan), to avoid rewriting some basic building blocks like logging and bitmap management in out app.
  - [SshDeploy](https://github.com/unosquare/sshdeploy), to perform continuous deployments to the RPi
 
+*Check our proposed diagram to test the project*
+
 ## Running
 
 ### 1. Update and upgrade the distro. Install mono on the Raspberry Pi
@@ -143,3 +145,28 @@ exit 0
 
 
 *[back to the tutorial](#3-deploy-and-test-continuously)*
+
+#### B. Diagram proposed
+
+![Diagram](https://i.imgur.com/gHraTuA.png)
+
+What do you need?
+
+* 1 protoboard
+* 1 Raspberry Pi 3 modelo B, v. 1.2
+* 1 level shifter (TXB0108)
+* 1 led strip (APA102C. Available [here](https://www.adafruit.com/product/2239))
+* 1 DC barrel jack adapter (female)
+* 1 Multimeter
+* 1 USB to micro USB wire (you'll only need a piece of wire that goes to the micro USB)
+* Wires
+
+Expectation:
+
+![Expected](https://i.imgur.com/RWH5yBr.jpg)
+
+Notes about the TXB0108
+
+![TXB0108](https://i.imgur.com/xF7dDmx.jpg)
+
+The TXB0108 works bidirectionally. The A side works with a range voltage of 1.2 V ~ 3.6 V, and the B side with 1.7 V ~ 7.5 V. There's only one ground (GND/MASA). The wires that are connected in the MOSI and SCLK pins goes connected to the A input in the level shifter (choose between A1-A8 I/O). In our case, we choose A1 and A2 and the outputs B1 and B2 (these ones goes connected to the led strip).
