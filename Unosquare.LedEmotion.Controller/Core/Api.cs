@@ -34,8 +34,7 @@
         [WebApiHandler(HttpVerbs.Get, RelativePath + "status")]
         public Task<bool> GetStatus(WebServer server, HttpListenerContext context)
         {
-            return context.JsonResponseAsync(new
-            {
+            return context.JsonResponseAsync(new {
                 PublicIP = Network.GetPublicIPAddress(),
                 LocalIPs = Network.GetIPv4Addresses()
             });
@@ -147,13 +146,13 @@
         {
             try
             { 
-                var settings = Json.Serialize(new AppSettings
+                var settings = new AppSettings
                 {
                     FramesPerSecond = LedStripWorker.Instance.FramesPerSecond,
                     LedCount = LedStripWorker.Instance.LedCount,
                     SpiChannel = LedStripWorker.Instance.SpiChannel,
                     SpiFrequency = LedStripWorker.Instance.SpiFrequency,
-                });
+                };
 
                 return context.JsonResponseAsync(settings);
             }
@@ -175,7 +174,8 @@
             try
             {
                 var data = Json.Deserialize<AppSettings>(context.RequestBody());
-                LedStripWorker.Instance.SetParameters(data.LedCount, data.SpiChannel, data.SpiFrequency, data.FramesPerSecond);
+                LedStripWorker.Instance.Restart(data.LedCount, data.SpiChannel, data.SpiFrequency, data.FramesPerSecond);
+
                 return context.JsonResponseAsync(new
                 {
                     Status = "ok"
