@@ -4,7 +4,7 @@ import Grid from 'material-ui/Grid';
 import Table, { TableBody, TableCell, TableHead, TableRow } from 'material-ui/Table';
 import PropTypes from 'prop-types';
 import { withStyles } from 'material-ui/styles';
-
+import Axios from 'axios';
 const styles = theme => ({
   root : {
     flexGrow : 1,
@@ -21,9 +21,23 @@ const styles = theme => ({
 });
 
 class Status extends Component {
+  state = {
+    LocalIPs : [],
+    PublicIP: ""
+  }
+  componentDidMount = () => {
+    Axios.get("api/status")
+    .then(response =>{
+      this.setState({
+        LocalIPs : response.data.LocalIPs,
+        PublicIP : response.data.PublicIP
+      });
+    });
+  } 
   render() {
 
     const { classes } = this.props;
+    const { LocalIPs, PublicIP } = this.state;
 
     return (
       <div className = { classes.root }>
@@ -44,9 +58,14 @@ class Status extends Component {
                 <TableCell>Could be wired or wireless</TableCell>
               </TableRow>
               <TableRow>
-                <TableCell>IP Address</TableCell>
-                <TableCell>X.Y.Z</TableCell>
-                <TableCell>The network IPv4 address of this controller</TableCell>
+                <TableCell>Local IP Addresses</TableCell>
+                <TableCell>{LocalIPs.join(",")}</TableCell>
+                <TableCell>The network IPv4 addresses of this controller</TableCell>
+              </TableRow>
+              <TableRow>
+                <TableCell>Public IP Address</TableCell>
+                <TableCell>{PublicIP}</TableCell>
+                <TableCell>The public network IPv4 address of this controller</TableCell>
               </TableRow>
             </TableBody>
           </Table>
