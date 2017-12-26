@@ -10,6 +10,18 @@ You will need a fairly powerful power supply to drive a 4m strip of 60 LEDs per 
 
 *A Raspberry Pi 3 is recommended just because it's faster.*
 
+## Table of Contents
+
+- [Software Components](#software-components)
+- [Running](#running)
+  - [1. Installing mono on the Raspberry Pi](#1-installing-mono-on-the-raspberry-pi)
+  - [2. Enable SPI](#2-enable-spi)
+  - [3. Deploy and test continuously](#3-deploy-and-test-continuously)
+  - [4. The ```rc.local``` file](#4-the-rclocal-file)
+- [Miscellaneous](#miscellaneous)
+  - [A. Proposed diagram](#a-proposed-diagram)
+  - [B. Setting up SSHDeploy](#b-setting-up-sshdeploy)
+
 ## Software Components
  - [EmbedIO](https://github.com/unosquare/embedio), to drive the web-based UI.
  - [RaspberryIO](https://github.com/unosquare/raspberryio), to interface with our hardware.
@@ -20,9 +32,10 @@ You will need a fairly powerful power supply to drive a 4m strip of 60 LEDs per 
 
 ## Running
 
-### 1. Update and upgrade the distro. Install mono on the Raspberry Pi
+### 1. Installing mono on the Raspberry Pi
 
 ```bash
+# First, update and upgrade the distro
 $ sudo apt-get update
 $ sudo apt-get upgrade
 $ sudo apt-get install mono-complete
@@ -45,7 +58,7 @@ $ mono --version
 
 You should get something above ```5.4.1.6```
 
-### 2. Enable SPI
+### 2. Enable ```SPI```
 
 ```bash
 $ sudo raspi-config
@@ -85,13 +98,15 @@ To see a list of processes:
 * ```ps```
 * ```htop``` (might need ```sudo apt-get install htop```)
 
-### 4. In the command line edit ```/etc/rc.local```
+### 4. The ```rc.local``` file
+
+In the command line edit this file:
 
 ```bash
 sudo nano /etc/rc.local
 ```
 
-### 5. Then add the following line before ```exit 0```:
+Then add the following line before ```exit 0```:
 ```bash
 mono /home/pi/[container folder]/Unosquare.LedEmotion.Controller.exe &
 ```
