@@ -16,37 +16,20 @@ import CustomPicker from '../Components/CustomPicker.jsx';
 import Avatar from 'material-ui/Avatar';
 import { CirclePicker } from 'react-color';
 import Grid from 'material-ui/Grid';
+import Dialog, { DialogActions, DialogContent, DialogContentText, DialogTitle, } from 'material-ui/Dialog';
+import Button from 'material-ui/Button';
+import TextField from 'material-ui/TextField';
 
 const styles = theme => ({
     root: {
-        flexgrow: 1,
-        /* height: '380px', */
-        /* position: 'absolute', */
-        /* top: '0px', */
-        /*right: '0px',
-        left: '0px', */
-        /* bottom: '0px',
-        width: '100%' */
-
-
-        /* marginTop: 20,
-        paddingLeft: 50,
-        paddingRight: 50, */
+        flexgrow: 1
     },
     roote: {
-        /* flexgrow: 1, */
         height: '380px',
-        /* position: 'absolute', */
         top: '0px',
-        /*right: '0px',
-        left: '0px', */
         bottom: '0px',
         width: '100%',
         position: 'fixed'
-
-        /* marginTop: 20,
-        paddingLeft: 50,
-        paddingRight: 50, */
     },
     typographyStyle: {
         color: '#FFF'
@@ -54,7 +37,9 @@ const styles = theme => ({
     divSketchPickerStyle: {
         display: "flex",
         alignItems: "center",
-        justifyContent: "center"
+        justifyContent: "center",
+        width: "80%",
+        margin: "0 auto",
     },
     paperStyle: {
         paddingTop: 20,
@@ -78,27 +63,15 @@ const styles = theme => ({
     inputStyle: {
         borderRadius: 6,
     },
-    divSketchPickerStyle: {
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "center",
-        width: "80%",
-        margin: "0 auto"
-    },
     divStyle: {
         display: "flex",
         alignItems: "center",
         justifyContent: "center",
-        /* width: "90%", */
-        margin: "0 auto",
-        /* height: "90%" */
+        margin: "0 auto"
     },
     cardStyle: {
         width: 50,
         height: 50,
-        /* borderRadius : 60,
-        alignItems: 'center',
-        margin: '0 auto', */
         borderRadius: '50%',
         boxShadow: '4px 6px 20px grey'
     },
@@ -111,14 +84,12 @@ const styles = theme => ({
         height: 60,
     },
     rowColorStyle: {
-        /* width: '30%', */
         display: 'inline-block',
         margin: '0 auto'
     },
     rowTextStyle: {
         width: '50%',
-        display: 'inline-block',
-        /* margin: '0 auto' */
+        display: 'inline-block'
     },
     rowDeleteStyle: {
         width: '10%',
@@ -151,28 +122,50 @@ const styles = theme => ({
     }
 });
 
-class SingleColor extends Component {
-    
+const mql = window.matchMedia(`(min-width: 800px)`);
 
-    constructor(props){
+class SingleColor extends Component {
+    constructor(props) {
         super(props)
 
-        this.AddColor = this.AddColor.bind(this);
-
         this.state = {
+            mql: mql,
+            docked: false,
             textColor: 'White',
             colors: [],
+            open: false,
             background: '#7ED321',
+            presetName: '',
+            color: [],
             displayColorPicker: false,
             presetColors: [{ color: '#D0021B', title: "Arc" }, { color: '#F5A623', title: "Arc" }, { color: '#F8E71C', title: "Arc" },
             { color: '#8B572A', title: "Arc" }, { color: '#7ED321', title: "Arc" }, { color: '#417505', title: "Arc" },
             { color: '#BD10E0', title: "Arc" }, { color: '#9013FE', title: "Arc" }, { color: '#4A90E2', title: "Arc" }]
         };
+
+        this.HandleDialogOpen = this.HandleDialogOpen.bind(this);
+        this.mediaQueryChanged = this.mediaQueryChanged.bind(this);
     }
 
     componentDidMount = () => {
         this.GetColors()
     };
+
+    componentWillMount() {
+        mql.addListener(this.mediaQueryChanged);
+        this.setState({ mql: mql, docked: mql.matches });
+    }
+
+    componentWillUnmount() {
+        this.state.mql.removeListener(this.mediaQueryChanged);
+    }
+
+    mediaQueryChanged() {
+        this.setState({
+            mql: mql,
+            docked: this.state.mql.matches,
+        });
+    }
 
     GetColors = () => {
         Axios.get('/api/appstate')
@@ -194,25 +187,6 @@ class SingleColor extends Component {
 
         return hex.length == 1 ? "0" + hex : hex;
     };
-
-    AddColor = (result) => {
-        console.log("Lok'tar Ogar")
-        console.log(result)
-        var presetName = prompt("Enter a name for the preset", "");
-
-        if (presetName == null || presetName == "") {
-            return;
-        }
-
-        /* var result = this.HexToRGB(this.state.background);
-        console.log(result) */
-        Axios.post('/api/preset', {
-            Name: presetName,
-            R: result.r,
-            G: result.g,
-            B: result.b
-        }).then(() => { this.GetColors() });
-    }
 
     DeleteColor = (presetName) => {
         Axios.delete('/api/preset', {
@@ -289,6 +263,106 @@ class SingleColor extends Component {
         return rgbColor;
     }
 
+    AddColor = () => {
+        if (this.state.presetName == null || this.state.presetName == "") {
+            return;
+        }
+
+        Axios.post('/api/preset', {
+            Name: this.state.presetName,
+            R: this.state.color.r,
+            G: this.state.color.g,
+            B: this.state.color.b
+        }).then(() => { this.GetColors() }, this.HandleDialogClose() );
+    }
+
+    ResetValues = () => {
+        this.setState({ presetName: '', color: [] });
+    }
+
+    HandleDialogOpen = (rgb) => {
+        this.setState({ open: true, color: rgb });
+    };
+
+    HandleDialogClose = () => {
+        this.setState({ open: false });
+        this.ResetValues()
+    };
+
+    ColorPickerCom = (props) => {
+        var display = ''
+        var colorPickerWidth = ''
+        var presetColorWidth = ''
+
+        if (this.state.docked == false) {
+            display = 'grid'
+            colorPickerWidth = '100%'
+            presetColorWidth = '100%'
+        }
+        else {
+            display = 'flex'
+            colorPickerWidth = '40%'
+            presetColorWidth = '60%'
+        }
+
+        return (
+            <div style={{
+                display: display,
+                alignItems: "center",
+                justifyContent: "center",
+                width: "80%",
+                margin: "0 auto"
+            }}
+            >
+                <div className={props.classes.colorPicker} style={{ width: colorPickerWidth, marginBottom: '40px' }}>
+                    <Typography style={{ color: props.textColor, textAlign: 'center' }} type="headline" component="h3">
+                        Pick and drag to set a solid color. You can save your selection as a preset
+                        </Typography>
+                    <br />
+
+                    <div style={{ textAlign: 'center' }}> 
+                        <Button raised onClick={this.handleClick} style={{ /* backgroundColor: '#4A90E2',  */height:'40px', width: '60%' }}>Pick Color</Button>
+                    </div>
+
+                    {this.state.displayColorPicker ? <div className={props.classes.popover}>
+                        <div className={props.classes.cover} onClick={this.handleClose} />
+                        <CustomPicker
+                            action={this.HandleDialogOpen}
+                            presetColors={[]}
+                            disableAlpha
+                            color={props.background}
+                            onChangeComplete={this.handleChange}
+                        />
+                    </div> : null}
+                </div>
+
+                <div className={props.classes.presetColorStyle} style={{ width: presetColorWidth, marginBottom: '40px' }}>
+                    <Grid container className={props.classes.root}>
+                        <Grid item xs={8} className={props.classes.divStyle}>
+                            <Grid container justify="center" spacing={Number(8)}>
+                                {
+                                    this.state.colors.map((color, key) =>
+                                        <Grid key={key} item>
+                                            <Card aria-label="Recipe" className={props.classes.cardStyle} style={{ backgroundColor: color.color }} title={color.title}>
+                                                <CardActions className={props.classes.shadowIconButtonStyle}>
+                                                    <IconButton
+                                                        className={props.classes.iconButtonStyle}
+                                                        aria-label="Select"
+                                                        onClick={() => this.SelectColor(color.color)} />
+                                                </CardActions>
+                                            </Card>
+                                        </Grid>
+                                    )
+                                }
+                            </Grid>
+                        </Grid>
+                    </Grid>
+                </div>
+
+            </div>
+        )
+    }
+
     render() {
         const { classes } = this.props;
         const { textColor, selectedColor, background } = this.state;
@@ -298,126 +372,43 @@ class SingleColor extends Component {
             <div className={classes.root}  >
                 <div className={classes.roote} style={{ backgroundColor: this.state.background }} />
 
-                {/* Paper */}
-                {/* <div >
-                    <Paper className={classes.paperStyle} elevation={4}>
-                        <Typography type="headline" component="h3" className={classes.typographyStyle}>
-                            <Info className={classes.iconStyle} /> Pick and drag to set a solid color. You can save your selection as a preset
-                        </Typography>
-                    </Paper>
-                </div> */}
+                <Dialog
+                    open={this.state.open}
+                    onClose={this.handleClose}
+                    aria-labelledby="form-dialog-title"
+                >
+                    <DialogTitle id="form-dialog-title">Preset Name</DialogTitle>
+                    <DialogContent>
+                        <DialogContentText>
+                            Please enter the new preset name.
+                        </DialogContentText>
+                        <TextField
+                            autoFocus
+                            margin="dense"
+                            id="name"
+                            label="Preset Name"
+                            type="text"
+                            fullWidth
+                            onChange={(event) => this.setState({ presetName: event.target.value })}
+                        />
+                    </DialogContent>
+                    <DialogActions>
+                        <Button onClick={this.HandleDialogClose} color="primary">
+                            Cancel
+                        </Button>
+                        <Button onClick={this.AddColor} color="primary">
+                            Save
+                        </Button>
+                    </DialogActions>
+                </Dialog>
 
-                {/* Display color selected */}
-                {/* <div className={classes.inputSelectedColorStyle}>
-                    <Input
-                        className={classes.inputStyle}
-                        value={"\xa0\xa0" + background.toUpperCase()}
-                        style={{ backgroundColor: background, color: textColor }}
-                        disabled
-                        disableUnderline>
-                    </Input>
-
-                    <IconButton
-                        onClick={() => this.AddColor()}
-                        color='default'>
-                        <DoneIcon />
-                    </IconButton>
-                </div> */}
-                <br/>
-                <br/>
-                {/* Color picker */}
-                <div className={classes.divSketchPickerStyle}>
-                    {/* <div className={classes.divStyle}> */}
-                    {/* <CirclePicker
-                        color={this.state.background}
-                        onChangeComplete={this.handleChange}
-                        width={400}
-                        circleSize={54}
-                        active={this.state.background}
-                    /> */}
-                    <div className={classes.colorPicker}>
-                        <Typography type="headline" component="h3" className={classes.typographyStyle}>
-                            Pick and drag to set a solid color. You can save your selection as a preset
-                        </Typography>
-                        <br />
-                        <button onClick={this.handleClick}>Pick Color</button>
-
-                        {this.state.displayColorPicker ? <div className={classes.popover}>
-                            <div className={classes.cover} onClick={this.handleClose} />
-                            <CustomPicker
-                                action={this.AddColor}
-                                presetColors={[]}
-                                disableAlpha
-                                color={background}
-                                onChangeComplete={this.handleChange}
-                            />
-
-                        </div> : null}
-
-                    </div>
-                    <div className={classes.presetColorStyle}>
-                        <Grid container className={classes.root}>
-                            <Grid item xs={8} className={classes.divStyle}>
-                                <Grid container justify="center" spacing={Number(8)}>
-                                    {
-                                        this.state.colors.map((color, key) =>
-
-
-                                            <Grid key={key} item>
-                                                <Card aria-label="Recipe" className={classes.cardStyle} style={{ backgroundColor: color.color }}>
-                                                    <CardActions className={classes.shadowIconButtonStyle}>
-                                                        <IconButton
-                                                            className={classes.iconButtonStyle}
-                                                            aria-label="Select"
-                                                            onClick={() => this.SelectColor(color.color)} />
-                                                    </CardActions>
-                                                </Card>
-                                            </Grid>
-
-                                        )
-                                    }
-                                </Grid>
-                            </Grid>
-                        </Grid>
-                    </div>
-
-                    
-                    {/* <CustomPicker
-                        presetColors={[]}
-                        width={400}
-                        height={1}
-                        disableAlpha
-                        color={background}
-                        onChangeComplete={this.handleChange}
-                        fields={false}
-                    /> */}
-                    {/* </div> */}
-                </div>
-
-                {/* List of colors */}
-                {/* <div className={classes.presetColorStyle}>
-                    <Grid>
-                        {
-                            this.state.colors.map((color, key) =>
-
-
-                                <div className={classes.rowColorStyle}>
-                                    <Card aria-label="Recipe" className={classes.cardStyle} style={{ backgroundColor: color.color }}>
-                                        <CardActions className={classes.shadowIconButtonStyle}>
-                                            <IconButton
-                                                className={classes.iconButtonStyle}
-                                                aria-label="Select"
-                                                onClick={() => this.SelectColor(color.color)} />
-                                        </CardActions>
-                                    </Card>
-                                </div>
-
-                            )
-                        }
-                    </Grid>
-                </div> */}
+                <br />
                 <br />
 
+                {/* Color picker */}
+                <this.ColorPickerCom classes={classes} background={background} textColor={textColor}/>
+
+                <br />
             </div>
         );
     }
