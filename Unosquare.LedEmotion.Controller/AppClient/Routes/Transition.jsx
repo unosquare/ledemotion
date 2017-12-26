@@ -183,8 +183,8 @@ class Transition extends Component {
       <div className = { classes.root }>
         <div className = { classes.inputSelectedColorStyle }>
           <Input className = { classes.inputStyle } value = { Object.keys(selectedColor).length === 0 ? "" : "\xa0\xa0" + selectedColor.toUpperCase() } style = {{ backgroundColor : selectedColor, color : "#FFFFFF" }} disabled disableUnderline></Input>
-          </div>
-        <br /><br />
+        </div>
+        <br /><br /><br />
 
         {/* Array of colors */}
         <div>
@@ -215,7 +215,7 @@ class Transition extends Component {
                 <Button fab color="primary" aria-label="add" className = { classes.button } onClick = { this.handleClick } >
                   <AddIcon />
                 </Button>
-              </div>
+              
               {
                 displayColorPicker 
                   ? 
@@ -226,6 +226,7 @@ class Transition extends Component {
                   :
                     null
               }
+              </div>
               </Grid>
             </Grid>
           </Grid>
