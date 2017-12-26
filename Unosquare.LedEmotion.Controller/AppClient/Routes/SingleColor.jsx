@@ -65,7 +65,7 @@ const styles = theme => ({
         width: 50,
         height: 50,
         borderRadius: '50%',
-        boxShadow: '2px 4px 5px #bbbbbb'
+        boxShadow: '2px 4px 5px #c2bebe'
     },
     iconButtonStyle: {
         height: '100%',
@@ -105,6 +105,7 @@ class SingleColor extends Component {
 
         this.HandleDialogOpen = this.HandleDialogOpen.bind(this);
         this.mediaQueryChanged = this.mediaQueryChanged.bind(this);
+        this.SelectColor = this.SelectColor.bind(this);
     }
 
     componentDidMount = () => {
@@ -138,6 +139,9 @@ class SingleColor extends Component {
                         colors: this.state.colors.concat({ color: hexColor, title: element.Name })
                     });
 
+                });
+                this.setState({
+                    colors: this.state.colors.concat({ color: 'White', title: 'Add Color' })
                 });
             });
     }
@@ -248,6 +252,38 @@ class SingleColor extends Component {
         this.ResetValues()
     };
 
+    ColorCard = (props) => {
+        if (props.color.title != 'Add Color') {
+            return (
+                <div>
+                    <Card aria-label="Recipe" className={props.classes.cardStyle} style={{ backgroundColor: props.color.color }} title={props.color.title}>
+                    <CardActions>
+                        <IconButton
+                            className={props.classes.iconButtonStyle}
+                            aria-label="Select"
+                            onClick={() => props.action(props.color.color)}
+                        />
+                        </CardActions>
+                    </Card>
+
+                </div>
+            )
+        }
+        else {
+            return (
+                <Card aria-label="Recipe" className={props.classes.cardStyle} style={{ backgroundColor: 'white' }} title='Add Color'>
+                    <IconButton
+                        className={props.classes.iconButtonStyle}
+                        aria-label="Select"
+                        onClick={() => this.setState({ displayColorPicker: true })} >
+                        <AddIcon />
+                    </IconButton>
+                </Card>
+            )
+        }
+
+    }
+
     ColorPickerCom = (props) => {
         var display = ''
         var colorPickerWidth = ''
@@ -306,26 +342,10 @@ class SingleColor extends Component {
                                 {
                                     this.state.colors.map((color, key) =>
                                         <Grid key={key} item>
-                                            <Card aria-label="Recipe" className={props.classes.cardStyle} style={{ backgroundColor: color.color }} title={color.title}>
-                                                <IconButton
-                                                    className={props.classes.iconButtonStyle}
-                                                    aria-label="Select"
-                                                    onClick={() => this.SelectColor(color.color)} />
-                                            </Card>
-                                            
+                                            <this.ColorCard classes={props.classes} color={color} action={this.SelectColor} />
                                         </Grid>
                                     )
                                 }
-
-                                <Card aria-label="Recipe" className={props.classes.cardStyle} style={{ backgroundColor: 'white' }} title='Add Color'>
-                                    <IconButton
-                                        className={props.classes.iconButtonStyle}
-                                        aria-label="Select"
-                                        onClick={() => this.setState({ displayColorPicker: true })} >
-                                        <AddIcon />
-                                    </IconButton>
-                                </Card>
-
                             </Grid>
                         </Grid>
                     </Grid>
