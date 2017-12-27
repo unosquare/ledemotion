@@ -128,7 +128,7 @@ class Transition extends Component {
   };
 
   /** Adds the color */
-  handleChange = (color, event) => {
+  handleChangeComplete = (color, event) => {
     console.log(color);
     const {r, g, b} = color.rgb;
 
@@ -176,6 +176,7 @@ class Transition extends Component {
     });
   }
 
+  /** Popover for the color picker */
   handleClick = () => {
     this.setState({
       displayColorPicker : !this.state.displayColorPicker
@@ -201,12 +202,11 @@ class Transition extends Component {
           <div>
             <Paper style = {{ backgroundColor : selectedColor, color : "#FFFFFF" }} className = { classes.paperStyle } elevation = { 4 }></Paper>
           </div>
-          {/* <div className = { classes.aux } style = {{ backgroundColor : selectedColor }}></div> */}
           <br /><br /><br />
 
           {/* Dialog color picker */}
           <Dialog open = { displayColorPicker } onClose = { this.handleClose } aria-labelledby = "form-dialog-title">
-            <CustomPicker fields = { false } presetColors = { [] } disableAlpha color = { selectedColor } onChangeComplete = { this.handleChange } />
+            <CustomPicker fields = { false } presetColors = { [] } disableAlpha color = { selectedColor } onChangeComplete = { this.handleChangeComplete } />
           </Dialog>
 
           {/* Color picker */}
