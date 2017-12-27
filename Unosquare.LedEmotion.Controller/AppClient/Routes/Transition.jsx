@@ -3,7 +3,7 @@ import Typography from 'material-ui/Typography';
 import Paper from 'material-ui/Paper';
 import PropTypes from 'prop-types';
 import { withStyles } from 'material-ui/styles';
-import { PhotoshopPicker, SketchPicker, HuePicker } from 'react-color';
+import { PhotoshopPicker, SketchPicker, HuePicker, ChromePicker } from 'react-color';
 import Card, { CardActions, CardContent } from 'material-ui/Card';
 import Slider, { Range } from 'rc-slider';
 import 'rc-slider/assets/index.css';
@@ -18,6 +18,7 @@ import Tooltip from 'material-ui/Tooltip';
 import FlashOn from 'material-ui-icons/FlashOn';
 import Input from 'material-ui/Input';
 import TextField from 'material-ui/TextField';
+import Dialog from 'material-ui/Dialog/Dialog';
 
 const styles = theme => ({
   root : {
@@ -26,12 +27,21 @@ const styles = theme => ({
     paddingLeft : 50, 
     paddingRight : 50
   },
+  aux : {
+    height : '380px',
+    top : '0px',
+    bottom: '0px',
+    width : '100%',
+    position : 'fixed',
+  },
   paperStyle : {
     paddingTop : 20,
     paddingLeft : 10,
     paddingBottom : 20,
     marginTop : theme.spacing.unit * 3,
-    backgroundColor : '#2CCCE4',
+    backgroundColor : '#FAFAFA',
+    height : 50,
+    borderRadius : 6,
   },
   iconStyle : {
     verticalAlign: "middle !important",
@@ -48,6 +58,9 @@ const styles = theme => ({
   inputStyle : {
     borderRadius: 6,
   },
+  paperInfoStyle : {
+    backgroundColor : "#FAFAFA",
+  },
   divSketchPickerStyle : {
     display: "flex",
     alignItems: "center",
@@ -56,9 +69,17 @@ const styles = theme => ({
   sketchPickerStyle : {
     width : 500,
   },
-  paperInfoStyle : {
-    backgroundColor : "#FAFAFA",
+  popover : {
+    position : 'absolute',
+    zIndex : '2',
   },
+  cover : {
+    position : 'fixed',
+    top: '0px',
+    right: '0px',
+    bottom: '0px',
+    left: '0px',
+  },  
   cardStyle : {
     width : 60,
     height : 60,
@@ -85,6 +106,15 @@ const styles = theme => ({
     position: 'absolute',
     bottom: 32,
     right: 32,
+  },
+  spacer20 : {
+    height: "20px",
+    width: "100%",
+    fontSize: "0",
+    margin: "0",
+    padding: "0",
+    border: "0",
+    display: "block",
   },
 });
 
@@ -163,40 +193,43 @@ class Transition extends Component {
     const { classes } = this.props;
     const { colors, selectedColor, seconds, displayColorPicker } = this.state;
 
-    const styles = reactCSS({
-      'default': {
-        popover: {
-          position: 'absolute',
-          zIndex: '2',
-        },
-        cover: {
-          position: 'fixed',
-          top: '0px',
-          right: '0px',
-          bottom: '0px',
-          left: '0px',
-        },
-      },
-    });
-
     return (
-      <div className = { classes.root }>
-        <div className = { classes.inputSelectedColorStyle }>
-          <Input className = { classes.inputStyle } value = { Object.keys(selectedColor).length === 0 ? "" : "\xa0\xa0" + selectedColor.toUpperCase() } style = {{ backgroundColor : selectedColor, color : "#FFFFFF" }} disabled disableUnderline></Input>
-        </div>
-        <br /><br /><br />
+      <div>
+        <div className = { classes.root }>
 
-        {/* Array of colors */}
-        <div>
-          <Grid container>
-            <Grid item xs = { 12 }>
-              <Grid container justify = "center" spacing = { 8 }>
-              {
-                colors.length == 0
+          {/* Color selected */}
+          <div>
+            <Paper style = {{ backgroundColor : selectedColor, color : "#FFFFFF" }} className = { classes.paperStyle } elevation = { 4 }></Paper>
+          </div>
+          {/* <div className = { classes.aux } style = {{ backgroundColor : selectedColor }}></div> */}
+          <br /><br /><br />
+
+          {/* Dialog color picker */}
+          <Dialog open = { displayColorPicker } onClose = { this.handleClose } aria-labelledby = "form-dialog-title">
+            <CustomPicker fields = { false } presetColors = { [] } disableAlpha color = { selectedColor } onChangeComplete = { this.handleChange } />
+          </Dialog>
+
+          {/* Color picker */}
+          <div className = { classes.divSketchPickerStyle }>
+            <div>
+              <Button fab color="primary" aria-label="add" className = { classes.button } onClick = { this.handleClick } >
+                <AddIcon />
+              </Button>
+            </div>
+          </div>
+          <br /><br /><br />
+
+          {/* Array of colors */}
+          <div>
+            <Grid container>
+              <Grid item xs = { 12 }>
+                <Grid container justify = "center" spacing = { 8 }>
+                {
+                  colors.length == 0
                   ?
                     <Paper className = { classes.paperInfoStyle } elevation = { 0 }>
                       <Typography type = "caption" component = "p">
-                        Pick multiple colors. Click the button to open de color picker, click outside to close it. Remove a color by taping on the colored circles appearing here
+                        Pick multiple colors. Click the button to open the dialog color picker, click outside the dialog to close it. Remove a color by taping on the colored circles appearing here
                       </Typography>              
                     </Paper>
                   :
@@ -210,45 +243,30 @@ class Transition extends Component {
                         </Card>
                       </Grid>
                     )
-              }
-              <div>
-                <Button fab color="primary" aria-label="add" className = { classes.button } onClick = { this.handleClick } >
-                  <AddIcon />
-                </Button>
-              
-              {
-                displayColorPicker 
-                  ? 
-                    <div style = { styles.popover }>
-                      <div style = { styles.cover } onClick = { this.handleClose } />
-                        <CustomPicker fields = { false } presetColors = { [] } disableAlpha color = { selectedColor } onChangeComplete = { this.handleChange } />
-                      </div>
-                  :
-                    null
-              }
-              </div>
+                }
+                </Grid>
               </Grid>
             </Grid>
-          </Grid>
-        </div>
-        <br /><br />
+          </div>
+          <br /><br /><br />
 
-        {/* Slider */}
-        <div className = { classes.divRCSliderStyle }>
-          <Slider min = { 1 } max = { 300 } onChange = { this.handleValueSliderChange } className = { classes.rcSliderStyle } />
-        </div>
-        <br />
+          {/* Slider */}
+          <div className = { classes.divRCSliderStyle }>
+            <Slider min = { 1 } max = { 300 } onChange = { this.handleValueSliderChange } className = { classes.rcSliderStyle } />
+          </div>
+          <br /><br /><br />
 
-        {/* Button */}
-        <div>
-          <Tooltip placement = "bottom" title = {"Animate " + colors.length + " colors over " + seconds + " seconds" }>
-            <Button fab color = "accent" disabled = { colors.length == 0 } onClick = { this.setTransition } className = { classes.fabButtonAbsoluteStyle }>
-              <FlashOn />
-            </Button>
-          </Tooltip>
-        </div>
-        <br />
+          {/* Button */}
+          <div>
+            <Tooltip placement = "bottom" title = {"Animate " + colors.length + " colors over " + seconds + " seconds" }>
+              <Button fab color = "accent" disabled = { colors.length == 0 } onClick = { this.setTransition } className = { classes.fabButtonAbsoluteStyle }>
+                <FlashOn />
+              </Button>
+            </Tooltip>
+          </div>
+          <br />
 
+          </div>
       </div>
     );
   }
