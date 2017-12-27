@@ -6,9 +6,11 @@ import SketchFields from 'react-color/lib/components/sketch/SketchFields'
 import SketchPresetColors from 'react-color/lib/components/sketch/SketchPresetColors'
 import IconButton from 'material-ui/IconButton';
 import AddIcon from 'material-ui-icons/Add';
+import Card, { CardActions, CardContent } from 'material-ui/Card';
+import DeleteIcon from 'material-ui-icons/Delete';
 
 export const CustomPicker = ({ width, rgb, hex, hsv, hsl, onChange, onSwatchHover,
-  disableAlpha, presetColors, renderers, action, className = '', fields = true }) => {
+  disableAlpha, presetColors, renderers, addAction, deleteAction, className = '', fields = true }) => {
   const styles = reactCSS({
     'default': {
       picker: {
@@ -70,6 +72,12 @@ export const CustomPicker = ({ width, rgb, hex, hsv, hsl, onChange, onSwatchHove
         radius: '2px',
         shadow: 'inset 0 0 0 1px rgba(0,0,0,.15), inset 0 0 4px rgba(0,0,0,.25)',
       },
+      cardStyle: {
+        boxShadow: 'none'
+      },
+      buttonStyle: {
+        margin: 'auto'
+      }
     },
     'disableAlpha': {
       color: {
@@ -134,25 +142,64 @@ export const CustomPicker = ({ width, rgb, hex, hsv, hsl, onChange, onSwatchHove
         onSwatchHover={onSwatchHover}
       />
 
-      {/* <IconButton
-        onClick={() => action(rgb)}
-        color='default'>
-        <DoneIcon />
-      </IconButton> */}
-
-      <AddButton
+      <CardComp
+        addAction={addAction}
+        deleteAction={deleteAction}
         rgb={rgb}
-        action={action}
+        styles={styles}
       />
 
     </div>
   )
 }
 
+function CardComp(props) {
+  if (props.addAction != null || props.deleteAction != null) {
+    return (
+      <Card style={props.styles.cardStyle}>
+        <CardActions>
+          <AddButton
+            rgb={props.rgb}
+            action={props.addAction}
+            styles={props.styles}
+          />
+
+          <DeleteButton
+            action={props.deleteAction}
+            styles={props.styles}
+          />
+        </CardActions>
+      </Card>
+    )
+  }
+
+  return (
+    <div />
+  );
+}
+
+function DeleteButton(props) {
+  if (props.action != null) {
+    return (
+      <div style={props.styles.buttonStyle}>
+        <IconButton
+          onClick={() => props.action()}
+          color='default'>
+          <DeleteIcon />
+        </IconButton>
+      </div>
+    );
+  }
+
+  return (
+    <div />
+  );
+}
+
 function AddButton(props) {
   if (props.action != null) {
     return (
-      <div style={{ textAlign: 'right' }}>
+      <div style={props.styles.buttonStyle}>
         <IconButton
           onClick={() => props.action(props.rgb)}
           color='default'>
