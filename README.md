@@ -4,23 +4,38 @@
 
 A very cool, Web-based RGB LED strip controller for the Raspberry Pi
 
-This program drives an RGB LED Strip (APA102C) available from Adafruit [Adafruit DotStar Digital LED Strip - Black 60 LED - Per Meter - BLACK](https://www.adafruit.com/products/2239). It does so by using one of the SPI channels available on the RPi.
+This program drives an RGB LED Strip (```APA102C```) available from Adafruit ([Adafruit DotStar Digital LED Strip - Black 60 LED - Per Meter - BLACK](https://www.adafruit.com/products/2239)). It does so by using one of the ```SPI``` channels available on the RPi.
 
 You will need a fairly powerful power supply to drive a 4m strip of 60 LEDs per meter ([5V 10A switching power supply](https://www.adafruit.com/product/658)).
 
 *A Raspberry Pi 3 is recommended just because it's faster.*
 
-## Components
+## Table of Contents
+
+- [Software Components](#software-components)
+- [Running](#running)
+  - [1. Installing mono on the Raspberry Pi](#1-installing-mono-on-the-raspberry-pi)
+  - [2. Enable SPI](#2-enable-spi)
+  - [3. Deploy and test continuously](#3-deploy-and-test-continuously)
+  - [4. The ```rc.local``` file](#4-the-rclocal-file)
+- [Miscellaneous](#miscellaneous)
+  - [A. Practical example](#a-practical-example)
+  - [B. Setting up dotnet-sshdeploy](#b-setting-up-dotnet-sshdeploy)
+
+## Software Components
  - [EmbedIO](https://github.com/unosquare/embedio), to drive the web-based UI.
  - [RaspberryIO](https://github.com/unosquare/raspberryio), to interface with our hardware.
  - [SWAN](https://github.com/unosquare/swan), to avoid rewriting some basic building blocks like logging and bitmap management in out app.
- - [SshDeploy](https://github.com/unosquare/sshdeploy), to perform continuous deployments to the RPi
+ - [dotnet-sshdeploy](https://github.com/unosquare/sshdeploy), to perform continuous deployments to the RPi
+
+*[Check](#a-practical-example) our proposed diagram to test the project*
 
 ## Running
 
-### 1. Update and upgrade the distro. Install mono on the Raspberry Pi
+### 1. Installing mono on the Raspberry Pi
 
 ```bash
+# First, update and upgrade the distro
 $ sudo apt-get update
 $ sudo apt-get upgrade
 $ sudo apt-get install mono-complete
@@ -43,14 +58,13 @@ $ mono --version
 
 You should get something above ```5.4.1.6```
 
-### 2. Enable SPI
+### 2. Enable ```SPI```
 
 ```bash
 $ sudo raspi-config
 ```
 
 You'll get a GUI like this:
-
 
 ![Raspberry Pi Software Configuration Tool (raspi-config)](https://i.imgur.com/V4uQMYH.png)
 
@@ -60,7 +74,8 @@ Select  ```5 Interfacing Options``` from the menu and then select ```P4 SPI``` t
 
 ### 3. Deploy and test continuously
 
-*Before to continue with this tutorial, check [this](#miscellaneous)*
+*Before to continue with this tutorial, check [this](#b-setting-up-dotnet-sshdeploy)*
+
 
 To kill the current mono process: 
 
@@ -80,13 +95,15 @@ To see a list of processes:
 * ```ps```
 * ```htop``` (might need ```sudo apt-get install htop```)
 
-### 4. In the command line edit ```/etc/rc.local```
+### 4. The ```rc.local``` file
+
+In the command line edit this file:
 
 ```bash
 sudo nano /etc/rc.local
 ```
 
-### 5. Then add the following line before ```exit 0```:
+Then add the following line before ```exit 0```:
 ```bash
 mono /home/pi/[container folder]/Unosquare.LedEmotion.Controller.exe &
 ```
@@ -120,9 +137,35 @@ exit 0
 
 ## Miscellaneous
 
-#### A. Setting up SSHDeploy
+#### A. Practical example
 
-* SSHDeploy comes preconfigured with some default properties inside the csproj file like:
+![Diagram](https://i.imgur.com/1xW8pXM.png)
+
+What do you need?
+
+* 1 protoboard
+* 1 Raspberry Pi 3 modelo B, v. 1.2
+* 1 level shifter (```TXB0108```)
+* 1 LED strip (```APA102C```. Available [here](https://www.adafruit.com/product/2239))
+* 1 DC barrel jack adapter (female. Available [here](https://www.sparkfun.com/products/10288))
+* 1 USB to micro USB wire (you'll only need a piece of wire that goes to the micro USB)
+* Wires
+
+Expectation:
+
+![Expected](https://i.imgur.com/RWH5yBr.jpg)
+
+Notes about the ```TXB0108```:
+
+![TXB0108](https://i.imgur.com/xF7dDmx.jpg)
+
+The ```TXB0108``` works bidirectionally. The A side works with a range voltage of ```1.2 V ~ 3.6 V```, and the B side with ```1.7 V ~ 7.5 V```. There's only one ground (```GND```/```MASA```). The wires that are connected in the ```MOSI``` and ```SCLK``` pins goes connected to the A input in the level shifter (choose between ```A1-A8 I/O```). In our case, we choose ```A1``` and ```A2``` and the outputs ```B1``` and ```B2``` (these ones goes connected to the LED strip).
+
+*[back to the tutorial](#running)*
+
+#### B. Setting up dotnet-sshdeploy
+
+* SSHDeploy comes preconfigured with some default properties inside the .csproj file like:
 ``` xml
 <PropertyGroup>
     <RunPostBuildEvent>OnBuildSuccess</RunPostBuildEvent>
@@ -132,14 +175,14 @@ exit 0
     <SshDeployPassword>raspberry</SshDeployPassword>
 </PropertyGroup>
 ```
-* These are just arguments for deploying ledemotion via ssh using SSHDeploy and they can be modified to suit your needs. Click [here](https://github.com/unosquare/sshdeploy) for more information about SSHDeploy
+These are just arguments for deploying LedEmotion via SSH using dotnet-sshdeploy and they can be modified to suit your needs. Click [here](https://github.com/unosquare/sshdeploy) for more information about dotnet-sshdeploy
 ``` xml
 <Target Condition="$(BuildingInsideSshDeploy) ==''" Name="PostBuild" AfterTargets="PostBuildEvent">
     <Exec Command="cd $(ProjectDir)" />
     <Exec Command="dotnet sshdeploy push" />
   </Target>
 ```
-* This target is what calls sshdeploy after a successful build, we use it to automatically deploy ledemotion using the defined properties explained above if you do not want to deploy every time you build ledemotion you can remove this target and execute `dotnet sshdeploy push` in your project directory.  
+* This target is what calls dotnet-sshdeploy after a successful build, we use it to automatically deploy LedEmotion using the defined properties explained above if you do not want to deploy every time you build LedEmotion you can remove this target and execute `dotnet sshdeploy push` in your project directory.  
 
 
 *[back to the tutorial](#3-deploy-and-test-continuously)*
