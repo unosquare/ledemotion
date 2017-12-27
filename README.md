@@ -66,15 +66,11 @@ $ sudo raspi-config
 
 You'll get a GUI like this:
 
-<p align = "center">
-  <img src = "https://i.imgur.com/V4uQMYH.png" alt = "Raspberry Pi Software Configuration Tool (raspi-config)" width = "700" height = "400" >
-<p>
+![Raspberry Pi Software Configuration Tool (raspi-config)](https://i.imgur.com/V4uQMYH.png)
 
 Select  ```5 Interfacing Options``` from the menu and then select ```P4 SPI``` to enable SPI
 
-<p align = "center">
-  <img src = "https://i.imgur.com/pU2ghgw.png" alt = "SPI" width = "700" height = "400" >
-<p>
+![SPI](https://i.imgur.com/pU2ghgw.png)
 
 ### 3. Deploy and test continuously
 
@@ -142,9 +138,7 @@ exit 0
 
 #### A. Practical example
 
-<p align = "center">
-  <img src = "https://i.imgur.com/1xW8pXM.png" alt = "Diagram" width = "1200" height = "600">
-</p>
+![Diagram](https://i.imgur.com/1xW8pXM.png)
 
 What do you need?
 
@@ -159,15 +153,11 @@ What do you need?
 
 Expectation:
 
-<p align = "center">
-  <img src = "https://i.imgur.com/RWH5yBr.jpg" alt = "Expected" width = "450" height = "600">
-</p>
+![Expected](https://i.imgur.com/RWH5yBr.jpg)
 
 Notes about the ```TXB0108```:
 
-<p align = "center">
-  <img src = "https://i.imgur.com/xF7dDmx.jpg" alt = "TXB0108" width = "500" height = "500">
-<p>
+![TXB0108](https://i.imgur.com/xF7dDmx.jpg)
 
 The ```TXB0108``` works bidirectionally. The A side works with a range voltage of ```1.2 V ~ 3.6 V```, and the B side with ```1.7 V ~ 7.5 V```. There's only one ground (```GND```/```MASA```). The wires that are connected in the ```MOSI``` and ```SCLK``` pins goes connected to the A input in the level shifter (choose between ```A1-A8 I/O```). In our case, we choose ```A1``` and ```A2``` and the outputs ```B1``` and ```B2``` (these ones goes connected to the LED strip).
 
@@ -192,7 +182,7 @@ These are just arguments for deploying LedEmotion via SSH using dotnet-sshdeploy
     <Exec Command="dotnet sshdeploy push" />
   </Target>
 ```
-* This target is what calls SSHDeploy after a successful build, we use it to automatically deploy LedEmotion using the defined properties explained above if you do not want to deploy every time you build LedEmotion you can remove this target and execute `dotnet sshdeploy push` in your project directory.  
+* This target is what calls dotnet-sshdeploy after a successful build, we use it to automatically deploy LedEmotion using the defined properties explained above if you do not want to deploy every time you build LedEmotion you can remove this target and execute `dotnet sshdeploy push` in your project directory.  
 
 
 *[back to the tutorial](#3-deploy-and-test-continuously)*
