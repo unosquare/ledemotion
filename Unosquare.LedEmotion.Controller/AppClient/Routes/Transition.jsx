@@ -116,6 +116,9 @@ const styles = theme => ({
     border: "0",
     display: "block",
   },
+  gradAux : {
+
+  },
 });
 
 class Transition extends Component {
@@ -123,12 +126,11 @@ class Transition extends Component {
     colors : [],
     selectedColor : {},
     seconds : 1,
-
     displayColorPicker: false,
   };
 
   /** Adds the color */
-  handleChangeComplete = (color, event) => {
+  handleChangeComplete = (color) => {
     console.log(color);
     const {r, g, b} = color.rgb;
 
@@ -194,13 +196,17 @@ class Transition extends Component {
     const { classes } = this.props;
     const { colors, selectedColor, seconds, displayColorPicker } = this.state;
 
+    const style = {
+      background: `${ colors.length == 0 ? `linear-gradient(to right, ${ "#FFFFFF" }, ${ "#FFFFFF" })` : `linear-gradient(to right, ${ colors.map((color, key) => color.name ) })` }`,
+    };
+
     return (
       <div>
         <div className = { classes.root }>
 
           {/* Color selected */}
-          <div>
-            <Paper style = {{ backgroundColor : selectedColor, color : "#FFFFFF" }} className = { classes.paperStyle } elevation = { 4 }></Paper>
+          <div style = { styles.colorAux }>
+            <Paper style =  { style } className = { classes.paperStyle } elevation = { 4 }></Paper>
           </div>
           <br /><br /><br />
 
