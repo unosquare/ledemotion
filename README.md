@@ -19,16 +19,16 @@ You will need a fairly powerful power supply to drive a 4m strip of 60 LEDs per 
   - [3. Deploy and test continuously](#3-deploy-and-test-continuously)
   - [4. The ```rc.local``` file](#4-the-rclocal-file)
 - [Miscellaneous](#miscellaneous)
-  - [A. Proposed diagram](#a-proposed-diagram)
+  - [A. Practical example](#a-practical-example)
   - [B. Setting up SSHDeploy](#b-setting-up-sshdeploy)
 
 ## Software Components
  - [EmbedIO](https://github.com/unosquare/embedio), to drive the web-based UI.
  - [RaspberryIO](https://github.com/unosquare/raspberryio), to interface with our hardware.
  - [SWAN](https://github.com/unosquare/swan), to avoid rewriting some basic building blocks like logging and bitmap management in out app.
- - [SSHDeploy](https://github.com/unosquare/sshdeploy), to perform continuous deployments to the RPi
+ - [dotnet-sshdeploy](https://github.com/unosquare/sshdeploy), to perform continuous deployments to the RPi
 
-*[Check](#a-proposed-diagram) our proposed diagram to test the project*
+*[Check](#a-practical-example) our proposed diagram to test the project*
 
 ## Running
 
@@ -140,7 +140,7 @@ exit 0
 
 ## Miscellaneous
 
-#### A. Proposed diagram
+#### A. Practical example
 
 <p align = "center">
   <img src = "https://i.imgur.com/1xW8pXM.png" alt = "Diagram" width = "1200" height = "600">
@@ -173,7 +173,7 @@ The ```TXB0108``` works bidirectionally. The A side works with a range voltage o
 
 *[back to the tutorial](#running)*
 
-#### B. Setting up SSHDeploy
+#### B. Setting up dotnet-sshdeploy
 
 * SSHDeploy comes preconfigured with some default properties inside the .csproj file like:
 ``` xml
@@ -185,14 +185,14 @@ The ```TXB0108``` works bidirectionally. The A side works with a range voltage o
     <SshDeployPassword>raspberry</SshDeployPassword>
 </PropertyGroup>
 ```
-These are just arguments for deploying LedEmotion via SSH using SSHDeploy and they can be modified to suit your needs. Click [here](https://github.com/unosquare/sshdeploy) for more information about SSHDeploy
+These are just arguments for deploying LedEmotion via SSH using dotnet-sshdeploy and they can be modified to suit your needs. Click [here](https://github.com/unosquare/sshdeploy) for more information about dotnet-sshdeploy
 ``` xml
 <Target Condition="$(BuildingInsideSshDeploy) ==''" Name="PostBuild" AfterTargets="PostBuildEvent">
     <Exec Command="cd $(ProjectDir)" />
     <Exec Command="dotnet sshdeploy push" />
   </Target>
 ```
-* This target is what calls sshdeploy after a successful build, we use it to automatically deploy LedEmotion using the defined properties explained above if you do not want to deploy every time you build LedEmotion you can remove this target and execute `dotnet sshdeploy push` in your project directory.  
+* This target is what calls SSHDeploy after a successful build, we use it to automatically deploy LedEmotion using the defined properties explained above if you do not want to deploy every time you build LedEmotion you can remove this target and execute `dotnet sshdeploy push` in your project directory.  
 
 
 *[back to the tutorial](#3-deploy-and-test-continuously)*
