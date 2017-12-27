@@ -20,7 +20,7 @@ You will need a fairly powerful power supply to drive a 4m strip of 60 LEDs per 
   - [4. The ```rc.local``` file](#4-the-rclocal-file)
 - [Miscellaneous](#miscellaneous)
   - [A. Practical example](#a-practical-example)
-  - [B. Setting up SSHDeploy](#b-setting-up-sshdeploy)
+  - [B. Setting up dotnet-sshdeploy](#b-setting-up-dotnet-sshdeploy)
 
 ## Software Components
  - [EmbedIO](https://github.com/unosquare/embedio), to drive the web-based UI.
@@ -74,7 +74,8 @@ Select  ```5 Interfacing Options``` from the menu and then select ```P4 SPI``` t
 
 ### 3. Deploy and test continuously
 
-*Before to continue with this tutorial, check [this](#b-setting-up-sshdeploy)*
+*Before to continue with this tutorial, check [this](#b-setting-up-dotnet-sshdeploy)*
+
 
 To kill the current mono process: 
 
@@ -147,7 +148,6 @@ What do you need?
 * 1 level shifter (```TXB0108```)
 * 1 LED strip (```APA102C```. Available [here](https://www.adafruit.com/product/2239))
 * 1 DC barrel jack adapter (female. Available [here](https://www.sparkfun.com/products/10288))
-* 1 Multimeter
 * 1 USB to micro USB wire (you'll only need a piece of wire that goes to the micro USB)
 * Wires
 
