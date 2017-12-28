@@ -3,12 +3,14 @@ import Axios from 'axios';
 import PropTypes from 'prop-types';
 import { withStyles } from 'material-ui/styles';
 import Typography from 'material-ui/Typography';
-import DropzoneComponent from 'react-dropzone-component';
+/* import DropzoneComponent from 'react-dropzone-component'; */
 /* import DropzoneComponent from 'react-dropzone-component/src/react-dropzone.js'; */
+import DropzoneComponent from '../Components/CustomDropZone.js';
 import ReactDOM from 'react-dom';
 import IconButton from 'material-ui/IconButton';
 import DeleteIcon from 'material-ui-icons/Delete';
 import AddIcon from 'material-ui-icons/Add';
+import Tooltip from 'material-ui/Tooltip';
 
 const styles = theme => ({
   root: {
@@ -33,11 +35,18 @@ const styles = theme => ({
   image: {
     width: '300px'
   },
-  iconButtonStyle: {
-    /* height: '100%',
-    width: '100%', */
-    /* margin: '0px 0px 2px 0px', */
-    color: 'Black'
+  divImageStyle: {
+    margin: '12px auto 30px auto'
+  },
+  fabButtonAbsoluteStyle: {
+      flip: false,
+      position: 'absolute',
+      bottom: 32,
+      right: 32,
+      transition: 'none'
+  },
+  typoStyle: {
+    marginTop: '20px'
   }
 });
 
@@ -83,9 +92,9 @@ class CustomImage extends Component {
   }
 
   Image = (dz, file) => {
-    console.log("Krokun")
+    /* console.log("Krokun")
     console.log(dz)
-    console.log(file)
+    console.log(file) */
     /* console.log(file.DataURL)
     console.log(file.name) */
 
@@ -108,7 +117,8 @@ class CustomImage extends Component {
     };
 
     var eventHandlers = {
-      init: dz => console.log(dz),
+      /* init: dz => console.log(dz),
+      maxfilesexceeded: () => console.log("Lok'tar Ogar"), */
       addedfile: (file) => this.Image(file),
       /* maxfilesreached: (arc) => console.log(arc) */
     }
@@ -117,39 +127,36 @@ class CustomImage extends Component {
       /* acceptedFiles: "image/jpeg,image/png,image/gif", */
       thumbnailHeight: 400,
       thumbnailWidth: 400,
-      maxFiles: 1,
+      maxFiles: 2,
+      /* maxFilesize: 1, */
       dictDefaultMessage: ReactDOMServer.renderToString(
-        <div>
-          <Typography style={{ textAlign: 'center' }} type="headline" component="h3">
+        <div className={classes.typoStyle}>
+          <Typography /* style={{ textAlign: 'center', maringTop:'20px' }} */ type="headline" component="h3">
             Drop files here to upload
           </Typography>
         </div>
       ),
       previewTemplate: ReactDOMServer.renderToString(
-        <div>
+        <div className={classes.divImageStyle}>
           <div>
-            <div><span data-dz-name="true"></span></div>
+            <div><span data-dz-name></span></div>
             <div data-dz-size></div>
-            <img /* className={classes.image} */ style={{ width: '80%' }} data-dz-thumbnail />
+            <img style={{ width: '80%' }} data-dz-thumbnail dz-max-files-reached='true'/>
+            <div><span ></span></div>
           </div>
-          <div ><span data-dz-uploadprogress></span></div>
-
-          <IconButton
-            /* className={props.classes.iconButtonStyle} */
-            aria-label="Select"
-            onClick={() => this.setState({ displayColorPicker: true })}
-          >
-            <AddIcon />
-          </IconButton>
-
-          <IconButton
-            /* className={props.classes.iconButtonStyle} */
-            aria-label="Select"
-            onClick={() => this.setState({ displayColorPicker: true })}
-            data-dz-remove
-          >
-            <DeleteIcon />
-          </IconButton>
+          
+          <div>
+            <Tooltip placement="bottom" title={"Delete Selected Color"}>
+              <IconButton
+                className={classes.fabButtonAbsoluteStyle}
+                
+                style={{ color: "White", backgroundColor: "Red" }}
+                data-dz-remove
+              >
+                <DeleteIcon />
+              </IconButton>
+            </Tooltip>
+          </div>
 
         </div>
       )
@@ -159,8 +166,7 @@ class CustomImage extends Component {
 
     return (
       <div className={classes.root}>
-        {/* <Typography type="headline" component="h3">Custom Image</Typography> */}
-
+        
         <div className={classes.dropzoneComponent} style={{ width: this.state.width }}>
           <DropzoneComponent config={componentConfig}
             eventHandlers={eventHandlers}
