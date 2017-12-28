@@ -19,7 +19,16 @@ const styles = theme => ({
     textAlign: 'center'
   },
   dropzoneComponent: {
-    margin: '0 auto'
+    margin: '0 auto',
+    marginTop: '60px'
+  },
+  dropzone: {
+    minHeight: '300px',
+    borderStyle: 'dotted',
+    borderColor: 'Black',
+    backgroundColor: '#e4e1e1',
+    borderRadius: '20px',
+    borderWidth: '2px'
   },
   image: {
     width: '300px'
@@ -58,14 +67,14 @@ class CustomImage extends Component {
   }
 
   mediaQueryChanged() {
-    var width=''
-    if(this.state.mql.matches){
-      width='400px'
+    var width = ''
+    if (this.state.mql.matches) {
+      width = '400px'
     }
     else {
-      width='100%'
+      width = '100%'
     }
-    console.log(width)
+
     this.setState({
       mql: mql,
       docked: this.state.mql.matches,
@@ -73,56 +82,95 @@ class CustomImage extends Component {
     });
   }
 
-  Image = (file) => {
+  Image = (dz, file) => {
+    console.log("Krokun")
+    console.log(dz)
     console.log(file)
+    /* console.log(file.DataURL)
+    console.log(file.name) */
+
+    /* Axios.post('/api/image', {
+      DataURL: file.DataURL,
+      name: file.name
+    }) */
   }
 
   render() {
     const { classes } = this.props;
 
-    var componentConfig = { postUrl: 'no-url' };
-
-    var eventHandlers = { addedfile: (file) => this.Image(file) }
-
     var ReactDOMServer = require('react-dom/server');
 
+    var componentConfig = {
+      iconFiletypes: ['.jpg', '.png', '.gif'],
+      showFiletypeIcon: true,
+      /* postUrl: 'api/image' */
+      postUrl: 'no-url'
+    };
+
+    var eventHandlers = {
+      init: dz => console.log(dz),
+      addedfile: (file) => this.Image(file),
+      /* maxfilesreached: (arc) => console.log(arc) */
+    }
+
     var djsConfig = {
+      /* acceptedFiles: "image/jpeg,image/png,image/gif", */
+      thumbnailHeight: 400,
+      thumbnailWidth: 400,
+      maxFiles: 1,
+      dictDefaultMessage: ReactDOMServer.renderToString(
+        <div>
+          <Typography style={{ textAlign: 'center' }} type="headline" component="h3">
+            Drop files here to upload
+          </Typography>
+        </div>
+      ),
       previewTemplate: ReactDOMServer.renderToString(
         <div>
           <div>
             <div><span data-dz-name="true"></span></div>
-            <img /* className={classes.image} */ style={{width:'80%'}} data-dz-thumbnail="true" />
+            <div data-dz-size></div>
+            <img /* className={classes.image} */ style={{ width: '80%' }} data-dz-thumbnail />
           </div>
-          <div ><span data-dz-uploadprogress="true"></span></div>
-          
+          <div ><span data-dz-uploadprogress></span></div>
+
           <IconButton
             /* className={props.classes.iconButtonStyle} */
             aria-label="Select"
-            onClick={() => this.setState({ displayColorPicker: true })} >
+            onClick={() => this.setState({ displayColorPicker: true })}
+          >
             <AddIcon />
           </IconButton>
 
           <IconButton
             /* className={props.classes.iconButtonStyle} */
             aria-label="Select"
-            onClick={() => this.setState({ displayColorPicker: true })} >
+            onClick={() => this.setState({ displayColorPicker: true })}
+            data-dz-remove
+          >
             <DeleteIcon />
           </IconButton>
-          
+
         </div>
       )
     }
 
-    
+
 
     return (
       <div className={classes.root}>
         {/* <Typography type="headline" component="h3">Custom Image</Typography> */}
 
-        <div className={classes.dropzoneComponent} style={{width:this.state.width}}>
+        <div className={classes.dropzoneComponent} style={{ width: this.state.width }}>
           <DropzoneComponent config={componentConfig}
             eventHandlers={eventHandlers}
-            djsConfig={djsConfig} />
+            djsConfig={djsConfig}
+            className={classes.dropzone}
+            style={{ height: this.state.width }}
+          >
+
+
+          </DropzoneComponent>
         </div>
 
       </div>
