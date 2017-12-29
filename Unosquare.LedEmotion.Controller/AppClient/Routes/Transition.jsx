@@ -123,14 +123,26 @@ class Transition extends Component {
     displayColorPicker: false,
   };
 
+  componentToHex = (c) => {
+    var hex = c.toString(16);
+
+    return hex.length == 1 ? "0" + hex : hex;
+  }
+
+  rgbToHex = (r, g, b) => {
+      return "#" + this.componentToHex(r) + this.componentToHex(g) + this.componentToHex(b);
+  }
+
   /** Adds the color */
   handleChangeComplete = (color) => {
     console.log(color);
-    const {r, g, b} = color.rgb;
+    const {r, g, b} = color;
+
+    let colorHexadecimal = this.rgbToHex(r, g, b);
 
     this.setState(prevState => ({
-      colors : [...prevState.colors, { id : this.state.colors.length, name : color.hex, rgb : {r, g, b} }],
-      selectedColor : color.hex
+      colors : [...prevState.colors, { id : this.state.colors.length, name : colorHexadecimal, rgb : {r, g, b} }],
+      selectedColor : color
     }));
   }
 
@@ -213,26 +225,19 @@ class Transition extends Component {
       }
     `;
 
-    // const style = {
-    //   background: `${ colors.length == 0 ? `linear-gradient(to right, ${ "#FFFFFF" }, ${ "#FFFFFF" })` 
-    //   : `linear-gradient(to right, ${ colors.map((color, key) => color.name ) })` }`,
-    // };
-
     return (
       <div>
         <div className = { classes.root }>
 
           {/* Color selected */}
           <div>
-            {/* <Paper style = { style } className = { classes.paperStyle } elevation = { 4 }></Paper> */}
             <CustomPaper className = { classes.paperStyle } elevation = { 4 }></CustomPaper>
           </div>
           <br /><br /><br />
 
           {/* Dialog color picker */}
           <Dialog open = { displayColorPicker } onClose = { this.handleClose } aria-labelledby = "form-dialog-title">
-            {/* <CustomPicker fields = { false } presetColors = { [] } disableAlpha color = { selectedColor } onChangeComplete = { this.handleChangeComplete } /> */}
-            <CustomPicker fields = { false } presetColors = { [] } disableAlpha color = { selectedColor } onChangeComplete = { this.handleChangeComplete } />
+            <CustomPicker fields = { false } presetColors = { [] } disableAlpha color = { selectedColor } addAction = { this.handleChangeComplete } />
           </Dialog>
 
           {/* Color picker */}
