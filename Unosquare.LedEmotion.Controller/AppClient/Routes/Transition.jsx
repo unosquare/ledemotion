@@ -202,7 +202,7 @@ class Transition extends Component {
       }
     `;
 
-    const MyPaper = styled(Paper)`
+    const CustomPaper = styled(Paper)`
       && {
         background: ${ colors.length == 0 ? `repeating-linear-gradient(to right, ${ "#FFFFFF" }, ${ "#FFFFFF" })` 
           : `repeating-linear-gradient(to right, ${ colors.map((color, key) => color.name ) })` };
@@ -225,12 +225,13 @@ class Transition extends Component {
           {/* Color selected */}
           <div>
             {/* <Paper style = { style } className = { classes.paperStyle } elevation = { 4 }></Paper> */}
-            <MyPaper className = { classes.paperStyle } elevation = { 4 }></MyPaper>
+            <CustomPaper className = { classes.paperStyle } elevation = { 4 }></CustomPaper>
           </div>
           <br /><br /><br />
 
           {/* Dialog color picker */}
           <Dialog open = { displayColorPicker } onClose = { this.handleClose } aria-labelledby = "form-dialog-title">
+            {/* <CustomPicker fields = { false } presetColors = { [] } disableAlpha color = { selectedColor } onChangeComplete = { this.handleChangeComplete } /> */}
             <CustomPicker fields = { false } presetColors = { [] } disableAlpha color = { selectedColor } onChangeComplete = { this.handleChangeComplete } />
           </Dialog>
 
