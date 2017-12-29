@@ -3,7 +3,6 @@ import Typography from 'material-ui/Typography';
 import Paper from 'material-ui/Paper';
 import PropTypes from 'prop-types';
 import { withStyles } from 'material-ui/styles';
-import { PhotoshopPicker, SketchPicker, HuePicker, ChromePicker } from 'react-color';
 import Card, { CardActions, CardContent } from 'material-ui/Card';
 import Slider, { Range } from 'rc-slider';
 import 'rc-slider/assets/index.css';
@@ -13,12 +12,10 @@ import IconButton from 'material-ui/IconButton';
 import Axios from 'axios';
 import CustomPicker from '../Components/CustomPicker.jsx'
 import AddIcon from 'material-ui-icons/Add';
-import reactCSS from 'reactCSS';
 import Tooltip from 'material-ui/Tooltip';
 import FlashOn from 'material-ui-icons/FlashOn';
-import Input from 'material-ui/Input';
-import TextField from 'material-ui/TextField';
 import Dialog from 'material-ui/Dialog/Dialog';
+import styled, { keyframes } from 'styled-components';
 
 const styles = theme => ({
   root : {
@@ -116,9 +113,6 @@ const styles = theme => ({
     border: "0",
     display: "block",
   },
-  gradAux : {
-
-  },
 });
 
 class Transition extends Component {
@@ -196,17 +190,42 @@ class Transition extends Component {
     const { classes } = this.props;
     const { colors, selectedColor, seconds, displayColorPicker } = this.state;
 
-    const style = {
-      background: `${ colors.length == 0 ? `linear-gradient(to right, ${ "#FFFFFF" }, ${ "#FFFFFF" })` : `linear-gradient(to right, ${ colors.map((color, key) => color.name ) })` }`,
-    };
+    const gradient = keyframes`
+      0% {
+        background-position: 0% 50%
+      }
+      50% {
+        background-position: 100% 50%
+      }
+      100% {
+        background-position: 0% 50%
+      }
+    `;
+
+    const MyPaper = styled(Paper)`
+      && {
+        background: ${ colors.length == 0 ? `repeating-linear-gradient(to right, ${ "#FFFFFF" }, ${ "#FFFFFF" })` 
+          : `repeating-linear-gradient(to right, ${ colors.map((color, key) => color.name ) })` };
+        background-size: 200% 200%;
+        background-position: 0 0;
+        background-repeat: repeat-x;
+        animation: ${gradient} 15s linear infinite;
+      }
+    `;
+
+    // const style = {
+    //   background: `${ colors.length == 0 ? `linear-gradient(to right, ${ "#FFFFFF" }, ${ "#FFFFFF" })` 
+    //   : `linear-gradient(to right, ${ colors.map((color, key) => color.name ) })` }`,
+    // };
 
     return (
       <div>
         <div className = { classes.root }>
 
           {/* Color selected */}
-          <div style = { styles.colorAux }>
-            <Paper style =  { style } className = { classes.paperStyle } elevation = { 4 }></Paper>
+          <div>
+            {/* <Paper style = { style } className = { classes.paperStyle } elevation = { 4 }></Paper> */}
+            <MyPaper className = { classes.paperStyle } elevation = { 4 }></MyPaper>
           </div>
           <br /><br /><br />
 
