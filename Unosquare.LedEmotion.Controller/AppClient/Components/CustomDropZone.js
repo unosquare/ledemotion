@@ -94,7 +94,7 @@
                         key: "componentDidMount",
                         value: function () {
                             var e = this.getDjsConfig();
-                            (u = u || i(5)).autoDiscover = !1, this.props.config.postUrl || this.props.eventHandlers.drop || console.info('Neither postUrl nor a "drop" eventHandler specified, the React-Dropzone component might misbehave.');
+                            (u = u || i(5)).autoDiscover = !1, this.props.config.postUrl || this.props.eventHandlers.drop /* || console.info('Neither postUrl nor a "drop" eventHandler specified, the React-Dropzone component might misbehave.'); */
                             var t = this.props.config.dropzoneSelector || s.default.findDOMNode(this);
                             this.dropzone = new u(t, e), this.setupEvents()
                         }
@@ -322,7 +322,7 @@
                                 var u;
                                 return u = r.options.fallback.call(r), t(r, u)
                             }
-                            if (null == r.options.url && (r.options.url = r.element.getAttribute("action")), !r.options.url) throw new Error("No URL provided.");
+                            /* if (null == r.options.url && (r.options.url = r.element.getAttribute("action")), !r.options.url) throw new Error("No URL provided."); */
                             if (r.options.acceptedFiles && r.options.acceptedMimeTypes) throw new Error("You can't provide both 'acceptedFiles' and 'acceptedMimeTypes'. 'acceptedMimeTypes' is deprecated.");
                             if (r.options.uploadMultiple && r.options.chunking) throw new Error("You cannot set both: uploadMultiple and chunking.");
                             return r.options.acceptedMimeTypes && (r.options.acceptedFiles = r.options.acceptedMimeTypes, delete r.options.acceptedMimeTypes), null != r.options.renameFilename && (r.options.renameFile = function (e) {
@@ -477,6 +477,9 @@
                                         return this.element.classList.remove("dz-started")
                                     },
                                     addedfile: function (e) {
+                                        console.log("=======")
+                                        console.log(e.dataURL)
+                                        console.log("=======")
                                         var t = this;
                                         if (this.element === this.previewsContainer && this.element.classList.add("dz-started"), this.previewsContainer) {
                                             e.previewElement = o.createElement(this.options.previewTemplate.trim()), e.previewTemplate = e.previewElement, this.previewsContainer.appendChild(e.previewElement);
@@ -489,11 +492,11 @@
                                             for (var a = 0, l = l = e.previewElement.querySelectorAll("[data-dz-size]"); !(a >= l.length);)(s = l[a++]).innerHTML = this.filesize(e.size);
                                             this.options.addRemoveLinks && (e._removeLink = o.createElement('<a class="dz-remove" href="javascript:undefined;" data-dz-remove>' + this.options.dictRemoveFile + "</a>"), e.previewElement.appendChild(e._removeLink));
                                             for (var u = function (i) {
-                                                return i.preventDefault(), i.stopPropagation(), e.status === o.UPLOADING ? o.confirm(t.options.dictCancelUploadConfirmation, function () {
+                                                return i.preventDefault(), i.stopPropagation(), /* e.status === o.UPLOADING ? o.confirm(t.options.dictCancelUploadConfirmation, function () {
                                                     return t.removeFile(e)
                                                 }) : t.options.dictRemoveFileConfirmation ? o.confirm(t.options.dictRemoveFileConfirmation, function () {
                                                     return t.removeFile(e)
-                                                }) : t.removeFile(e)
+                                                }) : */ t.removeFile(e)
                                             }, c = 0, d = d = e.previewElement.querySelectorAll("[data-dz-remove]"); !(c >= d.length);) d[c++].addEventListener("click", u)
                                         }
                                     },
@@ -999,6 +1002,10 @@
                                 var s = this,
                                     a = new FileReader;
                                 return a.onload = function () {
+                                    console.log("Thessia")
+                                    console.log(e)
+                                    console.log(a)
+                                    console.log("Liara")
                                     if (e.dataURL = a.result, "image/svg+xml" !== e.type) return s.createThumbnailFromUrl(e, t, i, n, r, o);
                                     null != o && o(a.result)
                                 }, a.readAsDataURL(e)
@@ -1214,6 +1221,7 @@
                                         p.append(f, v)
                                     }
                                 }
+                                
                                 for (var m = 0, g = g = e; ;) {
                                     var y;
                                     if (m >= g.length) break;
@@ -1224,8 +1232,8 @@
                                 for (var b = 0; b < t.length; b++) {
                                     var F = t[b];
                                     p.append(F.name, F.data, F.filename)
-                                }
-                                this.submitRequest(n, p, e)
+                                }console.log("---------------"),console.log(e),console.log("---------------")
+                                /* this.submitRequest(n, p, e) */
                             }
                         }, {
                             key: "_transformFiles",

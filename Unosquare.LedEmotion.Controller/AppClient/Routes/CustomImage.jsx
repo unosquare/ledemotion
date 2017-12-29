@@ -91,17 +91,16 @@ class CustomImage extends Component {
     });
   }
 
-  Image = (dz, file) => {
-    /* console.log("Krokun")
-    console.log(dz)
-    console.log(file) */
-    /* console.log(file.DataURL)
-    console.log(file.name) */
-
-    /* Axios.post('/api/image', {
-      DataURL: file.DataURL,
-      name: file.name
-    }) */
+  Image = (file) => {
+    console.log("Krokun")
+    console.log(file)
+    console.log(file.DataURL)
+    console.log(file.name)
+    console.log(file.height)
+    
+    Axios.post('/api/image', {
+      Data: file
+    })
   }
 
   render() {
@@ -113,12 +112,12 @@ class CustomImage extends Component {
       iconFiletypes: ['.jpg', '.png', '.gif'],
       showFiletypeIcon: true,
       /* postUrl: 'api/image' */
-      postUrl: 'no-url'
+      /* postUrl: 'no-url' */
     };
 
     var eventHandlers = {
-      /* init: dz => console.log(dz),
-      maxfilesexceeded: () => console.log("Lok'tar Ogar"), */
+      init: dz => console.log(dz),
+      /* maxfilesexceeded: () => console.log("Lok'tar Ogar"), */
       addedfile: (file) => this.Image(file),
       /* maxfilesreached: (arc) => console.log(arc) */
     }
@@ -127,7 +126,7 @@ class CustomImage extends Component {
       /* acceptedFiles: "image/jpeg,image/png,image/gif", */
       thumbnailHeight: 400,
       thumbnailWidth: 400,
-      maxFiles: 2,
+      maxFiles: 1,
       /* maxFilesize: 1, */
       dictDefaultMessage: ReactDOMServer.renderToString(
         <div className={classes.typoStyle}>
@@ -161,8 +160,6 @@ class CustomImage extends Component {
         </div>
       )
     }
-
-
 
     return (
       <div className={classes.root}>
