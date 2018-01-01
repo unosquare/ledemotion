@@ -24,13 +24,11 @@ const styles = theme => ({
     paddingLeft : 50, 
     paddingRight : 50
   },
-  aux : {
-    height : '380px',
-    top : '0px',
-    bottom: '0px',
-    width : '100%',
-    position : 'fixed',
-  },
+  divPaperStyle : {
+    display : "flex",
+    alignItems : "center",
+    justifyContent : "center",
+  }, 
   paperStyle : {
     paddingTop : 20,
     paddingLeft : 10,
@@ -38,6 +36,7 @@ const styles = theme => ({
     marginTop : theme.spacing.unit * 3,
     backgroundColor : '#FAFAFA',
     height : 50,
+    width : 700,
     borderRadius : 6,
   },
   iconStyle : {
@@ -216,8 +215,8 @@ class Transition extends Component {
 
     const CustomPaper = styled(Paper)`
       && {
-        background: ${ colors.length == 0 ? `repeating-linear-gradient(to right, ${ "#FFFFFF" }, ${ "#FFFFFF" })` 
-          : `repeating-linear-gradient(to right, ${ colors.map((color, key) => color.name ) })` };
+        background: ${ colors.length == 0 ? `linear-gradient(to right, ${ "#FFFFFF" }, ${ "#FFFFFF" })` 
+          : `linear-gradient(to right, ${ colors.map((color, key) => color.name ) })` };
         background-size: 200% 200%;
         background-position: 0 0;
         background-repeat: repeat-x;
@@ -225,12 +224,25 @@ class Transition extends Component {
       }
     `;
 
+    // const gradientTest = keyframes`
+    //   from { background-position: 0 0 }
+    //   to { background-position: 700px 0 }
+    // `;
+
+    // const CustomPaper = styled(Paper)`
+    //   && {
+    //     background: ${ colors.length == 0 ? `linear-gradient(to right, ${ "#FFFFFF" }, ${ "#FFFFFF" })` 
+    //       : `linear-gradient(to right, ${ colors.map((color, key) => color.name ) })` };
+    //     animation: ${gradientTest} 15s linear infinite;
+    //   }
+    // `;
+
     return (
       <div>
         <div className = { classes.root }>
 
           {/* Color selected */}
-          <div>
+          <div className = { classes.divPaperStyle }>
             <CustomPaper className = { classes.paperStyle } elevation = { 4 }></CustomPaper>
           </div>
           <br /><br /><br />
