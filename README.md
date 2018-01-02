@@ -155,11 +155,11 @@ What do you need?
 
 Expectation:
 
-![Expected](https://i.imgur.com/RWH5yBr.jpg)
+![Expected](https://i.imgur.com/f0xV0ym.png)
 
 Notes about the ```TXB0108```:
 
-![TXB0108](https://i.imgur.com/xF7dDmx.jpg)
+![TXB0108](https://i.imgur.com/62r0XQI.png)
 
 The ```TXB0108``` works bidirectionally. The A side works with a range voltage of ```1.2 V ~ 3.6 V```, and the B side with ```1.7 V ~ 7.5 V```. There's only one ground (```GND```/```MASA```). The wires that are connected in the ```MOSI``` and ```SCLK``` pins goes connected to the A input in the level shifter (choose between ```A1-A8 I/O```). In our case, we choose ```A1``` and ```A2``` and the outputs ```B1``` and ```B2``` (these ones goes connected to the LED strip).
 
