@@ -61,7 +61,6 @@ export const CustomPicker = ({ width, rgb, hex, hsv, hsl, onChange, onSwatchHove
         radius: '2px',
         shadow: 'inset 0 0 0 1px rgba(0,0,0,.15), inset 0 0 4px rgba(0,0,0,.25)',
       },
-
       alpha: {
         position: 'relative',
         height: '10px',
@@ -158,16 +157,16 @@ function CardComp(props) {
     return (
       <Card style={props.styles.cardStyle}>
         <CardActions>
-            <AddButton
-              rgb={props.rgb}
-              action={props.addAction}
-              styles={props.styles}
-            />
+          <AddButton
+            rgb={props.rgb}
+            action={props.addAction}
+            styles={props.styles}
+          />
 
-            <DeleteButton
-              action={props.deleteAction}
-              styles={props.styles}
-            />
+          <DeleteButton
+            action={props.deleteAction}
+            styles={props.styles}
+          />
         </CardActions>
       </Card>
     )

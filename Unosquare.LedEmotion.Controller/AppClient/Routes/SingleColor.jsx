@@ -4,10 +4,10 @@ import IconButton from 'material-ui/IconButton';
 import DeleteIcon from 'material-ui-icons/Delete';
 import Typography from 'material-ui/Typography';
 import { withStyles } from 'material-ui/styles';
-import Card, { CardActions, CardContent } from 'material-ui/Card';
+import Card, { CardActions } from 'material-ui/Card';
 import CustomPicker from '../Components/CustomPicker.jsx';
 import Grid from 'material-ui/Grid';
-import Dialog, { DialogActions, DialogContent, DialogContentText, DialogTitle, } from 'material-ui/Dialog';
+import Dialog, { DialogActions, DialogContent } from 'material-ui/Dialog';
 import Button from 'material-ui/Button';
 import TextField from 'material-ui/TextField';
 import AddIcon from 'material-ui-icons/Add';
@@ -19,27 +19,6 @@ const styles = theme => ({
     },
     roote: {
         height: 'auto'
-    },
-    typographyStyle: {
-        color: '#FFF'
-    },
-    divSketchPickerStyle: {
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-        width: '80%',
-        margin: '0 auto'
-    },
-    paperStyle: {
-        paddingTop: 20,
-        paddingLeft: 10,
-        paddingBottom: 20,
-        marginTop: theme.spacing.unit * 3,
-        backgroundColor: '#2CCCE4'
-    },
-    iconStyle: {
-        verticalAlign: 'middle !important',
-        paddingBottom: 3
     },
     divStyle: {
         display: 'flex',
@@ -89,7 +68,6 @@ class SingleColor extends Component {
             textColor: 'White',
             colors: [],
             addOpen: false,
-            deleteOpen: false,
             background: '#7ED321',
             presetName: '',
             color: [],
@@ -98,11 +76,6 @@ class SingleColor extends Component {
             { color: '#8B572A', title: 'Brown', origin: 'Array' }, { color: '#7ED321', title: 'Green', origin: 'Array' }, { color: '#3A5F0B', title: 'Green Leaf', origin: 'Array' },
             { color: '#CC4AE2', title: 'Pink', origin: 'Array' }, { color: '#9013FE', title: 'Purple', origin: 'Array' }, { color: '#4A90E2', title: 'Blue ', origin: 'Array' }]
         };
-
-        this.HandleAddDialogOpen = this.HandleAddDialogOpen.bind(this);
-        this.HandleDeleteDialogOpen = this.HandleDeleteDialogOpen.bind(this);
-        this.mediaQueryChanged = this.mediaQueryChanged.bind(this);
-        this.SelectColor = this.SelectColor.bind(this);
     }
 
     componentDidMount = () => {
@@ -181,10 +154,6 @@ class SingleColor extends Component {
         this.SetColor(rgb, true);
     }
 
-    handleClick = () => {
-        this.setState({ displayColorPicker: !this.state.displayColorPicker });
-    };
-
     handleClose = () => {
         this.setState({ displayColorPicker: false });
     };
@@ -233,26 +202,16 @@ class SingleColor extends Component {
         this.ResetValues();
     };
 
-    HandleDeleteDialogOpen = () => {
-        this.setState({ deleteOpen: true, displayColorPicker: false });
-    };
-
-    HandleDeleteDialogClose = () => {
-        this.setState({ deleteOpen: false });
-        this.ResetValues();
-    };
-
     DeleteColor = () => {
         Axios.delete('/api/preset', {
             data: { Name: this.state.presetName }
-        }).then(() => { this.GetColors() }, this.HandleDeleteDialogClose());
+        }).then(() => { this.GetColors() });
     }
 
     AddColor = () => {
-        if (this.state.presetName == null || this.state.presetName == '') {
+        if (this.state.presetName == null || this.state.presetName == '' || this.state.presetName == 'Add Color') {
             return;
         }
-
 
         Axios.post('/api/preset', {
             Name: this.state.presetName,
@@ -342,7 +301,6 @@ class SingleColor extends Component {
     }
 
     Fab = (props) => {
-
         if (props.origin == "Json") {
             return (
                 <div>
@@ -368,7 +326,6 @@ class SingleColor extends Component {
         const { textColor, background } = this.state;
 
         return (
-
             <div className={classes.root}  >
                 <div className={classes.roote} style={{ backgroundColor: this.state.background }} >
 
@@ -391,52 +348,20 @@ class SingleColor extends Component {
                         <DialogActions>
                             <Button onClick={this.HandleAddDialogClose} color="primary">
                                 Cancel
-                        </Button>
+                            </Button>
                             <Button onClick={this.AddColor} color="primary">
                                 Save
-                        </Button>
-                        </DialogActions>
-                    </Dialog>
-
-                    <Dialog
-                        open={this.state.deleteOpen}
-                        onClose={this.HandleDeleteDialogClose}
-                        aria-labelledby="form-dialog-title"
-                    >
-                        <DialogTitle id="form-dialog-title">Delete Preset</DialogTitle>
-                        <DialogContent>
-                            <DialogContentText>
-                                Please enter the name of the preset you want to delete.
-                        </DialogContentText>
-                            <TextField
-                                autoFocus
-                                margin="dense"
-                                id="name"
-                                label="Preset Name"
-                                type="text"
-                                fullWidth
-                                onChange={(event) => this.setState({ presetName: event.target.value })}
-                            />
-                        </DialogContent>
-                        <DialogActions>
-                            <Button onClick={this.HandleDeleteDialogClose} color="primary">
-                                Cancel
-                        </Button>
-                            <Button onClick={this.DeleteColor} color="primary">
-                                Delete
-                        </Button>
+                            </Button>
                         </DialogActions>
                     </Dialog>
 
                     <br />
                     <br />
 
-                    { /* Color picker */
-                    }
+                    { /* Color picker */}
                     <this.ColorPickerCom classes={classes} background={background} textColor={textColor} />
 
-                    { /* Tooltip */
-                    }
+                    { /* Tooltip */}
                     <this.Fab
                         classes={classes}
                         textColor={textColor}
