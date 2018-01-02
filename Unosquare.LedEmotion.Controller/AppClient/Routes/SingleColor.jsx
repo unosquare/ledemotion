@@ -24,28 +24,28 @@ const styles = theme => ({
         color: '#FFF'
     },
     divSketchPickerStyle: {
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "center",
-        width: "80%",
-        margin: "0 auto",
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        width: '80%',
+        margin: '0 auto'
     },
     paperStyle: {
         paddingTop: 20,
         paddingLeft: 10,
         paddingBottom: 20,
         marginTop: theme.spacing.unit * 3,
-        backgroundColor: '#2CCCE4',
+        backgroundColor: '#2CCCE4'
     },
     iconStyle: {
-        verticalAlign: "middle !important",
+        verticalAlign: 'middle !important',
         paddingBottom: 3
     },
     divStyle: {
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "center",
-        margin: "0 auto"
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        margin: '0 auto'
     },
     cardStyle: {
         width: 50,
@@ -81,7 +81,7 @@ const mql = window.matchMedia(`(min-width: 800px)`);
 
 class SingleColor extends Component {
     constructor(props) {
-        super(props)
+        super(props);
 
         this.state = {
             mql: mql,
@@ -94,9 +94,9 @@ class SingleColor extends Component {
             presetName: '',
             color: [],
             displayColorPicker: false,
-            presetColors: [{ color: '#D0021B', title: "Red", origin: 'Array' }, { color: '#F5A623', title: "Orange", origin: 'Array' }, { color: '#F8E71C', title: "Yellow", origin: 'Array' },
-            { color: '#8B572A', title: "Brown", origin: 'Array' }, { color: '#7ED321', title: "Green", origin: 'Array' }, { color: '#3A5F0B', title: "Green Leaf", origin: 'Array' },
-            { color: '#CC4AE2', title: "Pink", origin: 'Array' }, { color: '#9013FE', title: "Purple", origin: 'Array' }, { color: '#4A90E2', title: "Blue ", origin: 'Array' }]
+            presetColors: [{ color: '#D0021B', title: 'Red', origin: 'Array' }, { color: '#F5A623', title: 'Orange', origin: 'Array' }, { color: '#F8E71C', title: 'Yellow', origin: 'Array' },
+            { color: '#8B572A', title: 'Brown', origin: 'Array' }, { color: '#7ED321', title: 'Green', origin: 'Array' }, { color: '#3A5F0B', title: 'Green Leaf', origin: 'Array' },
+            { color: '#CC4AE2', title: 'Pink', origin: 'Array' }, { color: '#9013FE', title: 'Purple', origin: 'Array' }, { color: '#4A90E2', title: 'Blue ', origin: 'Array' }]
         };
 
         this.HandleAddDialogOpen = this.HandleAddDialogOpen.bind(this);
@@ -106,7 +106,7 @@ class SingleColor extends Component {
     }
 
     componentDidMount = () => {
-        this.GetColors()
+        this.GetColors();
     };
 
     componentWillMount() {
@@ -121,14 +121,14 @@ class SingleColor extends Component {
     mediaQueryChanged() {
         this.setState({
             mql: mql,
-            docked: this.state.mql.matches,
+            docked: this.state.mql.matches
         });
     }
 
     GetColors = () => {
         Axios.get('/api/appstate')
             .then(response => {
-                this.setState({ colors: this.state.presetColors })
+                this.setState({ colors: this.state.presetColors });
                 response.data.SolidColorPresets.forEach(element => {
                     var hexColor = '#' + this.ByteToHex(element.R) + this.ByteToHex(element.G) + this.ByteToHex(element.B);
 
@@ -146,17 +146,17 @@ class SingleColor extends Component {
     ByteToHex = (c) => {
         var hex = c.toString(16);
 
-        return hex.length == 1 ? "0" + hex : hex;
+        return hex.length === 1 ? `0${hex}` : hex;
     };
 
     ChangeTextColor = (rgb) => {
         var luma = 0.2126 * rgb.r + 0.7152 * rgb.g + 0.0722 * rgb.b; // per ITU-R BT.709
 
         if (luma < 170) {
-            this.setState({ textColor: "White" })
+            this.setState({ textColor: 'White' });
         }
         else {
-            this.setState({ textColor: "Black" })
+            this.setState({ textColor: 'Black' });
         }
     }
 
@@ -167,26 +167,26 @@ class SingleColor extends Component {
     }
 
     handleChange = (color, event) => {
-        this.ChangeTextColor(color.rgb)
-        this.ChangeBackgroundColor(color.hex)
-        this.ResetValues()
+        this.ChangeTextColor(color.rgb);
+        this.ChangeBackgroundColor(color.hex);
+        this.ResetValues();
     }
 
     SelectColor = (color) => {
-        var rgb = this.HexToRGB(color.color)
-        this.setState({ presetName: color.title })
-        this.setState({ origin: color.origin })
-        this.ChangeTextColor(rgb)
-        this.ChangeBackgroundColor(color.color)
-        this.SetColor(rgb, true)
+        var rgb = this.HexToRGB(color.color);
+        this.setState({ presetName: color.title });
+        this.setState({ origin: color.origin });
+        this.ChangeTextColor(rgb);
+        this.ChangeBackgroundColor(color.color);
+        this.SetColor(rgb, true);
     }
 
     handleClick = () => {
-        this.setState({ displayColorPicker: !this.state.displayColorPicker })
+        this.setState({ displayColorPicker: !this.state.displayColorPicker });
     };
 
     handleClose = () => {
-        this.setState({ displayColorPicker: false })
+        this.setState({ displayColorPicker: false });
     };
 
     SetColor = (color, sendToApi) => {
@@ -215,13 +215,13 @@ class SingleColor extends Component {
             r: res[0],
             g: res[1],
             b: res[2]
-        }
+        };
 
         return rgbColor;
     }
 
     ResetValues = () => {
-        this.setState({ presetName: '', color: [], origin:'' });
+        this.setState({ presetName: '', color: [], origin: '' });
     }
 
     HandleAddDialogOpen = (rgb) => {
@@ -230,7 +230,7 @@ class SingleColor extends Component {
 
     HandleAddDialogClose = () => {
         this.setState({ addOpen: false, displayColorPicker: false });
-        this.ResetValues()
+        this.ResetValues();
     };
 
     HandleDeleteDialogOpen = () => {
@@ -239,7 +239,7 @@ class SingleColor extends Component {
 
     HandleDeleteDialogClose = () => {
         this.setState({ deleteOpen: false });
-        this.ResetValues()
+        this.ResetValues();
     };
 
     DeleteColor = () => {
@@ -249,7 +249,7 @@ class SingleColor extends Component {
     }
 
     AddColor = () => {
-        if (this.state.presetName == null || this.state.presetName == "") {
+        if (this.state.presetName == null || this.state.presetName == '') {
             return;
         }
 
@@ -272,37 +272,37 @@ class SingleColor extends Component {
                         </CardActions>
                     </Card>
                 </div>
-            )
+            );
         }
         else {
             return (
-                <Card aria-label="Recipe" className={props.classes.cardStyle} style={{ backgroundColor: 'white' }} title='Add Color'>
+                <Card aria-label="Recipe" className={props.classes.cardStyle} style={{ backgroundColor: 'white' }} title="Add Color">
                     <IconButton className={props.classes.iconButtonStyle} aria-label="Select" onClick={() => this.setState({ displayColorPicker: true })} >
                         <AddIcon />
                     </IconButton>
                 </Card>
-            )
+            );
         }
     }
 
     ColorPickerCom = (props) => {
-        var display = ''
-        var colorPickerWidth = ''
-        var presetColorWidth = ''
+        var display = '';
+        var colorPickerWidth = '';
+        var presetColorWidth = '';
 
         if (this.state.docked == false) {
-            display = 'grid'
-            colorPickerWidth = '100%'
-            presetColorWidth = '100%'
+            display = 'grid';
+            colorPickerWidth = '100%';
+            presetColorWidth = '100%';
         }
         else {
-            display = 'flex'
-            colorPickerWidth = '40%'
-            presetColorWidth = '60%'
+            display = 'flex';
+            colorPickerWidth = '40%';
+            presetColorWidth = '60%';
         }
 
         return (
-            <div style={{ display: display, alignItems: "center", justifyContent: "center", width: "80%", margin: "0 auto" }} >
+            <div style={{ display: display, alignItems: 'center', justifyContent: 'center', width: '80%', margin: '0 auto' }} >
                 <Dialog open={this.state.displayColorPicker} onClose={this.handleClose} aria-labelledby="form-dialog-title">
                     <CustomPicker
                         addAction={this.HandleAddDialogOpen}
@@ -346,7 +346,7 @@ class SingleColor extends Component {
         if (props.origin == "Json") {
             return (
                 <div>
-                    <Tooltip placement="bottom" title={"Delete Selected Color"}>
+                    <Tooltip placement="bottom" title={'Delete Selected Color'}>
                         <IconButton
                             className={props.classes.fabButtonAbsoluteStyle}
                             onClick={props.DeleteColor}
@@ -378,9 +378,6 @@ class SingleColor extends Component {
                         aria-labelledby="form-dialog-title"
                     >
                         <DialogContent>
-                            <DialogContentText>
-                                Please enter the new preset name.
-                        </DialogContentText>
                             <TextField
                                 autoFocus
                                 margin="dense"
@@ -434,10 +431,12 @@ class SingleColor extends Component {
                     <br />
                     <br />
 
-                    {/* Color picker */}
+                    { /* Color picker */
+                    }
                     <this.ColorPickerCom classes={classes} background={background} textColor={textColor} />
 
-                    {/* Tooltip */}
+                    { /* Tooltip */
+                    }
                     <this.Fab
                         classes={classes}
                         textColor={textColor}
@@ -453,4 +452,4 @@ class SingleColor extends Component {
     }
 }
 
-export default withStyles(styles)(SingleColor);
+export default withStyles(styles)(SingleColor);;
