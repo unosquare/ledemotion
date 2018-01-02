@@ -41,9 +41,6 @@ const styles = theme => ({
         verticalAlign: "middle !important",
         paddingBottom: 3
     },
-    typographyStyle: {
-        color: '#FFF'
-    },
     divStyle: {
         display: "flex",
         alignItems: "center",
@@ -54,7 +51,7 @@ const styles = theme => ({
         width: 50,
         height: 50,
         borderRadius: '50%',
-        boxShadow: '2px 4px 5px #c2bebe'
+        boxShadow: '2px 4px 15px #c2bebe'
     },
     iconButtonStyle: {
         height: '100%',
@@ -271,24 +268,16 @@ class SingleColor extends Component {
                 <div>
                     <Card aria-label="Recipe" className={props.classes.cardStyle} style={{ backgroundColor: props.color.color }} title={props.color.title}>
                         <CardActions style={{ padding: '0px' }}>
-                            <IconButton
-                                className={props.classes.iconButtonStyle}
-                                aria-label="Select"
-                                onClick={() => props.action(props.color)}
-                            />
+                            <IconButton className={props.classes.iconButtonStyle} aria-label="Select" onClick={() => props.action(props.color)} />
                         </CardActions>
                     </Card>
-
                 </div>
             )
         }
         else {
             return (
                 <Card aria-label="Recipe" className={props.classes.cardStyle} style={{ backgroundColor: 'white' }} title='Add Color'>
-                    <IconButton
-                        className={props.classes.iconButtonStyle}
-                        aria-label="Select"
-                        onClick={() => this.setState({ displayColorPicker: true })} >
+                    <IconButton className={props.classes.iconButtonStyle} aria-label="Select" onClick={() => this.setState({ displayColorPicker: true })} >
                         <AddIcon />
                     </IconButton>
                 </Card>
@@ -313,19 +302,8 @@ class SingleColor extends Component {
         }
 
         return (
-            <div style={{
-                display: display,
-                alignItems: "center",
-                justifyContent: "center",
-                width: "80%",
-                margin: "0 auto"
-            }}
-            >
-                <Dialog
-                    open={this.state.displayColorPicker}
-                    onClose={this.handleClose}
-                    aria-labelledby="form-dialog-title"
-                >
+            <div style={{ display: display, alignItems: "center", justifyContent: "center", width: "80%", margin: "0 auto" }} >
+                <Dialog open={this.state.displayColorPicker} onClose={this.handleClose} aria-labelledby="form-dialog-title">
                     <CustomPicker
                         addAction={this.HandleAddDialogOpen}
                         presetColors={[]}
@@ -387,7 +365,7 @@ class SingleColor extends Component {
 
     render() {
         const { classes } = this.props;
-        const { textColor, selectedColor, background } = this.state;
+        const { textColor, background } = this.state;
 
         return (
 
