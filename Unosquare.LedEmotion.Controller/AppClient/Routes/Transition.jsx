@@ -195,27 +195,27 @@ class Transition extends Component {
         const { colors, selectedColor, seconds, displayColorPicker } = this.state;
 
         const gradient = keyframes`
-      0% {
-        background-position: 0% 50%
-      }
-      50% {
-        background-position: 100% 50%
-      }
-      100% {
-        background-position: 0% 50%
-      }
-    `;
+            0% {
+                background-position: 0% 50%
+            }
+            50% {
+                background-position: 100% 50%
+            }
+            100% {
+                background-position: 0% 50%
+            }
+        `;
 
         const CustomPaper = styled(Paper) `
-      && {
-        background: ${ colors.length === 0 ? `linear-gradient(to right, ${'#FFFFFF'}, ${'#FFFFFF'})`
-                : `linear-gradient(to right, ${colors.map((color) => color.name)})`};
-        background-size: 200% 200%;
-        background-position: 0 0;
-        background-repeat: repeat-x;
-        animation: ${gradient} 15s linear infinite;
-      }
-    `;
+            && {
+                background: ${ colors.length === 0 ? `linear-gradient(to right, ${'#FFFFFF'}, ${'#FFFFFF'})`
+                        : `linear-gradient(to right, ${colors.map((color) => color.name)})`};
+                background-size: 200% 200%;
+                background-position: 0 0;
+                background-repeat: repeat-x;
+                animation: ${gradient} 15s linear infinite;
+            }
+        `;
 
         return (
             <div>
@@ -253,7 +253,7 @@ class Transition extends Component {
                                             <Paper className={classes.paperInfoStyle} elevation={0}>
                                                 <Typography type="caption" component="p">
                                                     Pick multiple colors. Click the button to open the dialog color picker, click outside the dialog to close it. Remove a color by taping on the colored circles appearing here
-                      </Typography>
+                                                </Typography>
                                             </Paper>
                                             :
                                             colors.map((color, key) =>
@@ -282,7 +282,8 @@ class Transition extends Component {
                     {/* Button */}
                     <div>
                         <Tooltip placement="bottom" title={'Animate ' + colors.length + ' colors over ' + seconds + ' seconds'}>
-                            <Button fab color="accent" disabled={colors.length === 0} onClick={this.setTransition} className={classes.fabButtonAbsoluteStyle}>
+                            <Button fab color="accent" disabled = {colors.length === 0} onClick={this.setTransition} className={classes.fabButtonAbsoluteStyle} 
+                                    style = { colors.length === 0 ? { color : "#A3A3A3", background : "#DCDCDC" } : { color : "#FFFFFF", background : "#FFD700" } }>
                                 <FlashOn />
                             </Button>
                         </Tooltip>
