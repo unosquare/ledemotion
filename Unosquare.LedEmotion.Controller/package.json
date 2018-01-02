@@ -9,7 +9,7 @@
     "build:dev": "webpack --watch  --env.dev=true"
   },
   "author": "",
-  "license": "ISC",
+  "license": "MIT",
   "dependencies": {
     "axios": "^0.17.1",
     "css-loader": "^0.28.7",

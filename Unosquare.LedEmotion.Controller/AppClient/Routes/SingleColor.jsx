@@ -2,123 +2,116 @@ import React, { Component } from 'react';
 import Axios from 'axios';
 import IconButton from 'material-ui/IconButton';
 import DeleteIcon from 'material-ui-icons/Delete';
-import DoneIcon from 'material-ui-icons/Done';
-import { SketchPicker } from 'react-color';
 import Typography from 'material-ui/Typography';
-import { HuePickerProps } from 'react-color';
-import Paper from 'material-ui/Paper';
 import { withStyles } from 'material-ui/styles';
-import Info from 'material-ui-icons/Info';
-import Input from 'material-ui/Input';
-import Card, { CardActions, CardContent } from 'material-ui/Card';
-import List, { ListItem, ListItemIcon, ListItemSecondaryAction, ListItemText, ListSubheader, } from 'material-ui/List';
+import Card, { CardActions } from 'material-ui/Card';
 import CustomPicker from '../Components/CustomPicker.jsx';
-import Avatar from 'material-ui/Avatar';
+import Grid from 'material-ui/Grid';
+import Dialog, { DialogActions, DialogContent } from 'material-ui/Dialog';
+import Button from 'material-ui/Button';
+import TextField from 'material-ui/TextField';
+import AddIcon from 'material-ui-icons/Add';
+import Tooltip from 'material-ui/Tooltip';
 
 const styles = theme => ({
     root: {
-        flexgrow: 1,
-        marginTop: 20,
-        paddingLeft: 50,
-        paddingRight: 50,
+        flexgrow: 1
     },
-    typographyStyle: {
-        color: '#FFF'
+    roote: {
+        height: 'auto'
     },
-    divSketchPickerStyle: {
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "center"
-    },
-    paperStyle: {
-        paddingTop: 20,
-        paddingLeft: 10,
-        paddingBottom: 20,
-        marginTop: theme.spacing.unit * 3,
-        backgroundColor: '#2CCCE4',
-    },
-    iconStyle: {
-        verticalAlign: "middle !important",
-        paddingBottom: 3
-    },
-    typographyStyle: {
-        color: '#FFF'
-    },
-    inputSelectedColorStyle: {
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "center",
-    },
-    inputStyle: {
-        borderRadius: 6,
-    },
-    divSketchPickerStyle: {
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "center"
+    divStyle: {
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        margin: '0 auto'
     },
     cardStyle: {
         width: 50,
         height: 50,
-        alignItems: 'center',
-        margin: '0 auto',
         borderRadius: '50%',
-        boxShadow: '4px 6px 20px grey'
-    },
-    shadowIconButtonStyle: {
-        alignItems: "center",
-        justifyContent: "center",
+        boxShadow: '2px 4px 15px #c2bebe'
     },
     iconButtonStyle: {
-        width: 60,
-        height: 60,
+        height: '100%',
+        width: '100%',
+        margin: '0px 0px 2px 0px',
+        color: 'Black'
     },
-    rowColorStyle: {
-        /* width: '30%', */
-        display: 'inline-block',
-        margin: '0 auto'
-    },
-    rowTextStyle: {
-        width: '50%',
-        display: 'inline-block',
-        /* margin: '0 auto' */
-    },
-    rowDeleteStyle: {
-        width: '10%',
-        display: 'inline-block',
-        margin: '0 auto'
+    colorPicker: {
+        position: 'relative',
+        width: '40%'
     },
     presetColorStyle: {
-        paddingTop: 10
+        paddingTop: 10,
+        position: 'relative',
+        width: '60%'
     },
-    listItemStyle: {
-        margin: '0 auto',
-        width: '80%'
+    fabButtonAbsoluteStyle: {
+        flip: false,
+        position: 'absolute',
+        bottom: 32,
+        right: 32,
+        transition: 'none'
     }
 });
 
+const mql = window.matchMedia(`(min-width: 800px)`);
+
 class SingleColor extends Component {
-    state = {
-        textColor: 'White',
-        colors: [],
-        background: '#000000',
-    };
+    constructor(props) {
+        super(props);
+
+        this.state = {
+            mql: mql,
+            docked: false,
+            textColor: 'White',
+            colors: [],
+            addOpen: false,
+            background: '#7ED321',
+            presetName: '',
+            color: [],
+            displayColorPicker: false,
+            presetColors: [{ color: '#D0021B', title: 'Red', origin: 'Array' }, { color: '#F5A623', title: 'Orange', origin: 'Array' }, { color: '#F8E71C', title: 'Yellow', origin: 'Array' },
+            { color: '#8B572A', title: 'Brown', origin: 'Array' }, { color: '#7ED321', title: 'Green', origin: 'Array' }, { color: '#3A5F0B', title: 'Green Leaf', origin: 'Array' },
+            { color: '#CC4AE2', title: 'Pink', origin: 'Array' }, { color: '#9013FE', title: 'Purple', origin: 'Array' }, { color: '#4A90E2', title: 'Blue ', origin: 'Array' }]
+        };
+    }
 
     componentDidMount = () => {
-        this.GetColors()
+        this.GetColors();
     };
+
+    componentWillMount() {
+        mql.addListener(this.mediaQueryChanged);
+        this.setState({ mql: mql, docked: mql.matches });
+    }
+
+    componentWillUnmount() {
+        this.state.mql.removeListener(this.mediaQueryChanged);
+    }
+
+    mediaQueryChanged() {
+        this.setState({
+            mql: mql,
+            docked: this.state.mql.matches
+        });
+    }
 
     GetColors = () => {
         Axios.get('/api/appstate')
             .then(response => {
-                this.setState({ colors: [] })
+                this.setState({ colors: this.state.presetColors });
                 response.data.SolidColorPresets.forEach(element => {
                     var hexColor = '#' + this.ByteToHex(element.R) + this.ByteToHex(element.G) + this.ByteToHex(element.B);
 
                     this.setState({
-                        colors: this.state.colors.concat({ color: hexColor, title: element.Name })
+                        colors: this.state.colors.concat({ color: hexColor, title: element.Name, origin: 'Json' })
                     });
 
+                });
+                this.setState({
+                    colors: this.state.colors.concat({ color: 'White', title: 'Add Color' })
                 });
             });
     }
@@ -126,40 +119,17 @@ class SingleColor extends Component {
     ByteToHex = (c) => {
         var hex = c.toString(16);
 
-        return hex.length == 1 ? "0" + hex : hex;
+        return hex.length === 1 ? `0${hex}` : hex;
     };
-
-    AddColor = () => {
-        var presetName = prompt("Enter a name for the preset", "");
-
-        if (presetName == null || presetName == "") {
-            return;
-        }
-
-        var result = this.HexToRGB(this.state.background);
-        console.log(result)
-        Axios.post('/api/preset', {
-            Name: presetName,
-            R: result.r,
-            G: result.g,
-            B: result.b
-        }).then(() => { this.GetColors() });
-    }
-
-    DeleteColor = (presetName) => {
-        Axios.delete('/api/preset', {
-            data: { Name: presetName }
-        }).then(() => { this.GetColors() });
-    }
 
     ChangeTextColor = (rgb) => {
         var luma = 0.2126 * rgb.r + 0.7152 * rgb.g + 0.0722 * rgb.b; // per ITU-R BT.709
 
         if (luma < 170) {
-            this.setState({ textColor: "White" })
+            this.setState({ textColor: 'White' });
         }
         else {
-            this.setState({ textColor: "Black" })
+            this.setState({ textColor: 'Black' });
         }
     }
 
@@ -170,17 +140,23 @@ class SingleColor extends Component {
     }
 
     handleChange = (color, event) => {
-        this.ChangeTextColor(color.rgb)
-        this.ChangeBackgroundColor(color.hex)
-        this.SetColor(color.rgb, true)
+        this.ChangeTextColor(color.rgb);
+        this.ChangeBackgroundColor(color.hex);
+        this.ResetValues();
     }
 
     SelectColor = (color) => {
-        var rgb = this.HexToRGB(color)
-        this.ChangeTextColor(rgb)
-        this.ChangeBackgroundColor(color)
-        this.SetColor(rgb, true)
+        var rgb = this.HexToRGB(color.color);
+        this.setState({ presetName: color.title });
+        this.setState({ origin: color.origin });
+        this.ChangeTextColor(rgb);
+        this.ChangeBackgroundColor(color.color);
+        this.SetColor(rgb, true);
     }
+
+    handleClose = () => {
+        this.setState({ displayColorPicker: false });
+    };
 
     SetColor = (color, sendToApi) => {
         if (sendToApi !== true)
@@ -208,97 +184,197 @@ class SingleColor extends Component {
             r: res[0],
             g: res[1],
             b: res[2]
-        }
+        };
 
         return rgbColor;
     }
 
-    render() {
-        const { classes } = this.props;
-        const { textColor, selectedColor, background } = this.state;
+    ResetValues = () => {
+        this.setState({ presetName: '', color: [], origin: '' });
+    }
+
+    HandleAddDialogOpen = (rgb) => {
+        this.setState({ addOpen: true, color: rgb });
+    };
+
+    HandleAddDialogClose = () => {
+        this.setState({ addOpen: false, displayColorPicker: false });
+        this.ResetValues();
+    };
+
+    DeleteColor = () => {
+        Axios.delete('/api/preset', {
+            data: { Name: this.state.presetName }
+        }).then(() => { this.GetColors() });
+    }
+
+    AddColor = () => {
+        if (this.state.presetName == null || this.state.presetName == '' || this.state.presetName == 'Add Color') {
+            return;
+        }
+
+        Axios.post('/api/preset', {
+            Name: this.state.presetName,
+            R: this.state.color.r,
+            G: this.state.color.g,
+            B: this.state.color.b
+        }).then(() => { this.GetColors() }, this.HandleAddDialogClose());
+    }
+
+    ColorCard = (props) => {
+        if (props.color.title != 'Add Color') {
+            return (
+                <div>
+                    <Card aria-label="Recipe" className={props.classes.cardStyle} style={{ backgroundColor: props.color.color }} title={props.color.title}>
+                        <CardActions style={{ padding: '0px' }}>
+                            <IconButton className={props.classes.iconButtonStyle} aria-label="Select" onClick={() => props.action(props.color)} />
+                        </CardActions>
+                    </Card>
+                </div>
+            );
+        }
+        else {
+            return (
+                <Card aria-label="Recipe" className={props.classes.cardStyle} style={{ backgroundColor: 'white' }} title="Add Color">
+                    <IconButton className={props.classes.iconButtonStyle} aria-label="Select" onClick={() => this.setState({ displayColorPicker: true })} >
+                        <AddIcon />
+                    </IconButton>
+                </Card>
+            );
+        }
+    }
+
+    ColorPickerCom = (props) => {
+        var display = '';
+        var colorPickerWidth = '';
+        var presetColorWidth = '';
+
+        if (this.state.docked == false) {
+            display = 'grid';
+            colorPickerWidth = '100%';
+            presetColorWidth = '100%';
+        }
+        else {
+            display = 'flex';
+            colorPickerWidth = '40%';
+            presetColorWidth = '60%';
+        }
 
         return (
-            <div className={classes.root}>
-                {/* Paper */}
-                <div>
-                    <Paper className={classes.paperStyle} elevation={4}>
-                        <Typography type="headline" component="h3" className={classes.typographyStyle}>
-                            <Info className={classes.iconStyle} /> Pick and drag to set a solid color. You can save your selection as a preset
-                        </Typography>
-                    </Paper>
-                </div>
-                <br />
-
-                {/* Display color selected */}
-                <div className={classes.inputSelectedColorStyle}>
-                    <Input
-                        className={classes.inputStyle}
-                        value={"\xa0\xa0" + background.toUpperCase()}
-                        style={{ backgroundColor: background, color: textColor }}
-                        disabled
-                        disableUnderline>
-                    </Input>
-
-                    <IconButton
-                        onClick={() => this.AddColor()}
-                        color='default'>
-                        <DoneIcon />
-                    </IconButton>
-                </div>
-                <br />
-
-                {/* Color picker */}
-                <div className={classes.divSketchPickerStyle}>
+            <div style={{ display: display, alignItems: 'center', justifyContent: 'center', width: '80%', margin: '0 auto' }} >
+                <Dialog open={this.state.displayColorPicker} onClose={this.handleClose} aria-labelledby="form-dialog-title">
                     <CustomPicker
+                        addAction={this.HandleAddDialogOpen}
                         presetColors={[]}
-                        width={400}
-                        height={1}
                         disableAlpha
-                        color={background}
-                        onChangeComplete={this.handleChange}
                         fields={false}
+                        width={250}
+                        color={props.background}
+                        onChangeComplete={this.handleChange}
                     />
+                </Dialog>
+
+                <div className={props.classes.colorPicker} style={{ width: colorPickerWidth, marginBottom: '40px' }}>
+                    <Typography style={{ color: props.textColor, textAlign: 'center' }} type="headline" component="h3">
+                        Pick to set a solid color. You can save a color as a preset
+                    </Typography>
+                    <br />
                 </div>
 
-                {/* List of colors */}
-                <div className={classes.presetColorStyle}>
-                    <List>
-                        {
-                            this.state.colors.map((color, key) =>
-                                <ListItem className={classes.listItemStyle} key={key}>
-
-                                    <div className={classes.rowColorStyle}>
-                                        <Card aria-label="Recipe" className={classes.cardStyle} style={{ backgroundColor: color.color }}>
-                                            <CardActions className={classes.shadowIconButtonStyle}>
-                                                <IconButton
-                                                    className={classes.iconButtonStyle}
-                                                    aria-label="Select"
-                                                    onClick={() => this.SelectColor(color.color)} />
-                                            </CardActions>
-                                        </Card>
-                                    </div>
-
-                                    <Typography className={classes.rowTextStyle} type="subheading">
-                                        {color.title}
-                                    </Typography>
-
-                                    <IconButton
-                                        className={classes.rowDeleteStyle}
-                                        onClick={() => this.DeleteColor(color.title)}
-                                        color='default'>
-                                        <DeleteIcon />
-                                    </IconButton>
-
-                                </ListItem>
-                            )
-                        }
-                    </List>
+                <div className={props.classes.presetColorStyle} style={{ width: presetColorWidth, marginBottom: '40px' }}>
+                    <Grid container className={props.classes.root}>
+                        <Grid item xs={8} className={props.classes.divStyle}>
+                            <Grid container justify="center" spacing={Number(8)}>
+                                {
+                                    this.state.colors.map((color, key) =>
+                                        <Grid key={key} item>
+                                            <this.ColorCard classes={props.classes} color={color} action={this.SelectColor} />
+                                        </Grid>
+                                    )
+                                }
+                            </Grid>
+                        </Grid>
+                    </Grid>
                 </div>
-                <br />
+            </div>
+        )
+    }
 
+    Fab = (props) => {
+        if (props.origin == "Json") {
+            return (
+                <div>
+                    <Tooltip placement="bottom" title={'Delete Selected Color'}>
+                        <IconButton
+                            className={props.classes.fabButtonAbsoluteStyle}
+                            onClick={props.DeleteColor}
+                            style={{ color: props.textColor, backgroundColor: props.background }}
+                        >
+                            <DeleteIcon />
+                        </IconButton>
+                    </Tooltip>
+                </div>
+            )
+        }
+        return (
+            <div />
+        )
+    }
+
+    render() {
+        const { classes } = this.props;
+        const { textColor, background } = this.state;
+
+        return (
+            <div className={classes.root}  >
+                <div className={classes.roote} style={{ backgroundColor: this.state.background }} >
+
+                    <Dialog
+                        open={this.state.addOpen}
+                        onClose={this.HandleAddDialogClose}
+                        aria-labelledby="form-dialog-title"
+                    >
+                        <DialogContent>
+                            <TextField
+                                autoFocus
+                                margin="dense"
+                                id="name"
+                                label="Preset Name"
+                                type="text"
+                                fullWidth
+                                onChange={(event) => this.setState({ presetName: event.target.value })}
+                            />
+                        </DialogContent>
+                        <DialogActions>
+                            <Button onClick={this.HandleAddDialogClose} color="primary">
+                                Cancel
+                            </Button>
+                            <Button onClick={this.AddColor} color="primary">
+                                Save
+                            </Button>
+                        </DialogActions>
+                    </Dialog>
+
+                    <br />
+                    <br />
+
+                    { /* Color picker */}
+                    <this.ColorPickerCom classes={classes} background={background} textColor={textColor} />
+
+                    { /* Tooltip */}
+                    <this.Fab
+                        classes={classes}
+                        textColor={textColor}
+                        background={background}
+                        DeleteColor={this.DeleteColor}
+                        origin={this.state.origin}
+                    />
+
+                    <br />
+                </div>
             </div>
         );
     }
 }
 
-export default withStyles(styles)(SingleColor);
+export default withStyles(styles)(SingleColor);;
