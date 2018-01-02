@@ -221,7 +221,7 @@ class SingleColor extends Component {
     }
 
     ResetValues = () => {
-        this.setState({ presetName: '', color: [] });
+        this.setState({ presetName: '', color: [], origin:'' });
     }
 
     HandleAddDialogOpen = (rgb) => {
