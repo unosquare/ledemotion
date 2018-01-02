@@ -6,7 +6,6 @@ import SketchFields from 'react-color/lib/components/sketch/SketchFields'
 import SketchPresetColors from 'react-color/lib/components/sketch/SketchPresetColors'
 import IconButton from 'material-ui/IconButton';
 import AddIcon from 'material-ui-icons/Add';
-/* import SketchFields from '../Components/CustomSketchFields.jsx'; */
 import Card, { CardActions, CardContent } from 'material-ui/Card';
 import DeleteIcon from 'material-ui-icons/Delete';
 
@@ -62,7 +61,6 @@ export const CustomPicker = ({ width, rgb, hex, hsv, hsl, onChange, onSwatchHove
         radius: '2px',
         shadow: 'inset 0 0 0 1px rgba(0,0,0,.15), inset 0 0 4px rgba(0,0,0,.25)',
       },
-
       alpha: {
         position: 'relative',
         height: '10px',
