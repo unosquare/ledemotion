@@ -18,7 +18,7 @@ const styles = theme => ({
         flexgrow: 1
     },
     roote: {
-        height: '380px',
+        height: '320px',
         top: '0px',
         bottom: '0px',
         width: '100%',
@@ -45,9 +45,6 @@ const styles = theme => ({
         verticalAlign: "middle !important",
         paddingBottom: 3
     },
-    typographyStyle: {
-        color: '#FFF'
-    },
     divStyle: {
         display: "flex",
         alignItems: "center",
@@ -58,7 +55,7 @@ const styles = theme => ({
         width: 50,
         height: 50,
         borderRadius: '50%',
-        boxShadow: '2px 4px 5px #c2bebe'
+        boxShadow: '2px 4px 15px #c2bebe'
     },
     iconButtonStyle: {
         height: '100%',
@@ -273,24 +270,16 @@ class SingleColor extends Component {
                 <div>
                     <Card aria-label="Recipe" className={props.classes.cardStyle} style={{ backgroundColor: props.color.color }} title={props.color.title}>
                         <CardActions style={{ padding: '0px' }}>
-                            <IconButton
-                                className={props.classes.iconButtonStyle}
-                                aria-label="Select"
-                                onClick={() => props.action(props.color)}
-                            />
+                            <IconButton className={props.classes.iconButtonStyle} aria-label="Select" onClick={() => props.action(props.color)} />
                         </CardActions>
                     </Card>
-
                 </div>
             )
         }
         else {
             return (
                 <Card aria-label="Recipe" className={props.classes.cardStyle} style={{ backgroundColor: 'white' }} title='Add Color'>
-                    <IconButton
-                        className={props.classes.iconButtonStyle}
-                        aria-label="Select"
-                        onClick={() => this.setState({ displayColorPicker: true })} >
+                    <IconButton className={props.classes.iconButtonStyle} aria-label="Select" onClick={() => this.setState({ displayColorPicker: true })} >
                         <AddIcon />
                     </IconButton>
                 </Card>
@@ -315,19 +304,8 @@ class SingleColor extends Component {
         }
 
         return (
-            <div style={{
-                display: display,
-                alignItems: "center",
-                justifyContent: "center",
-                width: "80%",
-                margin: "0 auto"
-            }}
-            >
-                <Dialog
-                    open={this.state.displayColorPicker}
-                    onClose={this.handleClose}
-                    aria-labelledby="form-dialog-title"
-                >
+            <div style = {{ display: display, alignItems: "center", justifyContent: "center", width: "80%", margin: "0 auto" }} >
+                <Dialog open = { this.state.displayColorPicker } onClose = { this.handleClose } aria-labelledby = "form-dialog-title">
                     <CustomPicker
                         addAction={this.HandleAddDialogOpen}
                         deleteAction={this.HandleDeleteDialogOpen}
@@ -340,17 +318,17 @@ class SingleColor extends Component {
                 </Dialog>
 
                 <div className={props.classes.colorPicker} style={{ width: colorPickerWidth, marginBottom: '40px' }}>
-                    <Typography style={{ color: props.textColor, textAlign: 'center' }} type="headline" component="h3">
+                    <Typography style = {{ color: props.textColor, textAlign: 'center' }} type="headline" component = "h3">
                         Pick and drag to set a solid color. You can save your selection as a preset
                     </Typography>
                     <br />
 
-                    <div style={{ textAlign: 'center' }}>
-                        <Button raised onClick={this.handleClick} style={{ height: '40px', width: '60%' }}>Pick Color</Button>
+                    <div style = {{ textAlign: 'center' }}>
+                        <Button raised onClick = { this.handleClick } style = {{ height: '40px', width: '60%' }}>Pick Color</Button>
                     </div>
                 </div>
 
-                <div className={props.classes.presetColorStyle} style={{ width: presetColorWidth, marginBottom: '40px' }}>
+                <div className = {props.classes.presetColorStyle} style={{ width: presetColorWidth, marginBottom: '40px' }}>
                     <Grid container className={props.classes.root}>
                         <Grid item xs={8} className={props.classes.divStyle}>
                             <Grid container justify="center" spacing={Number(8)}>
@@ -371,23 +349,17 @@ class SingleColor extends Component {
 
     render() {
         const { classes } = this.props;
-        const { textColor, selectedColor, background } = this.state;
+        const { textColor, background } = this.state;
 
         return (
 
             <div className={classes.root}  >
                 <div className={classes.roote} style={{ backgroundColor: this.state.background }} />
 
-                <Dialog
-                    open={this.state.addOpen}
-                    onClose={this.HandleAddDialogClose}
-                    aria-labelledby="form-dialog-title"
-                >
+                <Dialog open={this.state.addOpen} onClose={this.HandleAddDialogClose} aria-labelledby="form-dialog-title">
                     <DialogTitle id="form-dialog-title">Save Preset</DialogTitle>
                     <DialogContent>
-                        <DialogContentText>
-                            Please enter the new preset name.
-                        </DialogContentText>
+                        <DialogContentText>Please enter the new preset name.</DialogContentText>
                         <TextField
                             autoFocus
                             margin="dense"
@@ -399,25 +371,15 @@ class SingleColor extends Component {
                         />
                     </DialogContent>
                     <DialogActions>
-                        <Button onClick={this.HandleAddDialogClose} color="primary">
-                            Cancel
-                        </Button>
-                        <Button onClick={this.AddColor} color="primary">
-                            Save
-                        </Button>
+                        <Button onClick={this.HandleAddDialogClose} color="primary">Cancel</Button>
+                        <Button onClick={this.AddColor} color="primary">Save</Button>
                     </DialogActions>
                 </Dialog>
 
-                <Dialog
-                    open={this.state.deleteOpen}
-                    onClose={this.HandleDeleteDialogClose}
-                    aria-labelledby="form-dialog-title"
-                >
+                <Dialog open={this.state.deleteOpen} onClose={this.HandleDeleteDialogClose} aria-labelledby="form-dialog-title">
                     <DialogTitle id="form-dialog-title">Delete Preset</DialogTitle>
                     <DialogContent>
-                        <DialogContentText>
-                            Please enter the name of the preset you want to delete.
-                        </DialogContentText>
+                        <DialogContentText>Please enter the name of the preset you want to delete.</DialogContentText>
                         <TextField
                             autoFocus
                             margin="dense"
@@ -429,17 +391,11 @@ class SingleColor extends Component {
                         />
                     </DialogContent>
                     <DialogActions>
-                        <Button onClick={this.HandleDeleteDialogClose} color="primary">
-                            Cancel
-                        </Button>
-                        <Button onClick={this.DeleteColor} color="primary">
-                            Delete
-                        </Button>
+                        <Button onClick={this.HandleDeleteDialogClose} color="primary">Cancel</Button>
+                        <Button onClick={this.DeleteColor} color="primary">Delete</Button>
                     </DialogActions>
                 </Dialog>
-
-                <br />
-                <br />
+                <br /><br />
 
                 {/* Color picker */}
                 <this.ColorPickerCom classes={classes} background={background} textColor={textColor} />
@@ -452,7 +408,7 @@ class SingleColor extends Component {
                             onClick={this.DeleteColor}
                             style={{ color: textColor, backgroundColor: background}} 
                         >
-                        <DeleteIcon />
+                            <DeleteIcon />
                         </IconButton>
                     </Tooltip>
                 </div>
