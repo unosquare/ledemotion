@@ -117,7 +117,7 @@ class App extends Component {
             <div>
                 <div>
                     <div className={classes.drawerHeader} style={{ display: 'flex', justifyContent: 'center' }} >
-                        <Typography style = {{overflow : 'visible', margin: 'auto', width: 'auto', display: 'block'}} type='title' noWrap><WbSunny /> LED Controller</Typography>
+                        <Typography style = {{overflow : 'visible', margin: 'auto', width: 'auto', display: 'block'}} type='title' noWrap><WbSunny /> LED Emotion</Typography>
                     </div>
                     <Divider />
                     <List>
@@ -157,7 +157,7 @@ class App extends Component {
                         </Toolbar>
                     </AppBar>
                     <Hidden mdUp>
-                        <Drawer type='temporary' open={this.state.mobileOpen} classes = {{ paper: classes.drawerPaper }} onRequestClose = { this.handleDrawerToggle } ModalProps = {{
+                        <Drawer type='temporary' open={this.state.mobileOpen} classes = {{ paper: classes.drawerPaper }} onClose = { this.handleDrawerToggle } ModalProps = {{
                                 keepMounted: true // Better open performance on mobile.
                             }}>
                             {drawer}
