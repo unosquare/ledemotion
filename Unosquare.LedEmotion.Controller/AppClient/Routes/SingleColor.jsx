@@ -18,11 +18,7 @@ const styles = theme => ({
         flexgrow: 1
     },
     roote: {
-        height: '380px',
-        top: '0px',
-        bottom: '0px',
-        width: '100%',
-        position: 'fixed'
+        height: 'auto'
     },
     typographyStyle: {
         color: '#FFF'
@@ -101,9 +97,9 @@ class SingleColor extends Component {
             presetName: '',
             color: [],
             displayColorPicker: false,
-            presetColors: [{ color: '#D0021B', title: "Red" }, { color: '#F5A623', title: "Orange" }, { color: '#F8E71C', title: "Yellow" },
-            { color: '#8B572A', title: "Brown" }, { color: '#7ED321', title: "Green" }, { color: '#3A5F0B', title: "Green Leaf" },
-            { color: '#CC4AE2', title: "Pink" }, { color: '#9013FE', title: "Purple" }, { color: '#4A90E2', title: "Blue " }]
+            presetColors: [{ color: '#D0021B', title: "Red", origin: 'Array' }, { color: '#F5A623', title: "Orange", origin: 'Array' }, { color: '#F8E71C', title: "Yellow", origin: 'Array' },
+            { color: '#8B572A', title: "Brown", origin: 'Array' }, { color: '#7ED321', title: "Green", origin: 'Array' }, { color: '#3A5F0B', title: "Green Leaf", origin: 'Array' },
+            { color: '#CC4AE2', title: "Pink", origin: 'Array' }, { color: '#9013FE', title: "Purple", origin: 'Array' }, { color: '#4A90E2', title: "Blue ", origin: 'Array' }]
         };
 
         this.HandleAddDialogOpen = this.HandleAddDialogOpen.bind(this);
@@ -140,7 +136,7 @@ class SingleColor extends Component {
                     var hexColor = '#' + this.ByteToHex(element.R) + this.ByteToHex(element.G) + this.ByteToHex(element.B);
 
                     this.setState({
-                        colors: this.state.colors.concat({ color: hexColor, title: element.Name })
+                        colors: this.state.colors.concat({ color: hexColor, title: element.Name, origin: 'Json' })
                     });
 
                 });
@@ -182,6 +178,7 @@ class SingleColor extends Component {
     SelectColor = (color) => {
         var rgb = this.HexToRGB(color.color)
         this.setState({ presetName: color.title })
+        this.setState({ origin: color.origin })
         this.ChangeTextColor(rgb)
         this.ChangeBackgroundColor(color.color)
         this.SetColor(rgb, true)
@@ -235,12 +232,12 @@ class SingleColor extends Component {
     };
 
     HandleAddDialogClose = () => {
-        this.setState({ addOpen: false });
+        this.setState({ addOpen: false, displayColorPicker: false });
         this.ResetValues()
     };
 
     HandleDeleteDialogOpen = () => {
-        this.setState({ deleteOpen: true });
+        this.setState({ deleteOpen: true, displayColorPicker: false });
     };
 
     HandleDeleteDialogClose = () => {
@@ -258,6 +255,7 @@ class SingleColor extends Component {
         if (this.state.presetName == null || this.state.presetName == "") {
             return;
         }
+
 
         Axios.post('/api/preset', {
             Name: this.state.presetName,
@@ -330,9 +328,9 @@ class SingleColor extends Component {
                 >
                     <CustomPicker
                         addAction={this.HandleAddDialogOpen}
-                        deleteAction={this.HandleDeleteDialogOpen}
                         presetColors={[]}
                         disableAlpha
+                        fields={false}
                         width={250}
                         color={props.background}
                         onChangeComplete={this.handleChange}
@@ -341,13 +339,9 @@ class SingleColor extends Component {
 
                 <div className={props.classes.colorPicker} style={{ width: colorPickerWidth, marginBottom: '40px' }}>
                     <Typography style={{ color: props.textColor, textAlign: 'center' }} type="headline" component="h3">
-                        Pick and drag to set a solid color. You can save your selection as a preset
+                        Pick to set a solid color. You can save a color as a preset
                     </Typography>
                     <br />
-
-                    <div style={{ textAlign: 'center' }}>
-                        <Button raised onClick={this.handleClick} style={{ height: '40px', width: '60%' }}>Pick Color</Button>
-                    </div>
                 </div>
 
                 <div className={props.classes.presetColorStyle} style={{ width: presetColorWidth, marginBottom: '40px' }}>
@@ -369,6 +363,28 @@ class SingleColor extends Component {
         )
     }
 
+    Fab = (props) => {
+
+        if (props.origin == "Json") {
+            return (
+                <div>
+                    <Tooltip placement="bottom" title={"Delete Selected Color"}>
+                        <IconButton
+                            className={props.classes.fabButtonAbsoluteStyle}
+                            onClick={props.DeleteColor}
+                            style={{ color: props.textColor, backgroundColor: props.background }}
+                        >
+                            <DeleteIcon />
+                        </IconButton>
+                    </Tooltip>
+                </div>
+            )
+        }
+        return (
+            <div />
+        )
+    }
+
     render() {
         const { classes } = this.props;
         const { textColor, selectedColor, background } = this.state;
@@ -376,88 +392,84 @@ class SingleColor extends Component {
         return (
 
             <div className={classes.root}  >
-                <div className={classes.roote} style={{ backgroundColor: this.state.background }} />
+                <div className={classes.roote} style={{ backgroundColor: this.state.background }} >
 
-                <Dialog
-                    open={this.state.addOpen}
-                    onClose={this.HandleAddDialogClose}
-                    aria-labelledby="form-dialog-title"
-                >
-                    <DialogTitle id="form-dialog-title">Save Preset</DialogTitle>
-                    <DialogContent>
-                        <DialogContentText>
-                            Please enter the new preset name.
+                    <Dialog
+                        open={this.state.addOpen}
+                        onClose={this.HandleAddDialogClose}
+                        aria-labelledby="form-dialog-title"
+                    >
+                        <DialogContent>
+                            <DialogContentText>
+                                Please enter the new preset name.
                         </DialogContentText>
-                        <TextField
-                            autoFocus
-                            margin="dense"
-                            id="name"
-                            label="Preset Name"
-                            type="text"
-                            fullWidth
-                            onChange={(event) => this.setState({ presetName: event.target.value })}
-                        />
-                    </DialogContent>
-                    <DialogActions>
-                        <Button onClick={this.HandleAddDialogClose} color="primary">
-                            Cancel
+                            <TextField
+                                autoFocus
+                                margin="dense"
+                                id="name"
+                                label="Preset Name"
+                                type="text"
+                                fullWidth
+                                onChange={(event) => this.setState({ presetName: event.target.value })}
+                            />
+                        </DialogContent>
+                        <DialogActions>
+                            <Button onClick={this.HandleAddDialogClose} color="primary">
+                                Cancel
                         </Button>
-                        <Button onClick={this.AddColor} color="primary">
-                            Save
+                            <Button onClick={this.AddColor} color="primary">
+                                Save
                         </Button>
-                    </DialogActions>
-                </Dialog>
+                        </DialogActions>
+                    </Dialog>
 
-                <Dialog
-                    open={this.state.deleteOpen}
-                    onClose={this.HandleDeleteDialogClose}
-                    aria-labelledby="form-dialog-title"
-                >
-                    <DialogTitle id="form-dialog-title">Delete Preset</DialogTitle>
-                    <DialogContent>
-                        <DialogContentText>
-                            Please enter the name of the preset you want to delete.
+                    <Dialog
+                        open={this.state.deleteOpen}
+                        onClose={this.HandleDeleteDialogClose}
+                        aria-labelledby="form-dialog-title"
+                    >
+                        <DialogTitle id="form-dialog-title">Delete Preset</DialogTitle>
+                        <DialogContent>
+                            <DialogContentText>
+                                Please enter the name of the preset you want to delete.
                         </DialogContentText>
-                        <TextField
-                            autoFocus
-                            margin="dense"
-                            id="name"
-                            label="Preset Name"
-                            type="text"
-                            fullWidth
-                            onChange={(event) => this.setState({ presetName: event.target.value })}
-                        />
-                    </DialogContent>
-                    <DialogActions>
-                        <Button onClick={this.HandleDeleteDialogClose} color="primary">
-                            Cancel
+                            <TextField
+                                autoFocus
+                                margin="dense"
+                                id="name"
+                                label="Preset Name"
+                                type="text"
+                                fullWidth
+                                onChange={(event) => this.setState({ presetName: event.target.value })}
+                            />
+                        </DialogContent>
+                        <DialogActions>
+                            <Button onClick={this.HandleDeleteDialogClose} color="primary">
+                                Cancel
                         </Button>
-                        <Button onClick={this.DeleteColor} color="primary">
-                            Delete
+                            <Button onClick={this.DeleteColor} color="primary">
+                                Delete
                         </Button>
-                    </DialogActions>
-                </Dialog>
+                        </DialogActions>
+                    </Dialog>
 
-                <br />
-                <br />
+                    <br />
+                    <br />
 
-                {/* Color picker */}
-                <this.ColorPickerCom classes={classes} background={background} textColor={textColor} />
+                    {/* Color picker */}
+                    <this.ColorPickerCom classes={classes} background={background} textColor={textColor} />
 
-                {/* Tooltip */}
-                <div>
-                    <Tooltip placement="bottom" title={"Delete Selected Color"}>
-                        <IconButton
-                            className={classes.fabButtonAbsoluteStyle}
-                            onClick={this.DeleteColor}
-                            style={{ color: textColor, backgroundColor: background}} 
-                        >
-                        <DeleteIcon />
-                        </IconButton>
-                    </Tooltip>
+                    {/* Tooltip */}
+                    <this.Fab
+                        classes={classes}
+                        textColor={textColor}
+                        background={background}
+                        DeleteColor={this.DeleteColor}
+                        origin={this.state.origin}
+                    />
+
+                    <br />
                 </div>
-
-                <br />
             </div>
         );
     }

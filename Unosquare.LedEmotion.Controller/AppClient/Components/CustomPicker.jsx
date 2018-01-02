@@ -158,16 +158,16 @@ function CardComp(props) {
     return (
       <Card style={props.styles.cardStyle}>
         <CardActions>
-          <AddButton
-            rgb={props.rgb}
-            action={props.addAction}
-            styles={props.styles}
-          />
+            <AddButton
+              rgb={props.rgb}
+              action={props.addAction}
+              styles={props.styles}
+            />
 
-          <DeleteButton
-            action={props.deleteAction}
-            styles={props.styles}
-          />
+            <DeleteButton
+              action={props.deleteAction}
+              styles={props.styles}
+            />
         </CardActions>
       </Card>
     )
