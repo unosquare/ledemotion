@@ -141,6 +141,8 @@ exit 0
 
 ![Diagram](https://i.imgur.com/1xW8pXM.png)
 
+![Schematic](https://i.imgur.com/VOH6h9p.png)
+
 What do you need?
 
 * 1 protoboard
