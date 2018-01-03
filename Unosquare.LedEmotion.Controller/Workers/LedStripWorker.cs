@@ -225,7 +225,7 @@
             {
                 var animation = _animations[AnimationType.Image] as ImageAnimation;
 
-                // animation.EnqueueColor(rgbValue, transitionTime);
+                animation.SetImage(image, totalTransitionTime);
                 _currentAnimationType = AnimationType.Image;
             }
         }

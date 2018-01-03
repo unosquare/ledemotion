@@ -11,6 +11,7 @@
     using Swan.Formatters;
     using Unosquare.Labs.EmbedIO.Constants;
     using Unosquare.Net;
+    using System.Drawing;
 
     public class Api : WebApiController
     {
@@ -159,6 +160,48 @@
                     Cl = $"{colors.Count}",
                     Ms = $"{transitionTime.TotalMilliseconds}"
                 });
+            }
+            catch (Exception ex)
+            {
+                context.Response.StatusCode = 400;
+
+                return context.JsonResponseAsync(new
+                {
+                    ErrorType = ex.GetType().ToString(),
+                    ex.Message
+                });
+            }
+        }
+
+        [WebApiHandler(HttpVerbs.Post, RelativePath + "image")]
+        public Task<bool> SaveImage(WebServer server, HttpListenerContext context)
+        {
+            try
+            {
+                byte frames = 6;
+                var data = Json.Deserialize<ImagePreset>(context.RequestBody());
+
+                var stringIm = data.Data.Replace(data.Type, string.Empty);
+                stringIm = stringIm.Substring(13);
+                byte[] bytes = Convert.FromBase64String(stringIm);
+
+                var transitionTime = TimeSpan.FromMilliseconds(LedStripWorker.Instance.MillisecondsPerFrame * frames);
+
+                // using (var ms = new MemoryStream(bytes))
+                // {
+                //    LedStripWorker.Instance.SetImage(Image.FromStream(ms), transitionTime);
+                // }
+                Image image = (Bitmap)new ImageConverter().ConvertFrom(bytes);
+                image.Save("C:\\Arc.jpg");
+                LedStripWorker.Instance.SetImage(image, transitionTime);
+                
+                // using (var imageFile = new FileStream(AppDomain.CurrentDomain.BaseDirectory + @"\imageArc.jpg", FileMode.Create))
+                // {
+                //    imageFile.Write(bytes, 0, bytes.Length);
+                //    LedStripWorker.Instance.SetImage(Image.FromStream(imageFile), transitionTime);
+                //    imageFile.Flush();
+                // }
+                return context.JsonResponseAsync(Program.State);
             }
             catch (Exception ex)
             {

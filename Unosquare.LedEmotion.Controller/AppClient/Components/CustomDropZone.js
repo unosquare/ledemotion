@@ -477,9 +477,6 @@
                                         return this.element.classList.remove("dz-started")
                                     },
                                     addedfile: function (e) {
-                                        console.log("=======")
-                                        console.log(e.dataURL)
-                                        console.log("=======")
                                         var t = this;
                                         if (this.element === this.previewsContainer && this.element.classList.add("dz-started"), this.previewsContainer) {
                                             e.previewElement = o.createElement(this.options.previewTemplate.trim()), e.previewTemplate = e.previewElement, this.previewsContainer.appendChild(e.previewElement);
@@ -498,6 +495,7 @@
                                                     return t.removeFile(e)
                                                 }) : */ t.removeFile(e)
                                             }, c = 0, d = d = e.previewElement.querySelectorAll("[data-dz-remove]"); !(c >= d.length);) d[c++].addEventListener("click", u)
+
                                         }
                                     },
                                     removedfile: function (e) {
@@ -919,13 +917,13 @@
                                     filename: this._renameFile(e),
                                     chunked: this.options.chunking && (this.options.forceChunking || e.size > this.options.chunkSize),
                                     totalChunkCount: Math.ceil(e.size / this.options.chunkSize)
-                                }, 
-                                /* console.log(t.options.maxFiles), */
-                                this.files.length < t.options.maxFiles ? (this.files.push(e), e.status = o.ADDED, this.emit("addedfile", e)) : null, 
-                                this._enqueueThumbnail(e), 
-                                this.accept(e, function (i) {
-                                    return i ? (e.accepted = !1, t._errorProcessing([e], i)) : (e.accepted = !0, t.options.autoQueue && t.enqueueFile(e)), t._updateMaxFilesReachedClass()
-                                })
+                                },
+                                    /* console.log(t.options.maxFiles), */
+                                    this.files.length < t.options.maxFiles ? (this.files.push(e), e.status = o.ADDED, this.emit("addedfile", e)) : null,
+                                    this._enqueueThumbnail(e),
+                                    this.accept(e, function (i) {
+                                        return i ? (e.accepted = !1, t._errorProcessing([e], i)) : (e.accepted = !0, t.options.autoQueue && t.enqueueFile(e)), t._updateMaxFilesReachedClass()
+                                    })
                             }
                         }, {
                             key: "enqueueFiles",
@@ -1002,10 +1000,6 @@
                                 var s = this,
                                     a = new FileReader;
                                 return a.onload = function () {
-                                    console.log("Thessia")
-                                    console.log(e)
-                                    console.log(a)
-                                    console.log("Liara")
                                     if (e.dataURL = a.result, "image/svg+xml" !== e.type) return s.createThumbnailFromUrl(e, t, i, n, r, o);
                                     null != o && o(a.result)
                                 }, a.readAsDataURL(e)
@@ -1221,7 +1215,7 @@
                                         p.append(f, v)
                                     }
                                 }
-                                
+
                                 for (var m = 0, g = g = e; ;) {
                                     var y;
                                     if (m >= g.length) break;
@@ -1232,8 +1226,8 @@
                                 for (var b = 0; b < t.length; b++) {
                                     var F = t[b];
                                     p.append(F.name, F.data, F.filename)
-                                }console.log("---------------"),console.log(e),console.log("---------------")
-                                /* this.submitRequest(n, p, e) */
+                                }/* console.log("---------------"),console.log(e),console.log("---------------") */
+                                this.submitRequest(n, p, e)
                             }
                         }, {
                             key: "_transformFiles",
@@ -1334,7 +1328,9 @@
                         }, {
                             key: "submitRequest",
                             value: function (e, t, i) {
-                                e.send(t)
+                                /* this.emit("success", e, t, i)
+                                this.emit("complete", e, t, i) */
+                                e.send("")
                             }
                         }, {
                             key: "_finished",

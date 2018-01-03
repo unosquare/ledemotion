@@ -39,11 +39,11 @@ const styles = theme => ({
     margin: '12px auto 30px auto'
   },
   fabButtonAbsoluteStyle: {
-      flip: false,
-      position: 'absolute',
-      bottom: 32,
-      right: 32,
-      transition: 'none'
+    flip: false,
+    position: 'absolute',
+    bottom: 32,
+    right: 32,
+    transition: 'none'
   },
   typoStyle: {
     marginTop: '20px'
@@ -91,17 +91,19 @@ class CustomImage extends Component {
     });
   }
 
-  Image = (file) => {
-    console.log("Krokun")
+  complete = (file) => {
+    console.log('complete')
     console.log(file)
-    console.log(file.DataURL)
-    console.log(file.name)
-    console.log(file.height)
-    
+    /* console.log(file.dataURL) */
+
     Axios.post('/api/image', {
-      Data: file
+      Data: file.dataURL,
+      /* R:36,
+      G:57,
+      B:12, */
+      Type: file.type
     })
-  }
+  };
 
   render() {
     const { classes } = this.props;
@@ -111,26 +113,22 @@ class CustomImage extends Component {
     var componentConfig = {
       iconFiletypes: ['.jpg', '.png', '.gif'],
       showFiletypeIcon: true,
-      /* postUrl: 'api/image' */
-      /* postUrl: 'no-url' */
+      postUrl: 'no-url'
     };
 
     var eventHandlers = {
-      init: dz => console.log(dz),
-      /* maxfilesexceeded: () => console.log("Lok'tar Ogar"), */
-      addedfile: (file) => this.Image(file),
-      /* maxfilesreached: (arc) => console.log(arc) */
+      /* init: dz => console.log(dz), */
+      complete: (file) => this.complete(file)
     }
 
     var djsConfig = {
-      /* acceptedFiles: "image/jpeg,image/png,image/gif", */
+      acceptedFiles: "image/jpeg,image/png",
       thumbnailHeight: 400,
       thumbnailWidth: 400,
       maxFiles: 1,
-      /* maxFilesize: 1, */
       dictDefaultMessage: ReactDOMServer.renderToString(
         <div className={classes.typoStyle}>
-          <Typography /* style={{ textAlign: 'center', maringTop:'20px' }} */ type="headline" component="h3">
+          <Typography type="headline" component="h3">
             Drop files here to upload
           </Typography>
         </div>
@@ -140,15 +138,15 @@ class CustomImage extends Component {
           <div>
             <div><span data-dz-name></span></div>
             <div data-dz-size></div>
-            <img style={{ width: '80%' }} data-dz-thumbnail dz-max-files-reached='true'/>
+            <img style={{ width: '80%' }} data-dz-thumbnail dz-max-files-reached='true' />
             <div><span ></span></div>
           </div>
-          
+
           <div>
             <Tooltip placement="bottom" title={"Delete Selected Color"}>
               <IconButton
                 className={classes.fabButtonAbsoluteStyle}
-                
+
                 style={{ color: "White", backgroundColor: "Red" }}
                 data-dz-remove
               >
@@ -156,26 +154,20 @@ class CustomImage extends Component {
               </IconButton>
             </Tooltip>
           </div>
-
         </div>
       )
     }
 
     return (
       <div className={classes.root}>
-        
         <div className={classes.dropzoneComponent} style={{ width: this.state.width }}>
           <DropzoneComponent config={componentConfig}
             eventHandlers={eventHandlers}
             djsConfig={djsConfig}
             className={classes.dropzone}
-            style={{ height: this.state.width }}
           >
-
-
           </DropzoneComponent>
         </div>
-
       </div>
     );
   }
