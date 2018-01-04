@@ -5,6 +5,7 @@ import Drawer from 'material-ui/Drawer';
 import Hidden from 'material-ui/Hidden';
 import IconButton from 'material-ui/IconButton';
 import MenuIcon from 'material-ui-icons/Menu';
+import SettingsIcon from 'material-ui-icons/Settings';
 import PropTypes from 'prop-types';
 import Routes from './Constants/Routes.jsx';
 import Toolbar from 'material-ui/Toolbar';
@@ -14,6 +15,7 @@ import { withStyles } from 'material-ui/styles';
 import { Link, Redirect, HashRouter as Router, Route, Switch, withRouter } from 'react-router-dom';
 import List, { ListItem, ListItemIcon, ListItemText } from 'material-ui/List';
 import WbSunny from 'material-ui-icons/WbSunny';
+import SettingsDialog from './Components/SettingsDialog.jsx';
 
 const drawerWidth = 240;
 const primary = '#EAE5E5';
@@ -93,21 +95,29 @@ const styles = theme => ({
 
 class App extends Component {
     state = {
-        mobileOpen: false
+        mobileOpen: false,
+        isSettingsDialogOpen: false
     }
   
     handleDrawerToggle = () => this.setState({ 
         mobileOpen : !this.state.mobileOpen 
     });
-  
+
+    handleDialogClose = () => this.setState({
+            isSettingsDialogOpen : false
+        })
+
+    handleDialogOpen = () => this.setState({
+            isSettingsDialogOpen : true
+        })
+
     render() {
         const { classes } = this.props;
-        
         const drawer = (
             <div>
                 <div>
                     <div className={classes.drawerHeader} style={{ display: 'flex', justifyContent: 'center' }} >
-                        <Typography style = {{overflow : 'visible', margin: 'auto', width: 'auto', display: 'block'}} type='title' noWrap><WbSunny /> LED Controller</Typography>
+                        <Typography style = {{overflow : 'visible', margin: 'auto', width: 'auto', display: 'block'}} type='title' noWrap><WbSunny /> LED Emotion</Typography>
                     </div>
                     <Divider />
                     <List>
@@ -141,6 +151,9 @@ class App extends Component {
                                 <Route key={index} path={route.path} exact={route.exact} component={route.title} />
                             ))}
                             <div className={classes.spacer}></div>
+                            <IconButton onClick={this.handleDialogOpen}>
+                                <SettingsIcon/>
+                            </IconButton>
                         </Toolbar>
                     </AppBar>
                     <Hidden mdUp>
@@ -167,7 +180,9 @@ class App extends Component {
                             Copyright © 2017 - 2018 <a href = 'https://www.unosquare.com/' target = '_blank' className = { classes.unosquareLink }>Unosquare</a> - All rights reserved
                         </Typography>
                     </main>
-                </div>
+                </div>                
+                <SettingsDialog open={this.state.isSettingsDialogOpen} handleClose={this.handleDialogClose}
+                /> 
             </div>
         </Router>
       );

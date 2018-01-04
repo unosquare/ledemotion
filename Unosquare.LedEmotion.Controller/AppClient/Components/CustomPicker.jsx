@@ -61,7 +61,6 @@ export const CustomPicker = ({ width, rgb, hex, hsv, hsl, onChange, onSwatchHove
         radius: '2px',
         shadow: 'inset 0 0 0 1px rgba(0,0,0,.15), inset 0 0 4px rgba(0,0,0,.25)',
       },
-
       alpha: {
         position: 'relative',
         height: '10px',
@@ -91,7 +90,6 @@ export const CustomPicker = ({ width, rgb, hex, hsv, hsl, onChange, onSwatchHove
       },
     },
   }, { disableAlpha })
-
   return (
     <div style={styles.picker} className={`sketch-picker ${className}`}>
       <div style={styles.saturation}>

@@ -1,15 +1,11 @@
 import React, { Component } from 'react';
 import Typography from 'material-ui/Typography';
-
 import Status from '../Routes/Status.jsx';
 import Info from 'material-ui-icons/Info';
-
 import SingleColor from '../Routes/SingleColor.jsx';
 import ColorLens from 'material-ui-icons/ColorLens';
-
 import Transition from '../Routes/Transition.jsx';
-import InsertChart from 'material-ui-icons/InsertChart';
-
+import CompareArrows from 'material-ui-icons/CompareArrows';
 import CustomImage from '../Routes/CustomImage.jsx';
 import CropOriginal from 'material-ui-icons/CropOriginal';
 
@@ -43,7 +39,7 @@ const routes = [
         title: () => <Typography style={style} noWrap type='title' noWrap>Transition</Typography>,
         main: () => <Transition />,
         linkTo: 'transition',
-        icon: () => <InsertChart />,
+        icon: () => <CompareArrows />,
         iconText: 'Transition'
     },
     {

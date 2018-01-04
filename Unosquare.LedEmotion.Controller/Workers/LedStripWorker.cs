@@ -159,6 +159,16 @@
         }
 
         /// <summary>
+        /// Restarts the LedStripWorker with the specified parameters
+        /// </summary>
+        public void Restart(int ledCount, int spiChannel, int spiFrequency, int framesPerSecond)
+        {
+            this.Stop();
+            this.SetParameters(ledCount, spiChannel, spiFrequency, framesPerSecond);
+            this.Start();
+        }
+
+        /// <summary>
         /// Should stop the task immediately and synchronously
         /// </summary>
         public void Stop()
