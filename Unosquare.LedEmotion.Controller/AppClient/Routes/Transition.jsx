@@ -135,7 +135,6 @@ class Transition extends Component {
     /** Adds the color */
     handleChangeComplete = (color) => {
         const { r, g, b } = color;
-
         const colorHexadecimal = this.rgbToHex(r, g, b);
 
         this.setState(prevState => ({
@@ -190,7 +189,6 @@ class Transition extends Component {
     }
 
     render() {
-
         const { classes } = this.props;
         const { colors, selectedColor, seconds, displayColorPicker } = this.state;
 
