@@ -233,7 +233,6 @@
         {
             lock (SyncLock)
             {
-
                 var animation = _animations[AnimationType.Image] as ImageAnimation;
 
                 animation.SetImage(imageColors, totalTransitionTime);

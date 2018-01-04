@@ -12,7 +12,7 @@
     using Unosquare.Labs.EmbedIO.Constants;
     using Unosquare.Net;
     using System.Drawing;
-    using System.IO;
+    using Models;
 
     public class Api : WebApiController
     {
@@ -275,8 +275,7 @@
                 
                 LedStripWorker.Instance.SetImage(imageColors, transitionTime);
                 
-                img.Save(AppDomain.CurrentDomain.BaseDirectory + @"\imageArc.jpeg", System.Drawing.Imaging.ImageFormat.Jpeg);
-                
+                // img.Save(AppDomain.CurrentDomain.BaseDirectory + @"\imageArc.jpeg", System.Drawing.Imaging.ImageFormat.Jpeg);
                 return context.JsonResponseAsync(Program.State);
             }
             catch (Exception ex)

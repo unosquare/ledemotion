@@ -40,10 +40,9 @@
                 var targetColor = _colorSteps[_currentColorStep];
 
                 // _currentAnimation.EnqueueColor(targetColor, TransitionTimePerPixel);
-                var currentRow = 1;
-                BitmapBuffer pixels = null;
-
-                LedStripWorker.Instance.LedStrip.SetPixels(pixels, 0, currentRow);
+                // var currentRow = 1;
+                // BitmapBuffer pixels = null;
+                // LedStripWorker.Instance.LedStrip.SetPixels(pixels, 0, currentRow);
             }
         }
     }
