@@ -3,6 +3,7 @@
     using System;
     using System.Collections.Generic;
     using System.Drawing;
+    using Workers;
     using Unosquare.Swan.Formatters;
 
     public class ImageAnimation : IAnimation
@@ -14,16 +15,15 @@
 
         public TimeSpan TransitionTimePerPixel { get; private set; }
         
-        public void SetImage(Image image, TimeSpan totalTransitionTime)
+        public void SetImage(List<byte[]> imageColors, TimeSpan totalTransitionTime)
         {
             lock (_syncLock)
             {
-                var pixels = new BitmapBuffer(image);
-
                 _colorSteps.Clear();
 
-                // foreach (var color in rgbValues)
-                //    _colorSteps.Add(color);
+                foreach (var color in imageColors)
+                    _colorSteps.Add(color);
+
                 TransitionTimePerPixel =
                     TimeSpan.FromMilliseconds(totalTransitionTime.TotalMilliseconds / _colorSteps.Count);
                 _currentColorStep = 0;
@@ -38,7 +38,12 @@
                 _currentAnimation.PaintNextFrame();
 
                 var targetColor = _colorSteps[_currentColorStep];
-                _currentAnimation.EnqueueColor(targetColor, TransitionTimePerPixel);
+
+                // _currentAnimation.EnqueueColor(targetColor, TransitionTimePerPixel);
+                var currentRow = 1;
+                BitmapBuffer pixels = null;
+
+                LedStripWorker.Instance.LedStrip.SetPixels(pixels, 0, currentRow);
             }
         }
     }
