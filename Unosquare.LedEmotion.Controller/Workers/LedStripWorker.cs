@@ -229,13 +229,13 @@
             }
         }
 
-        public void SetImage(Image image, TimeSpan totalTransitionTime)
+        public void SetImage(List<byte[]> imageColors, TimeSpan totalTransitionTime)
         {
             lock (SyncLock)
             {
                 var animation = _animations[AnimationType.Image] as ImageAnimation;
 
-                // animation.EnqueueColor(rgbValue, transitionTime);
+                animation.SetImage(imageColors, totalTransitionTime);
                 _currentAnimationType = AnimationType.Image;
             }
         }

@@ -21,13 +21,13 @@ export const CustomPicker = ({ width, rgb, hex, hsv, hsl, onChange, onSwatchHove
         borderRadius: '4px',
         boxShadow: '0 0 0 1px rgba(0,0,0,.15), 0 8px 16px rgba(0,0,0,.15)'
       },
-      saturation: {
+      saturationDiv: {
         width: '100%',
         paddingBottom: '75%',
         position: 'relative',
         overflow: 'hidden'
       },
-      Saturation: {
+      saturation: {
         radius: '3px',
         shadow: 'inset 0 0 0 1px rgba(0,0,0,.15), inset 0 0 4px rgba(0,0,0,.25)'
       },
