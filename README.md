@@ -155,7 +155,7 @@ Expectation:
 
 ![Expected](https://i.imgur.com/t1BpE5m.jpg)
 
-An example of how LedEmotion works (click the imagen to view the video):
+An example of how LedEmotion works (click the image to watch the video):
 
 [![Transition](https://i.imgur.com/VjiAale.png)](https://www.youtube.com/watch?v=l7H0Oo2xMLU)
 
