@@ -139,29 +139,25 @@ exit 0
 
 #### A. Practical example
 
-![Diagram](https://i.imgur.com/f0xV0ym.png)
+![Diagram](https://i.imgur.com/Ujqq0MG.png)
 
-![Schematic](https://i.imgur.com/62r0XQI.png)
+![Schematic](https://i.imgur.com/bdKtaCB.png)
 
 What do you need?
 
-* 1 protoboard
 * 1 Raspberry Pi 3 modelo B, v. 1.2
-* 1 level shifter (```TXB0108```)
 * 1 LED strip (```APA102C```. Available [here](https://www.adafruit.com/product/2239))
 * 1 DC barrel jack adapter (female. Available [here](https://www.sparkfun.com/products/10288))
-* 1 USB to micro USB wire (you'll only need a piece of wire that goes to the micro USB)
+* 1 USB to micro USB charger (5 V)
 * Wires
 
 Expectation:
 
-![Expected](https://i.imgur.com/Q2xl6P9.jpg)
+![Expected](https://i.imgur.com/t1BpE5m.jpg)
 
-Notes about the ```TXB0108```:
+An example of how LedEmotion works (click the imagen to view the video):
 
-![TXB0108](https://i.imgur.com/xF7dDmx.jpg)
-
-The ```TXB0108``` works bidirectionally. The A side works with a range voltage of ```1.2 V ~ 3.6 V```, and the B side with ```1.7 V ~ 7.5 V```. There's only one ground (```GND```/```MASA```). The wires that are connected in the ```MOSI``` and ```SCLK``` pins goes connected to the A input in the level shifter (choose between ```A1-A8 I/O```). In our case, we choose ```A1``` and ```A2``` and the outputs ```B1``` and ```B2``` (these ones goes connected to the LED strip).
+[![Transition](https://i.imgur.com/VjiAale.png)](https://www.youtube.com/watch?v=l7H0Oo2xMLU)
 
 *[back to the tutorial](#running)*
 
@@ -182,7 +178,7 @@ These are just arguments for deploying LedEmotion via SSH using dotnet-sshdeploy
 <Target Condition="$(BuildingInsideSshDeploy) ==''" Name="PostBuild" AfterTargets="PostBuildEvent">
     <Exec Command="cd $(ProjectDir)" />
     <Exec Command="dotnet sshdeploy push" />
-  </Target>
+</Target>
 ```
 * This target is what calls dotnet-sshdeploy after a successful build, we use it to automatically deploy LedEmotion using the defined properties explained above if you do not want to deploy every time you build LedEmotion you can remove this target and execute `dotnet sshdeploy push` in your project directory.  
 
