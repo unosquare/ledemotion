@@ -12,6 +12,7 @@
     using Unosquare.Labs.EmbedIO.Constants;
     using Unosquare.Net;
     using Unosquare.LedEmotion.Controller.Models;
+    using Unosquare.Swan.Components;
 
     public class Api : WebApiController
     {
@@ -34,7 +35,44 @@
         [WebApiHandler(HttpVerbs.Get, RelativePath + "status")]
         public Task<bool> GetStatus(WebServer server, HttpListenerContext context)
         {
-            return context.JsonResponseAsync(new {
+            List<string> nameList = new List<string>();
+
+            try
+            {
+                var interfacesOutput = ProcessRunner.GetProcessOutputAsync("ifconfig").Result;
+                var outputLines = interfacesOutput.Split('\n').Where(x => string.IsNullOrWhiteSpace(x) == false).ToArray();
+                var name = string.Empty;
+
+                foreach (var item in outputLines)
+                {
+                    if (item[0] >= 'a' && item[0] <= 'z')
+                    {
+                        name = item.Substring(0, item.IndexOf(':'));
+                    }
+
+                    if (item.IndexOf("RX packets") != -1)
+                    {
+                        var packets = item.Substring(item.IndexOf("RX packets") + 11, 5);
+                        var index = packets.IndexOf(' ');
+                        var packetsValue = index != -1 ? Int32.Parse(packets.Substring(0, index)) : Int32.Parse(packets);
+                        
+                        if (packetsValue > 0)
+                        {
+                            name = name.StartsWith("eth") ? "Wired" : name;
+                            name = name.StartsWith("wlan") ? "Wireless" : name;
+                            nameList.Add(name);
+                        }
+                    }
+                }
+            }
+            catch (Exception)
+            {
+                // Empty
+            }
+
+            return context.JsonResponseAsync(new
+            {
+                ConnectionType = nameList,
                 PublicIP = Network.GetPublicIPAddress(),
                 LocalIPs = Network.GetIPv4Addresses()
             });
