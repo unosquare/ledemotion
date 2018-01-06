@@ -4,8 +4,8 @@ import Paper from 'material-ui/Paper';
 import PropTypes from 'prop-types';
 import { withStyles } from 'material-ui/styles';
 import Card, { CardActions, CardContent } from 'material-ui/Card';
-import Slider, { Range } from 'rc-slider';
-import 'rc-slider/assets/index.css';
+// import Slider, { Range } from 'rc-slider';
+// import 'rc-slider/assets/index.css';
 import Button from 'material-ui/Button';
 import Grid from 'material-ui/Grid';
 import IconButton from 'material-ui/IconButton';
@@ -16,6 +16,9 @@ import Tooltip from 'material-ui/Tooltip';
 import FlashOn from 'material-ui-icons/FlashOn';
 import Dialog from 'material-ui/Dialog/Dialog';
 import styled, { keyframes } from 'styled-components';
+
+import Slider from 'react-rangeslider';
+import 'react-rangeslider/lib/index.css'
 
 const styles = theme => ({
     root: {
@@ -206,8 +209,9 @@ class Transition extends Component {
 
         const CustomPaper = styled(Paper) `
             && {
-                background: ${ colors.length === 0 ? `linear-gradient(to right, ${'#FFFFFF'}, ${'#FFFFFF'})`
-                        : `linear-gradient(to right, ${colors.map((color) => color.name)})`};
+                background: ${ (colors.length === 0) ? `${'#FFFFFF'}` :
+                                (colors.length === 1) ? `${colors.map((color) => color.name)}` :
+                                 `linear-gradient(to right, ${colors.map((color) => color.name)})`}; 
                 background-size: 200% 200%;
                 background-position: 0 0;
                 background-repeat: repeat-x;
@@ -272,10 +276,15 @@ class Transition extends Component {
                     <br /><br /><br />
 
                     {/* Slider */}
-                    <div className={classes.divRCSliderStyle}>
-                        <Slider min={1} max={300} onChange={this.handleValueSliderChange} className={classes.rcSliderStyle} />
+                    <div className = { classes.divRCSliderStyle }>
+                        {/* <Slider min={1} max={300} onChange={this.handleValueSliderChange} className={classes.rcSliderStyle} /> */}
+                        <Slider min = { 1 } max = { 300 } value = { seconds } onChange={this.handleValueSliderChange} orientation = 'horizontal' className = { classes.rcSliderStyle } />
                     </div>
-                    <br /><br /><br />
+                    <div className = { classes.divRCSliderStyle }>
+                        <Typography type="caption" component="p">
+                            {seconds} seconds
+                        </Typography>
+                    </div>
 
                     {/* Button */}
                     <div>
