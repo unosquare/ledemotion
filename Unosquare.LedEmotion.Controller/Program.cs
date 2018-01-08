@@ -50,8 +50,8 @@
         public static void Main(string[] args)
         {
             LoadState();
-            WebServerWorker.Instance.Start();
-            LedStripWorker.Instance.Start();
+            WebServerWorker.Instance.Start(0);
+            LedStripWorker.Instance.Start(0);
 
             if (Debugger.IsAttached)
             {

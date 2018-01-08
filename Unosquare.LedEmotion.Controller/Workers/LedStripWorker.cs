@@ -110,7 +110,7 @@
         /// <summary>
         /// Should start the task immediately and asynchronously
         /// </summary>
-        public void Start()
+        public void Start(int value)
         {
             SetParameters(LedCount, SpiChannel, SpiFrequency, FramesPerSecond);
 
@@ -129,21 +129,34 @@
                     LedStrip.ClearPixels();
                     LedStrip.Render();
 
-                    for (var i = 0; i < LedCount; i++)
+                    if (value == 1)
                     {
-                        LedStrip.SetPixel(i, 1f, 255, 0, 0);
-                        LedStrip.Render();
-                        tickLock.WaitOne(10);
-                    }
+                        for (var i = 0; i < LedCount; i++)
+                        {
+                            LedStrip.SetPixel(i, 1f, 0, 0, 255);
+                            LedStrip.Render();
+                            LedStrip.ClearPixels();
+                            LedStrip.Render();
+                        }
 
-                    for (var i = 0; i < 3; i++)
+                    } else
                     {
-                        LedStrip.SetPixels(0, 255, 0);
-                        LedStrip.Render();
-                        tickLock.WaitOne(200);
-                        LedStrip.ClearPixels();
-                        LedStrip.Render();
-                        tickLock.WaitOne(200);
+                        for (var i = 0; i < LedCount; i++)
+                        {
+                            LedStrip.SetPixel(i, 1f, 255, 0, 0);
+                            LedStrip.Render();
+                            tickLock.WaitOne(10);
+                        }
+
+                        for (var i = 0; i < 3; i++)
+                        {
+                            LedStrip.SetPixels(0, 255, 0);
+                            LedStrip.Render();
+                            tickLock.WaitOne(200);
+                            LedStrip.ClearPixels();
+                            LedStrip.Render();
+                            tickLock.WaitOne(200);
+                        }
                     }
 
                     LedStrip.Render();
@@ -161,11 +174,11 @@
         /// <summary>
         /// Restarts the LedStripWorker with the specified parameters
         /// </summary>
-        public void Restart(int ledCount, int spiChannel, int spiFrequency, int framesPerSecond)
+        public void Restart(int ledCount, int spiChannel, int spiFrequency, int framesPerSecond, int value)
         {
             this.Stop();
             this.SetParameters(ledCount, spiChannel, spiFrequency, framesPerSecond);
-            this.Start();
+            this.Start(value);
         }
 
         /// <summary>

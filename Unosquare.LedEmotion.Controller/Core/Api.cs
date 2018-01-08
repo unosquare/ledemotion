@@ -175,7 +175,7 @@
             try
             {
                 var data = Json.Deserialize<AppSettings>(context.RequestBody());
-                LedStripWorker.Instance.Restart(data.LedCount, data.SpiChannel, data.SpiFrequency, data.FramesPerSecond);
+                LedStripWorker.Instance.Restart(data.LedCount, data.SpiChannel, data.SpiFrequency, data.FramesPerSecond, 0);
 
                 return context.JsonResponseAsync(new
                 {
@@ -221,6 +221,33 @@
                 {
                     Cl = $"{colors.Count}",
                     Ms = $"{transitionTime.TotalMilliseconds}"
+                });
+            }
+            catch (Exception ex)
+            {
+                context.Response.StatusCode = 400;
+
+                return context.JsonResponseAsync(new
+                {
+                    ErrorType = ex.GetType().ToString(),
+                    ex.Message
+                });
+            }
+        }
+
+        [WebApiHandler(HttpVerbs.Put, RelativePath + "stop")]
+        public Task<bool> StopTransition(WebServer server,  HttpListenerContext context)
+        {
+            try
+            {
+                var data = Json.Deserialize(context.RequestBody()) as Dictionary<string, object>;
+                var value = int.Parse(data["value"].ToString());
+
+                LedStripWorker.Instance.Restart(240, 1, 1000000, 25, value);
+
+                return context.JsonResponseAsync(new
+                {
+                    Message = $"Stopped"
                 });
             }
             catch (Exception ex)
