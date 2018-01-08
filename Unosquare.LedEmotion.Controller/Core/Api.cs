@@ -11,7 +11,7 @@
     using Swan.Formatters;
     using Unosquare.Labs.EmbedIO.Constants;
     using Unosquare.Net;
-    using Unosquare.LedEmotion.Controller.Models;
+    using Models;
     using Unosquare.Swan.Components;
 
     public class Api : WebApiController
@@ -35,7 +35,7 @@
         [WebApiHandler(HttpVerbs.Get, RelativePath + "status")]
         public Task<bool> GetStatus(WebServer server, HttpListenerContext context)
         {
-            List<string> nameList = new List<string>();
+            var nameList = new List<string>();
 
             try
             {
