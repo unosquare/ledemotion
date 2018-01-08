@@ -13,6 +13,7 @@
     using Unosquare.Net;
     using Models;
     using Unosquare.Swan.Components;
+    using System.Drawing;
 
     public class Api : WebApiController
     {
