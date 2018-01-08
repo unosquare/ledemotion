@@ -73,8 +73,9 @@ class SingleColor extends Component {
             color: [],
             displayColorPicker: false,
             presetColors: [{ color: '#D0021B', title: 'Red', origin: 'Array' }, { color: '#F5A623', title: 'Orange', origin: 'Array' }, { color: '#F8E71C', title: 'Yellow', origin: 'Array' },
-            { color: '#8B572A', title: 'Brown', origin: 'Array' }, { color: '#7ED321', title: 'Green', origin: 'Array' }, { color: '#3A5F0B', title: 'Green Leaf', origin: 'Array' },
-            { color: '#CC4AE2', title: 'Pink', origin: 'Array' }, { color: '#9013FE', title: 'Purple', origin: 'Array' }, { color: '#4A90E2', title: 'Blue ', origin: 'Array' }]
+            { color: '#8B572A', title: 'Brown', origin: 'Array' }, { color: '#7ED321', title: 'Green', origin: 'Array' }, { color: '#CC4AE2', title: 'Pink', origin: 'Array' },
+            { color: '#9013FE', title: 'Purple', origin: 'Array' }, { color: '#4A90E2', title: 'Blue ', origin: 'Array' }, { color: '#000000', title: 'Off ', origin: 'Array' },
+            { color: '#FFFFFF', title: 'Full Brightness ', origin: 'Array' }]
         };
     }
 
@@ -140,7 +141,6 @@ class SingleColor extends Component {
     }
 
     handleChange = (color, event) => {
-        console.log("Lok'tar Ogar")
         this.changeTextColor(color.rgb);
         this.changeBackgroundColor(color.hex);
         this.setState({ origin: 'Json' });
@@ -265,13 +265,13 @@ class SingleColor extends Component {
             <div style={{ display: display, alignItems: 'center', justifyContent: 'center', width: '80%', margin: '0 auto' }} >
                 <Dialog open={this.state.displayColorPicker} onClose={this.handleClose} aria-labelledby="form-dialog-title">
                     <CustomPicker
-                        addAction={this.handleAddDialogOpen.bind(this) }
+                        addAction={this.handleAddDialogOpen.bind(this)}
                         presetColors={[]}
                         disableAlpha
                         fields={false}
                         width={250}
                         color={props.background}
-                        onChangeComplete={this.handleChange.bind(this) }
+                        onChangeComplete={this.handleChange.bind(this)}
                     />
                 </Dialog>
 

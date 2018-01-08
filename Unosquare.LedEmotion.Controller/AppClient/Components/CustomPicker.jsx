@@ -5,6 +5,7 @@ import { ColorWrap, Saturation, Hue, Alpha, Checkboard } from 'react-color/lib/c
 import SketchFields from 'react-color/lib/components/sketch/SketchFields'
 import SketchPresetColors from 'react-color/lib/components/sketch/SketchPresetColors'
 import IconButton from 'material-ui/IconButton';
+import Button from 'material-ui/Button';
 import AddIcon from 'material-ui-icons/Add';
 import Card, { CardActions, CardContent } from 'material-ui/Card';
 import DeleteIcon from 'material-ui-icons/Delete';
@@ -17,17 +18,17 @@ export const CustomPicker = ({ width, rgb, hex, hsv, hsl, onChange, onSwatchHove
         width,
         padding: '10px 10px 0',
         boxSizing: 'initial',
-        background: '#FFF',
+        background: '#fff',
         borderRadius: '4px',
         boxShadow: '0 0 0 1px rgba(0,0,0,.15), 0 8px 16px rgba(0,0,0,.15)'
       },
-      saturationDiv: {
+      saturation: {
         width: '100%',
         paddingBottom: '75%',
         position: 'relative',
         overflow: 'hidden'
       },
-      saturation: {
+      Saturation: {
         radius: '3px',
         shadow: 'inset 0 0 0 1px rgba(0,0,0,.15), inset 0 0 4px rgba(0,0,0,.25)'
       },
@@ -94,15 +95,15 @@ export const CustomPicker = ({ width, rgb, hex, hsv, hsl, onChange, onSwatchHove
   return (
     <div style={styles.picker} className={`sketch-picker ${className}`}>
       <div style={styles.saturation}>
-        <Saturation style={styles.Saturation} hsl={hsl} hsv={hsv} onChange={onChange} />
+        <Saturation style = { styles.Saturation } hsl = { hsl } hsv = { hsv } onChange = { onChange } />
       </div>
       <div style={styles.controls} className="flexbox-fix">
         <div style={styles.sliders}>
           <div style={styles.hue}>
-            <Hue style={styles.Hue} hsl={hsl} onChange={onChange} />
+            <Hue style = { styles.Hue } hsl = { hsl } onChange = { onChange } />
           </div>
           <div style={styles.alpha}>
-            <Alpha style={styles.Alpha} rgb={rgb} hsl={hsl} renderers={renderers} onChange={onChange} />
+            <Alpha style = { styles.Alpha } rgb = { rgb } hsl = { hsl } renderers = { renderers } onChange = { onChange} />
           </div>
         </div>
         <div style={styles.color}>
@@ -141,8 +142,8 @@ function CardComp(props) {
     return (
       <Card style={props.styles.cardStyle}>
         <CardActions>
-          <AddButton rgb={props.rgb} action={props.addAction} styles={props.styles} />
-          <DeleteButton action={props.deleteAction} styles={props.styles} />
+          <AddButton rgb = { props.rgb } action = { props.addAction } styles = { props.styles } />
+          <DeleteButton action = { props.deleteAction } styles = { props.styles } />
         </CardActions>
       </Card>
     )
@@ -157,9 +158,9 @@ function DeleteButton(props) {
   if (props.action != null) {
     return (
       <div style={props.styles.buttonStyle}>
-        <IconButton onClick={() => props.action()} color='default'>
+        <Button fab mini onClick = { () => props.action() } color = 'default' style = {{ background : '#FF0000' }}>
           <DeleteIcon />
-        </IconButton>
+        </Button>
       </div>
     );
   }
@@ -173,9 +174,9 @@ function AddButton(props) {
   if (props.action != null) {
     return (
       <div style={props.styles.buttonStyle}>
-        <IconButton onClick={() => props.action(props.rgb)} color='default'>
+        <Button fab mini onClick = { () => props.action(props.rgb) } color = 'primary'>
           <AddIcon />
-        </IconButton>
+        </Button>
       </div>
     );
   }
@@ -213,7 +214,7 @@ CustomPicker.defaultProps = {
   width: 200,
   presetColors: ['#D0021B', '#F5A623', '#F8E71C', '#8B572A', '#7ED321', '#417505',
     '#BD10E0', '#9013FE', '#4A90E2', '#50E3C2', '#B8E986', '#000000',
-    '#4A4A4A', '#9B9B9B', '#FFFFFF'],
+    '#4A4A4A', '#9B9B9B', '#FFFFFF']
 }
 
 export default ColorWrap(CustomPicker)

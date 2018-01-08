@@ -5,7 +5,7 @@
     <TargetFramework>net46</TargetFramework>
     <CodeAnalysisRuleSet>..\StyleCop.Analyzers.ruleset</CodeAnalysisRuleSet>
     <RunPostBuildEvent>OnBuildSuccess</RunPostBuildEvent>
-    <SshDeployHost>172.16.17.54</SshDeployHost>
+    <SshDeployHost>172.16.17.138</SshDeployHost>
     <SshDeployTargetPath>/home/pi/ledemotion</SshDeployTargetPath>
     <SshDeployUsername>pi</SshDeployUsername>
     <SshDeployPassword>raspberry</SshDeployPassword>
@@ -25,7 +25,7 @@
     <Reference Include="System.Xml" />
     <PackageReference Include="EmbedIO" Version="1.11.3" />
     <PackageReference Include="StyleCop.Analyzers" Version="1.0.2" />
-    <PackageReference Include="Unosquare.Raspberry.IO" Version="0.12.0" />
+    <PackageReference Include="Unosquare.Raspberry.IO" Version="0.13.0" />
     <DotNetCliToolReference Include="dotnet-sshdeploy" Version="0.1.6-r1" />
   </ItemGroup>
 

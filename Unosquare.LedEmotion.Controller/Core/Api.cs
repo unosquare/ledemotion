@@ -35,7 +35,8 @@
         [WebApiHandler(HttpVerbs.Get, RelativePath + "status")]
         public Task<bool> GetStatus(WebServer server, HttpListenerContext context)
         {
-            return context.JsonResponseAsync(new {
+            return context.JsonResponseAsync(new
+            {
                 PublicIP = Network.GetPublicIPAddress(),
                 LocalIPs = Network.GetIPv4Addresses()
             });
@@ -249,8 +250,8 @@
 
                 var transitionTime = TimeSpan.FromMilliseconds(LedStripWorker.Instance.MillisecondsPerFrame * frames);
                 
-                int maxwidth = 300;
-                int maxheight = 300;
+                int maxwidth = 240;
+                int maxheight = 140;
 
                 Bitmap img = (Bitmap)new ImageConverter().ConvertFrom(bytes);
                 Bitmap bitmap = new Bitmap(maxwidth, maxheight);
@@ -259,23 +260,8 @@
                     graphics.DrawImage(img, 0, 0, maxwidth, maxheight);
                 img = bitmap;
                 
-                // Bitmap image = (Bitmap)new ImageConverter().ConvertFrom(bytes);
-                for (int i = 0; i < img.Width; i++)
-                {
-                    for (int j = 0; j < img.Height; j++)
-                    {
-                        imageColors.Add(new[]
-                        {
-                            Convert.ToByte((decimal) img.GetPixel(i, j).R),
-                            Convert.ToByte((decimal) img.GetPixel(i, j).G),
-                            Convert.ToByte((decimal) img.GetPixel(i, j).B)
-                        });
-                    }
-                }
+                LedStripWorker.Instance.SetImage(img);
                 
-                LedStripWorker.Instance.SetImage(imageColors, transitionTime);
-                
-                // img.Save(AppDomain.CurrentDomain.BaseDirectory + @"\imageArc.jpeg", System.Drawing.Imaging.ImageFormat.Jpeg);
                 return context.JsonResponseAsync(Program.State);
             }
             catch (Exception ex)
