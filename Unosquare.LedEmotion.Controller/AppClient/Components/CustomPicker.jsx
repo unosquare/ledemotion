@@ -17,26 +17,26 @@ export const CustomPicker = ({ width, rgb, hex, hsv, hsl, onChange, onSwatchHove
         width,
         padding: '10px 10px 0',
         boxSizing: 'initial',
-        background: '#fff',
+        background: '#FFF',
         borderRadius: '4px',
-        boxShadow: '0 0 0 1px rgba(0,0,0,.15), 0 8px 16px rgba(0,0,0,.15)',
+        boxShadow: '0 0 0 1px rgba(0,0,0,.15), 0 8px 16px rgba(0,0,0,.15)'
       },
-      saturation: {
+      saturationDiv: {
         width: '100%',
         paddingBottom: '75%',
         position: 'relative',
-        overflow: 'hidden',
+        overflow: 'hidden'
       },
-      Saturation: {
+      saturation: {
         radius: '3px',
-        shadow: 'inset 0 0 0 1px rgba(0,0,0,.15), inset 0 0 4px rgba(0,0,0,.25)',
+        shadow: 'inset 0 0 0 1px rgba(0,0,0,.15), inset 0 0 4px rgba(0,0,0,.25)'
       },
       controls: {
-        display: 'flex',
+        display: 'flex'
       },
       sliders: {
         padding: '4px 0',
-        flex: '1',
+        flex: '1'
       },
       color: {
         width: '24px',
@@ -44,32 +44,32 @@ export const CustomPicker = ({ width, rgb, hex, hsv, hsl, onChange, onSwatchHove
         position: 'relative',
         marginTop: '4px',
         marginLeft: '4px',
-        borderRadius: '3px',
+        borderRadius: '3px'
       },
       activeColor: {
         absolute: '0px 0px 0px 0px',
         borderRadius: '2px',
         background: `rgba(${rgb.r},${rgb.g},${rgb.b},${rgb.a})`,
-        boxShadow: 'inset 0 0 0 1px rgba(0,0,0,.15), inset 0 0 4px rgba(0,0,0,.25)',
+        boxShadow: 'inset 0 0 0 1px rgba(0,0,0,.15), inset 0 0 4px rgba(0,0,0,.25)'
       },
       hue: {
         position: 'relative',
         height: '10px',
-        overflow: 'hidden',
+        overflow: 'hidden'
       },
       Hue: {
         radius: '2px',
-        shadow: 'inset 0 0 0 1px rgba(0,0,0,.15), inset 0 0 4px rgba(0,0,0,.25)',
+        shadow: 'inset 0 0 0 1px rgba(0,0,0,.15), inset 0 0 4px rgba(0,0,0,.25)'
       },
       alpha: {
         position: 'relative',
         height: '10px',
         marginTop: '4px',
-        overflow: 'hidden',
+        overflow: 'hidden'
       },
       Alpha: {
         radius: '2px',
-        shadow: 'inset 0 0 0 1px rgba(0,0,0,.15), inset 0 0 4px rgba(0,0,0,.25)',
+        shadow: 'inset 0 0 0 1px rgba(0,0,0,.15), inset 0 0 4px rgba(0,0,0,.25)'
       },
       cardStyle: {
         boxShadow: 'none'
@@ -80,13 +80,13 @@ export const CustomPicker = ({ width, rgb, hex, hsv, hsl, onChange, onSwatchHove
     },
     'disableAlpha': {
       color: {
-        height: '10px',
+        height: '10px'
       },
       hue: {
-        height: '10px',
+        height: '10px'
       },
       alpha: {
-        display: 'none',
+        display: 'none'
       },
     },
   }, { disableAlpha })
@@ -94,30 +94,15 @@ export const CustomPicker = ({ width, rgb, hex, hsv, hsl, onChange, onSwatchHove
   return (
     <div style={styles.picker} className={`sketch-picker ${className}`}>
       <div style={styles.saturation}>
-        <Saturation
-          style={styles.Saturation}
-          hsl={hsl}
-          hsv={hsv}
-          onChange={onChange}
-        />
+        <Saturation style={styles.Saturation} hsl={hsl} hsv={hsv} onChange={onChange} />
       </div>
       <div style={styles.controls} className="flexbox-fix">
         <div style={styles.sliders}>
           <div style={styles.hue}>
-            <Hue
-              style={styles.Hue}
-              hsl={hsl}
-              onChange={onChange}
-            />
+            <Hue style={styles.Hue} hsl={hsl} onChange={onChange} />
           </div>
           <div style={styles.alpha}>
-            <Alpha
-              style={styles.Alpha}
-              rgb={rgb}
-              hsl={hsl}
-              renderers={renderers}
-              onChange={onChange}
-            />
+            <Alpha style={styles.Alpha} rgb={rgb} hsl={hsl} renderers={renderers} onChange={onChange} />
           </div>
         </div>
         <div style={styles.color}>
@@ -147,7 +132,6 @@ export const CustomPicker = ({ width, rgb, hex, hsv, hsl, onChange, onSwatchHove
         rgb={rgb}
         styles={styles}
       />
-
     </div>
   )
 }
@@ -157,16 +141,8 @@ function CardComp(props) {
     return (
       <Card style={props.styles.cardStyle}>
         <CardActions>
-          <AddButton
-            rgb={props.rgb}
-            action={props.addAction}
-            styles={props.styles}
-          />
-
-          <DeleteButton
-            action={props.deleteAction}
-            styles={props.styles}
-          />
+          <AddButton rgb={props.rgb} action={props.addAction} styles={props.styles} />
+          <DeleteButton action={props.deleteAction} styles={props.styles} />
         </CardActions>
       </Card>
     )
@@ -181,9 +157,7 @@ function DeleteButton(props) {
   if (props.action != null) {
     return (
       <div style={props.styles.buttonStyle}>
-        <IconButton
-          onClick={() => props.action()}
-          color='default'>
+        <IconButton onClick={() => props.action()} color='default'>
           <DeleteIcon />
         </IconButton>
       </div>
@@ -199,9 +173,7 @@ function AddButton(props) {
   if (props.action != null) {
     return (
       <div style={props.styles.buttonStyle}>
-        <IconButton
-          onClick={() => props.action(props.rgb)}
-          color='default'>
+        <IconButton onClick={() => props.action(props.rgb)} color='default'>
           <AddIcon />
         </IconButton>
       </div>
@@ -233,7 +205,7 @@ function Fields(props) {
 
 CustomPicker.propTypes = {
   disableAlpha: PropTypes.bool,
-  width: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
+  width: PropTypes.oneOfType([PropTypes.string, PropTypes.number])
 }
 
 CustomPicker.defaultProps = {

@@ -79,7 +79,7 @@ class SingleColor extends Component {
     }
 
     componentDidMount = () => {
-        this.GetColors();
+        this.getColors();
     };
 
     componentWillMount() {
@@ -98,12 +98,12 @@ class SingleColor extends Component {
         });
     }
 
-    GetColors = () => {
+    getColors = () => {
         Axios.get('/api/appstate')
             .then(response => {
                 this.setState({ colors: this.state.presetColors });
                 response.data.SolidColorPresets.forEach(element => {
-                    var hexColor = '#' + this.ByteToHex(element.R) + this.ByteToHex(element.G) + this.ByteToHex(element.B);
+                    var hexColor = '#' + this.byteToHex(element.R) + this.byteToHex(element.G) + this.byteToHex(element.B);
 
                     this.setState({
                         colors: this.state.colors.concat({ color: hexColor, title: element.Name, origin: 'Json' })
@@ -116,13 +116,13 @@ class SingleColor extends Component {
             });
     }
 
-    ByteToHex = (c) => {
+    byteToHex = (c) => {
         var hex = c.toString(16);
 
         return hex.length === 1 ? `0${hex}` : hex;
     };
 
-    ChangeTextColor = (rgb) => {
+    changeTextColor = (rgb) => {
         var luma = 0.2126 * rgb.r + 0.7152 * rgb.g + 0.0722 * rgb.b; // per ITU-R BT.709
 
         if (luma < 170) {
@@ -133,32 +133,34 @@ class SingleColor extends Component {
         }
     }
 
-    ChangeBackgroundColor = (color) => {
+    changeBackgroundColor = (color) => {
         this.setState(prevState => ({
             background: color
         }));
     }
 
     handleChange = (color, event) => {
-        this.ChangeTextColor(color.rgb);
-        this.ChangeBackgroundColor(color.hex);
-        this.ResetValues();
+        console.log("Lok'tar Ogar")
+        this.changeTextColor(color.rgb);
+        this.changeBackgroundColor(color.hex);
+        this.setState({ origin: 'Json' });
     }
 
-    SelectColor = (color) => {
-        var rgb = this.HexToRGB(color.color);
+    selectColor = (color) => {
+        var rgb = this.hexToRGB(color.color);
         this.setState({ presetName: color.title });
         this.setState({ origin: color.origin });
-        this.ChangeTextColor(rgb);
-        this.ChangeBackgroundColor(color.color);
-        this.SetColor(rgb, true);
+        this.changeTextColor(rgb);
+        this.changeBackgroundColor(color.color);
+        this.setColor(rgb, true);
     }
 
     handleClose = () => {
         this.setState({ displayColorPicker: false });
+        this.resetValues();
     };
 
-    SetColor = (color, sendToApi) => {
+    setColor = (color, sendToApi) => {
         if (sendToApi !== true)
             return;
 
@@ -167,10 +169,10 @@ class SingleColor extends Component {
             R: color.r,
             G: color.g,
             B: color.b
-        }).then(() => { this.GetColors() });
+        }).then(() => { this.getColors() });
     }
 
-    HexToRGB = (a) => {
+    hexToRGB = (a) => {
         var first = a[1] + a[2];
         var second = a[3] + a[4];
         var third = a[5] + a[6];
@@ -189,26 +191,25 @@ class SingleColor extends Component {
         return rgbColor;
     }
 
-    ResetValues = () => {
+    resetValues = () => {
         this.setState({ presetName: '', color: [], origin: '' });
     }
 
-    HandleAddDialogOpen = (rgb) => {
+    handleAddDialogOpen = (rgb) => {
         this.setState({ addOpen: true, color: rgb });
     };
 
-    HandleAddDialogClose = () => {
+    handleAddDialogClose = () => {
         this.setState({ addOpen: false, displayColorPicker: false });
-        this.ResetValues();
     };
 
-    DeleteColor = () => {
+    deleteColor = () => {
         Axios.delete('/api/preset', {
             data: { Name: this.state.presetName }
-        }).then(() => { this.GetColors() });
+        }).then(() => { this.getColors(), this.resetValues() });
     }
 
-    AddColor = () => {
+    addColor = () => {
         if (this.state.presetName == null || this.state.presetName == '' || this.state.presetName == 'Add Color') {
             return;
         }
@@ -218,10 +219,10 @@ class SingleColor extends Component {
             R: this.state.color.r,
             G: this.state.color.g,
             B: this.state.color.b
-        }).then(() => { this.GetColors() }, this.HandleAddDialogClose());
+        }).then(() => { this.getColors() }, this.handleAddDialogClose(), this.setState({ origin: 'Json' }));
     }
 
-    ColorCard = (props) => {
+    colorCard = (props) => {
         if (props.color.title != 'Add Color') {
             return (
                 <div>
@@ -244,7 +245,7 @@ class SingleColor extends Component {
         }
     }
 
-    ColorPickerCom = (props) => {
+    colorPickerCom = (props) => {
         var display = '';
         var colorPickerWidth = '';
         var presetColorWidth = '';
@@ -264,13 +265,13 @@ class SingleColor extends Component {
             <div style={{ display: display, alignItems: 'center', justifyContent: 'center', width: '80%', margin: '0 auto' }} >
                 <Dialog open={this.state.displayColorPicker} onClose={this.handleClose} aria-labelledby="form-dialog-title">
                     <CustomPicker
-                        addAction={this.HandleAddDialogOpen}
+                        addAction={this.handleAddDialogOpen.bind(this) }
                         presetColors={[]}
                         disableAlpha
                         fields={false}
                         width={250}
                         color={props.background}
-                        onChangeComplete={this.handleChange}
+                        onChangeComplete={this.handleChange.bind(this) }
                     />
                 </Dialog>
 
@@ -288,7 +289,7 @@ class SingleColor extends Component {
                                 {
                                     this.state.colors.map((color, key) =>
                                         <Grid key={key} item>
-                                            <this.ColorCard classes={props.classes} color={color} action={this.SelectColor} />
+                                            <this.colorCard classes={props.classes} color={color} action={this.selectColor} />
                                         </Grid>
                                     )
                                 }
@@ -300,7 +301,7 @@ class SingleColor extends Component {
         )
     }
 
-    Fab = (props) => {
+    fab = (props) => {
         if (props.origin == "Json") {
             return (
                 <div>
@@ -331,7 +332,7 @@ class SingleColor extends Component {
 
                     <Dialog
                         open={this.state.addOpen}
-                        onClose={this.HandleAddDialogClose}
+                        onClose={this.handleAddDialogClose}
                         aria-labelledby="form-dialog-title"
                     >
                         <DialogContent>
@@ -346,10 +347,10 @@ class SingleColor extends Component {
                             />
                         </DialogContent>
                         <DialogActions>
-                            <Button onClick={this.HandleAddDialogClose} color="primary">
+                            <Button onClick={this.handleAddDialogClose} color="primary">
                                 Cancel
                             </Button>
-                            <Button onClick={this.AddColor} color="primary">
+                            <Button onClick={this.addColor} color="primary">
                                 Save
                             </Button>
                         </DialogActions>
@@ -359,14 +360,14 @@ class SingleColor extends Component {
                     <br />
 
                     { /* Color picker */}
-                    <this.ColorPickerCom classes={classes} background={background} textColor={textColor} />
+                    <this.colorPickerCom classes={classes} background={background} textColor={textColor} />
 
                     { /* Tooltip */}
-                    <this.Fab
+                    <this.fab
                         classes={classes}
                         textColor={textColor}
                         background={background}
-                        DeleteColor={this.DeleteColor}
+                        DeleteColor={this.deleteColor}
                         origin={this.state.origin}
                     />
 

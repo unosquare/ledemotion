@@ -5,6 +5,7 @@ import Table, { TableBody, TableCell, TableHead, TableRow } from 'material-ui/Ta
 import PropTypes from 'prop-types';
 import { withStyles } from 'material-ui/styles';
 import Axios from 'axios';
+
 const styles = theme => ({
   root : {
     flexGrow : 1,
@@ -16,7 +17,7 @@ const styles = theme => ({
     minWidth : 700,
   },
   responsiveTableStyle : {
-    overflowX : 'auto',
+    overflowX : 'auto'
   }
 });
 
@@ -25,7 +26,8 @@ class Status extends Component {
     ConnectionType : [],
     LocalIPs : [],
     PublicIP: ""
-  }
+  };
+
   componentDidMount = () => {
     Axios.get("api/status")
     .then(response =>{
@@ -36,8 +38,8 @@ class Status extends Component {
       });
     });
   } 
-  render() {
 
+  render() {
     const { classes } = this.props;
     const { LocalIPs, PublicIP, ConnectionType } = this.state;
 
@@ -61,12 +63,12 @@ class Status extends Component {
               </TableRow>
               <TableRow>
                 <TableCell>Local IP Addresses</TableCell>
-                <TableCell>{LocalIPs.join(",")}</TableCell>
+                <TableCell>{ LocalIPs.join(",") }</TableCell>
                 <TableCell>The network IPv4 addresses of this controller</TableCell>
               </TableRow>
               <TableRow>
                 <TableCell>Public IP Address</TableCell>
-                <TableCell>{PublicIP}</TableCell>
+                <TableCell>{ PublicIP }</TableCell>
                 <TableCell>The public network IPv4 address of this controller</TableCell>
               </TableRow>
             </TableBody>

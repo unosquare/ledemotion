@@ -271,5 +271,60 @@
                 });
             }
         }
+
+        [WebApiHandler(HttpVerbs.Post, RelativePath + "image")]
+        public Task<bool> SaveImage(WebServer server, HttpListenerContext context)
+        {
+            try
+            {
+                byte frames = 6;
+                var data = Json.Deserialize<ImagePreset>(context.RequestBody());
+
+                var stringIm = data.Data.Replace(data.Type, string.Empty).Substring(13);
+                byte[] bytes = Convert.FromBase64String(stringIm);
+                var imageColors = new List<byte[]>();
+
+                var transitionTime = TimeSpan.FromMilliseconds(LedStripWorker.Instance.MillisecondsPerFrame * frames);
+                
+                int maxwidth = 300;
+                int maxheight = 300;
+
+                Bitmap img = (Bitmap)new ImageConverter().ConvertFrom(bytes);
+                Bitmap bitmap = new Bitmap(maxwidth, maxheight);
+
+                using (Graphics graphics = Graphics.FromImage(bitmap))
+                    graphics.DrawImage(img, 0, 0, maxwidth, maxheight);
+                img = bitmap;
+                
+                // Bitmap image = (Bitmap)new ImageConverter().ConvertFrom(bytes);
+                for (int i = 0; i < img.Width; i++)
+                {
+                    for (int j = 0; j < img.Height; j++)
+                    {
+                        imageColors.Add(new[]
+                        {
+                            Convert.ToByte((decimal) img.GetPixel(i, j).R),
+                            Convert.ToByte((decimal) img.GetPixel(i, j).G),
+                            Convert.ToByte((decimal) img.GetPixel(i, j).B)
+                        });
+                    }
+                }
+                
+                LedStripWorker.Instance.SetImage(imageColors, transitionTime);
+                
+                // img.Save(AppDomain.CurrentDomain.BaseDirectory + @"\imageArc.jpeg", System.Drawing.Imaging.ImageFormat.Jpeg);
+                return context.JsonResponseAsync(Program.State);
+            }
+            catch (Exception ex)
+            {
+                context.Response.StatusCode = 400;
+
+                return context.JsonResponseAsync(new
+                {
+                    ErrorType = ex.GetType().ToString(),
+                    ex.Message
+                });
+            }
+        }
     }
 }
