@@ -16,6 +16,7 @@ import Tooltip from 'material-ui/Tooltip';
 import FlashOn from 'material-ui-icons/FlashOn';
 import Dialog from 'material-ui/Dialog/Dialog';
 import styled, { keyframes } from 'styled-components';
+import FlashOff from 'material-ui-icons/FlashOff';
 
 const styles = theme => ({
     root: {
@@ -55,7 +56,7 @@ const styles = theme => ({
         borderRadius: 6
     },
     paperInfoStyle: {
-        backgroundColor: '#FAFAFA'
+        backgroundColor: '#FFFFFF'
     },
     divSketchPickerStyle: {
         display: 'flex',
@@ -103,6 +104,12 @@ const styles = theme => ({
         bottom: 32,
         right: 32
     },
+    fabButtonAbsoluteStyleAux: {
+        flip: false,
+        position: 'absolute',
+        bottom: 96,
+        right: 32
+    },
     spacer20: {
         height: '20px',
         width: '100%',
@@ -139,7 +146,8 @@ class Transition extends Component {
 
         this.setState(prevState => ({
             colors: [...prevState.colors, { id: this.state.colors.length, name: colorHexadecimal, rgb: { r, g, b } }],
-            selectedColor: color
+            selectedColor: color,
+            displayColorPicker : false
         }));
     }
 
@@ -206,8 +214,9 @@ class Transition extends Component {
 
         const CustomPaper = styled(Paper) `
             && {
-                background: ${ colors.length === 0 ? `linear-gradient(to right, ${'#FFFFFF'}, ${'#FFFFFF'})`
-                        : `linear-gradient(to right, ${colors.map((color) => color.name)})`};
+                background: ${ (colors.length === 0) ? `${'#FFFFFF'}` :
+                                (colors.length === 1) ? `${colors.map((color) => color.name)}` :
+                                 `linear-gradient(to right, ${colors.map((color) => color.name)})`}; 
                 background-size: 200% 200%;
                 background-position: 0 0;
                 background-repeat: repeat-x;
@@ -233,7 +242,7 @@ class Transition extends Component {
                     {/* Color picker */}
                     <div className={classes.divSketchPickerStyle}>
                         <div>
-                            <Button fab color="primary" aria-label="add" className={classes.button} onClick={this.handleClick} >
+                            <Button fab color="primary" aria-label="add" className={classes.button} onClick={this.handleClick} style = {{ background : "#4CAF50" }}>
                                 <AddIcon />
                             </Button>
                         </div>
@@ -272,8 +281,29 @@ class Transition extends Component {
                     <br /><br /><br />
 
                     {/* Slider */}
-                    <div className={classes.divRCSliderStyle}>
-                        <Slider min={1} max={300} onChange={this.handleValueSliderChange} className={classes.rcSliderStyle} />
+                    <div className = { classes.divRCSliderStyle }>
+                        <Slider
+                            min={1} 
+                            max={300}
+                            trackStyle={{ backgroundColor: '#8BC34A', height: 10 }}
+                            handleStyle={{
+                                borderColor: '#8BC34A',
+                                height: 28,
+                                width: 28,
+                                marginLeft: -14,
+                                marginTop: -9,
+                                backgroundColor: '#FFFFFF',
+                            }}
+                            railStyle={{ backgroundColor: '#DCDCDC', height: 10 }}
+                            onChange={this.handleValueSliderChange}
+                            className={classes.rcSliderStyle}
+                        />
+                    </div>
+                    <br /><br />
+                    <div className = { classes.divRCSliderStyle }>
+                        <Typography type="subheading" component="p">
+                            {seconds} seconds
+                        </Typography>
                     </div>
                     <br /><br /><br />
 
