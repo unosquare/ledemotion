@@ -23,6 +23,7 @@ const styles = theme => ({
 
 class Status extends Component {
   state = {
+    ConnectionType : [],
     LocalIPs : [],
     PublicIP: ""
   };
@@ -31,6 +32,7 @@ class Status extends Component {
     Axios.get("api/status")
     .then(response =>{
       this.setState({
+        ConnectionType : response.data.ConnectionType,
         LocalIPs : response.data.LocalIPs,
         PublicIP : response.data.PublicIP
       });
@@ -39,7 +41,7 @@ class Status extends Component {
 
   render() {
     const { classes } = this.props;
-    const { LocalIPs, PublicIP } = this.state;
+    const { LocalIPs, PublicIP, ConnectionType } = this.state;
 
     return (
       <div className = { classes.root }>
@@ -56,7 +58,7 @@ class Status extends Component {
             <TableBody>
               <TableRow>
                 <TableCell>Connection Type</TableCell>
-                <TableCell>Wireless</TableCell>
+                <TableCell>{ConnectionType.join(",")}</TableCell>
                 <TableCell>Could be wired or wireless</TableCell>
               </TableRow>
               <TableRow>

@@ -174,7 +174,7 @@ function AddButton(props) {
   if (props.action != null) {
     return (
       <div style={props.styles.buttonStyle}>
-        <Button fab mini onClick = { () => props.action(props.rgb) } color = 'primary'>
+        <Button fab mini onClick = { () => props.action(props.rgb) } color = 'primary' style = {{ background : "#4CAF50" }}>
           <AddIcon />
         </Button>
       </div>
