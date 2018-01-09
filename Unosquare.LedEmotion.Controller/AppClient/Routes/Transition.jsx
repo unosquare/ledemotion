@@ -182,22 +182,6 @@ class Transition extends Component {
         });
     }
 
-    /** Stop all */
-    stopAll = () => {
-        console.log('Reseting all');
-
-        this.setState({
-            colors : [],
-            seconds : 1
-        });
-
-        Axios.put('/api/stop', {
-            value : 1
-        }).then(response => {
-            console.log(response);
-        });
-    }
-
     /** Popover for the color picker */
     handleClick = () => {
         this.setState({
