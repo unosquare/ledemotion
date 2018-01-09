@@ -25,11 +25,6 @@ const styles = theme => ({
         paddingLeft: 50,
         paddingRight: 50
     },
-    divPaperStyle: {
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center'
-    },
     paperStyle: {
         paddingTop: 20,
         paddingLeft: 10,
@@ -47,21 +42,11 @@ const styles = theme => ({
     typographyStyle: {
         color: '#FFF'
     },
-    inputSelectedColorStyle: {
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center'
-    },
     inputStyle: {
         borderRadius: 6
     },
     paperInfoStyle: {
         backgroundColor: '#FFFFFF'
-    },
-    divSketchPickerStyle: {
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center'
     },
     sketchPickerStyle: {
         width: 500
@@ -90,34 +75,16 @@ const styles = theme => ({
         width: 60,
         height: 60
     },
-    divRCSliderStyle: {
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center'
-    },
     rcSliderStyle: {
         width: 500
     },
-    fabButtonAbsoluteStyle: {
-        flip: false,
-        position: 'absolute',
-        bottom: 32,
-        right: 32
+    fabButtonStyle : {
+        padding : '0 10px 0 10px'
     },
-    fabButtonAbsoluteStyleAux: {
-        flip: false,
-        position: 'absolute',
-        bottom: 96,
-        right: 32
-    },
-    spacer20: {
-        height: '20px',
-        width: '100%',
-        fontSize: '0',
-        margin: '0',
-        padding: '0',
-        border: '0',
-        display: 'block'
+    componentsAlignToCenterStyle : {
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center'
     }
 });
 
@@ -185,16 +152,12 @@ class Transition extends Component {
 
     /** Stops the transition */
     stopTransition = () => {
-        console.log("Stopping All")
-
         this.setState({
             colors : [],
             seconds : 1
         })
 
         Axios.put('/api/stop');
-
-        console.log('Finished')
     }
 
     /** Popover for the color picker */
@@ -243,10 +206,10 @@ class Transition extends Component {
                 <div className={classes.root}>
 
                     {/* Color selected */}
-                    <div className={classes.divPaperStyle}>
+                    <div className={classes.componentsAlignToCenterStyle}>
                         <CustomPaper className={classes.paperStyle} elevation={4}></CustomPaper>
                     </div>
-                    <br /><br /><br />
+                    <br /><br />
 
                     {/* Dialog color picker */}
                     <Dialog open={displayColorPicker} onClose={this.handleClose} aria-labelledby="form-dialog-title">
@@ -254,14 +217,14 @@ class Transition extends Component {
                     </Dialog>
 
                     {/* Color picker */}
-                    <div className={classes.divSketchPickerStyle}>
+                    <div className={classes.componentsAlignToCenterStyle}>
                         <div>
                             <Button fab color="primary" aria-label="add" className={classes.button} onClick={this.handleClick} style = {{ background : "#4CAF50" }}>
                                 <AddIcon />
                             </Button>
                         </div>
                     </div>
-                    <br /><br /><br />
+                    <br /><br />
 
                     {/* Array of colors */}
                     <div>
@@ -292,10 +255,10 @@ class Transition extends Component {
                             </Grid>
                         </Grid>
                     </div>
-                    <br /><br /><br />
+                    <br /><br />
 
                     {/* Slider */}
-                    <div className = { classes.divRCSliderStyle }>
+                    <div className = { classes.componentsAlignToCenterStyle }>
                         <Slider
                             min={1} 
                             max={300}
@@ -314,39 +277,33 @@ class Transition extends Component {
                         />
                     </div>
                     <br /><br />
-                    <div className = { classes.divRCSliderStyle }>
+                    <div className = { classes.componentsAlignToCenterStyle }>
                         <Typography type="subheading" component="p">
                             {seconds} seconds
                         </Typography>
                     </div>
-                    <br /><br /><br />
+                    <br /><br />
 
-                    {/* Button */}
+                    {/* Buttons */}
                     {
                         colors.length > 0 &&
-                        <div>
-                            <div>
-                                <Tooltip placement="left" title={'Animate ' + colors.length + ' colors over ' + seconds + ' seconds'}>
-                                    <Button fab color="accent" onClick={this.setTransition} className={classes.fabButtonAbsoluteStyle} 
-                                            style = {{ color : "#FFFFFF", background : "#FFD700" }}>
+                        <div className = { classes.componentsAlignToCenterStyle }>
+                            <div className = { classes.fabButtonStyle }>
+                                <Tooltip placement="bottom" title={'Animate ' + colors.length + ' colors over ' + seconds + ' seconds'}>
+                                    <Button fab color="accent" onClick={this.setTransition} style = {{ color : "#FFFFFF", background : "#FFD700" }}>
                                         <FlashOn />
                                     </Button>
                                 </Tooltip>
                             </div>
-                            <br />
-
-                            <div>
+                            <div className = { classes.fabButtonStyle }>
                                 <Tooltip placement="left" title={'Stop Transition'}>
-                                    <Button fab color="accent" onClick={this.stopTransition} className={classes.fabButtonAbsoluteStyleAux} 
-                                            style = {{ color : "#FFFFFF", background : "#000000" }}>
+                                    <Button fab color="accent" onClick={this.stopTransition} style = {{ color : "#FFFFFF", background : "#000000" }}>
                                         <FlashOff />
                                     </Button>
                                 </Tooltip>
                             </div>
-                            <br />
                         </div>
                     }
-
                 </div>
             </div>
         );
