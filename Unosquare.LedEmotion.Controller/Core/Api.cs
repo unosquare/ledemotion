@@ -275,5 +275,29 @@
                 });
             }
         }
+
+        [WebApiHandler(HttpVerbs.Put, RelativePath + "stop")]
+        public Task<bool> StopAnimation(WebServer server, HttpListenerContext context)
+        {
+            try
+            {
+                LedStripWorker.Instance.Restart();
+
+                return context.JsonResponseAsync(new
+                {
+                    Status = "ok"
+                });
+            }
+            catch (Exception ex)
+            {
+                context.Response.StatusCode = 400;
+
+                return context.JsonResponseAsync(new
+                {
+                    ErrorType = ex.GetType().ToString(),
+                    ex.Message
+                });
+            }
+        }
     }
 }

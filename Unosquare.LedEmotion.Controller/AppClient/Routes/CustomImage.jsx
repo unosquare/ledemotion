@@ -123,12 +123,7 @@ class CustomImage extends Component {
   stopAnimateImage = () => {
     this.setState({ status: "Off" });
 
-    Axios.put('/api/color', {
-      F: 6,
-      R: 0,
-      G: 0,
-      B: 0
-    });
+    Axios.put('/api/stop');
   }
 
   complete = (file) => {
@@ -136,8 +131,11 @@ class CustomImage extends Component {
   };
 
   delete = () => {
-    this.setState({ image: "", imageType: "", status: "Off" });
-    this.stopAnimateImage();
+    this.setState({ image: "", imageType: "" });
+
+    if (this.state.status == "On") {
+      this.stopAnimateImage();
+    }
   }
 
   animateButton = (props) => {
@@ -148,7 +146,7 @@ class CustomImage extends Component {
             <IconButton
               className={props.classes.animateButtonStyle}
               onClick={this.animateImage}
-              style={{background:"yellow", color:"black"}}
+              style={{ background: "yellow", color: "black" }}
             >
               <FlashOn />
             </IconButton>
@@ -161,7 +159,7 @@ class CustomImage extends Component {
           <IconButton
             className={props.classes.animateButtonStyle}
             onClick={this.stopAnimateImage}
-            style={{background:"black", color:"white"}}
+            style={{ background: "black", color: "white" }}
           >
             <FlashOff />
           </IconButton>
@@ -186,7 +184,6 @@ class CustomImage extends Component {
     };
 
     var eventHandlers = {
-      /* init: dz => console.log(dz), */
       removedfile: () => this.delete(),
       complete: (file) => this.complete(file)
     }
