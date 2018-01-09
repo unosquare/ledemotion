@@ -86,6 +86,7 @@ class SingleColor extends Component {
     componentWillMount() {
         mql.addListener(this.mediaQueryChanged);
         this.setState({ mql: mql, docked: mql.matches });
+        this.stopAnimateImage();
     }
 
     componentWillUnmount() {
@@ -97,6 +98,10 @@ class SingleColor extends Component {
             mql: mql,
             docked: this.state.mql.matches
         });
+    }
+
+    stopAnimateImage = () => {
+        Axios.put('/api/stop');
     }
 
     getColors = () => {
