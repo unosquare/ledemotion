@@ -4,11 +4,10 @@ import reactCSS from 'reactcss'
 import { ColorWrap, Saturation, Hue, Alpha, Checkboard } from 'react-color/lib/components/common'
 import SketchFields from 'react-color/lib/components/sketch/SketchFields'
 import SketchPresetColors from 'react-color/lib/components/sketch/SketchPresetColors'
-import IconButton from 'material-ui/IconButton';
-import Button from 'material-ui/Button';
-import AddIcon from 'material-ui-icons/Add';
-import Card, { CardActions, CardContent } from 'material-ui/Card';
-import DeleteIcon from 'material-ui-icons/Delete';
+import Button from 'material-ui/Button'
+import AddIcon from 'material-ui-icons/Add'
+import Card, { CardActions} from 'material-ui/Card'
+import DeleteIcon from 'material-ui-icons/Delete'
 
 export const CustomPicker = ({ width, rgb, hex, hsv, hsl, onChange, onSwatchHover,
   disableAlpha, presetColors, renderers, addAction, deleteAction, className = '', fields = true }) => {
@@ -22,13 +21,13 @@ export const CustomPicker = ({ width, rgb, hex, hsv, hsl, onChange, onSwatchHove
         borderRadius: '4px',
         boxShadow: '0 0 0 1px rgba(0,0,0,.15), 0 8px 16px rgba(0,0,0,.15)'
       },
-      saturation: {
+      saturationDiv: {
         width: '100%',
         paddingBottom: '75%',
         position: 'relative',
         overflow: 'hidden'
       },
-      Saturation: {
+      saturation: {
         radius: '3px',
         shadow: 'inset 0 0 0 1px rgba(0,0,0,.15), inset 0 0 4px rgba(0,0,0,.25)'
       },
@@ -53,22 +52,22 @@ export const CustomPicker = ({ width, rgb, hex, hsv, hsl, onChange, onSwatchHove
         background: `rgba(${rgb.r},${rgb.g},${rgb.b},${rgb.a})`,
         boxShadow: 'inset 0 0 0 1px rgba(0,0,0,.15), inset 0 0 4px rgba(0,0,0,.25)'
       },
-      hue: {
+      hueDiv: {
         position: 'relative',
         height: '10px',
         overflow: 'hidden'
       },
-      Hue: {
+      hue: {
         radius: '2px',
         shadow: 'inset 0 0 0 1px rgba(0,0,0,.15), inset 0 0 4px rgba(0,0,0,.25)'
       },
-      alpha: {
+      alphaDiv: {
         position: 'relative',
         height: '10px',
         marginTop: '4px',
         overflow: 'hidden'
       },
-      Alpha: {
+      alpha: {
         radius: '2px',
         shadow: 'inset 0 0 0 1px rgba(0,0,0,.15), inset 0 0 4px rgba(0,0,0,.25)'
       },
@@ -86,7 +85,7 @@ export const CustomPicker = ({ width, rgb, hex, hsv, hsl, onChange, onSwatchHove
       hue: {
         height: '10px'
       },
-      alpha: {
+      alphaDiv: {
         display: 'none'
       },
     },
@@ -94,16 +93,16 @@ export const CustomPicker = ({ width, rgb, hex, hsv, hsl, onChange, onSwatchHove
 
   return (
     <div style={styles.picker} className={`sketch-picker ${className}`}>
-      <div style={styles.saturation}>
-        <Saturation style = { styles.Saturation } hsl = { hsl } hsv = { hsv } onChange = { onChange } />
+      <div style={styles.saturationDiv}>
+        <Saturation style = { styles.saturation } hsl = { hsl } hsv = { hsv } onChange = { onChange } />
       </div>
       <div style={styles.controls} className="flexbox-fix">
         <div style={styles.sliders}>
-          <div style={styles.hue}>
-            <Hue style = { styles.Hue } hsl = { hsl } onChange = { onChange } />
+          <div style={styles.hueDiv}>
+            <Hue style = { styles.hue } hsl = { hsl } onChange = { onChange } />
           </div>
-          <div style={styles.alpha}>
-            <Alpha style = { styles.Alpha } rgb = { rgb } hsl = { hsl } renderers = { renderers } onChange = { onChange} />
+          <div style={styles.alphaDiv}>
+            <Alpha style = { styles.alpha } rgb = { rgb } hsl = { hsl } renderers = { renderers } onChange = { onChange} />
           </div>
         </div>
         <div style={styles.color}>
