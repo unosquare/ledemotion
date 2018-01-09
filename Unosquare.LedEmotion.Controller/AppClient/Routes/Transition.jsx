@@ -183,6 +183,20 @@ class Transition extends Component {
         });
     }
 
+    /** Stops the transition */
+    stopTransition = () => {
+        console.log("Stopping All")
+
+        this.setState({
+            colors : [],
+            seconds : 1
+        })
+
+        Axios.put('/api/stop');
+
+        console.log('Finished')
+    }
+
     /** Popover for the color picker */
     handleClick = () => {
         this.setState({
@@ -308,15 +322,30 @@ class Transition extends Component {
                     <br /><br /><br />
 
                     {/* Button */}
-                    <div>
-                        <Tooltip placement="bottom" title={'Animate ' + colors.length + ' colors over ' + seconds + ' seconds'}>
-                            <Button fab color="accent" disabled = {colors.length === 0} onClick={this.setTransition} className={classes.fabButtonAbsoluteStyle} 
-                                    style = { colors.length === 0 ? { color : "#A3A3A3", background : "#DCDCDC" } : { color : "#FFFFFF", background : "#FFD700" } }>
-                                <FlashOn />
-                            </Button>
-                        </Tooltip>
-                    </div>
-                    <br />
+                    {
+                        colors.length > 0 &&
+                        <div>
+                            <div>
+                                <Tooltip placement="left" title={'Animate ' + colors.length + ' colors over ' + seconds + ' seconds'}>
+                                    <Button fab color="accent" onClick={this.setTransition} className={classes.fabButtonAbsoluteStyle} 
+                                            style = {{ color : "#FFFFFF", background : "#FFD700" }}>
+                                        <FlashOn />
+                                    </Button>
+                                </Tooltip>
+                            </div>
+                            <br />
+
+                            <div>
+                                <Tooltip placement="left" title={'Stop Transition'}>
+                                    <Button fab color="accent" onClick={this.stopTransition} className={classes.fabButtonAbsoluteStyleAux} 
+                                            style = {{ color : "#FFFFFF", background : "#000000" }}>
+                                        <FlashOff />
+                                    </Button>
+                                </Tooltip>
+                            </div>
+                            <br />
+                        </div>
+                    }
 
                 </div>
             </div>
