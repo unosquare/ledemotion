@@ -18,7 +18,7 @@ import WbSunny from 'material-ui-icons/WbSunny';
 import SettingsDialog from './Components/SettingsDialog.jsx';
 
 const drawerWidth = 240;
-const primary = '#EAE5E5';
+const primary = '#8BC34A';
 
 const styles = theme => ({
     root: {
@@ -54,10 +54,11 @@ const styles = theme => ({
             width: drawerWidth,
             position: 'relative',
             height: '100%'
-        }
+        },
+        borderRightStyle: 'none'
     },
     content: {
-        backgroundColor: theme.palette.background.default,
+        backgroundColor: '#FFFFFF',
         width: '100%',
         height: '100%',
         marginTop: 66,
@@ -79,10 +80,7 @@ const styles = theme => ({
     },
     unosquareLink : {
         textDecoration: 'none',
-        color : "#C68400",
-    },
-    settingsButton: {
-        color: '#FFF'
+        color : "#8BC34A",
     },
     spacer: {
         flex: '1 1 100%'
@@ -133,7 +131,7 @@ class App extends Component {
                         )
                     }
                     </List>
-                    <Divider />
+                    
                 </div>
             </div>
       );
@@ -145,14 +143,14 @@ class App extends Component {
                     <AppBar className = { classes.appBar }>
                         <Toolbar>
                             <IconButton color = 'default' aria-label = 'open drawer' onClick = { this.handleDrawerToggle } className = { classes.navIconHide }>
-                                <MenuIcon />
+                                <MenuIcon color = "contrast" />
                             </IconButton>
                             {Routes.map((route, index) => (
                                 <Route key={index} path={route.path} exact={route.exact} component={route.title} />
                             ))}
                             <div className={classes.spacer}></div>
                             <IconButton onClick={this.handleDialogOpen}>
-                                <SettingsIcon/>
+                                <SettingsIcon color = "contrast" />
                             </IconButton>
                         </Toolbar>
                     </AppBar>
@@ -181,8 +179,7 @@ class App extends Component {
                         </Typography>
                     </main>
                 </div>                
-                <SettingsDialog open={this.state.isSettingsDialogOpen} handleClose={this.handleDialogClose}
-                /> 
+                <SettingsDialog open={this.state.isSettingsDialogOpen} handleClose={this.handleDialogClose} /> 
             </div>
         </Router>
       );

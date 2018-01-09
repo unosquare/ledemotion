@@ -21,13 +21,13 @@ export const CustomPicker = ({ width, rgb, hex, hsv, hsl, onChange, onSwatchHove
         borderRadius: '4px',
         boxShadow: '0 0 0 1px rgba(0,0,0,.15), 0 8px 16px rgba(0,0,0,.15)'
       },
-      saturationDiv: {
+      saturation: {
         width: '100%',
         paddingBottom: '75%',
         position: 'relative',
         overflow: 'hidden'
       },
-      saturation: {
+      Saturation: {
         radius: '3px',
         shadow: 'inset 0 0 0 1px rgba(0,0,0,.15), inset 0 0 4px rgba(0,0,0,.25)'
       },
@@ -93,16 +93,16 @@ export const CustomPicker = ({ width, rgb, hex, hsv, hsl, onChange, onSwatchHove
 
   return (
     <div style={styles.picker} className={`sketch-picker ${className}`}>
-      <div style={styles.saturationDiv}>
-        <Saturation style = { styles.saturation } hsl = { hsl } hsv = { hsv } onChange = { onChange } />
+      <div style={styles.saturation}>
+        <Saturation style = { styles.Saturation } hsl = { hsl } hsv = { hsv } onChange = { onChange } />
       </div>
       <div style={styles.controls} className="flexbox-fix">
         <div style={styles.sliders}>
-          <div style={styles.hueDiv}>
-            <Hue style = { styles.hue } hsl = { hsl } onChange = { onChange } />
+          <div style={styles.hue}>
+            <Hue style = { styles.Hue } hsl = { hsl } onChange = { onChange } />
           </div>
-          <div style={styles.alphaDiv}>
-            <Alpha style = { styles.alpha } rgb = { rgb } hsl = { hsl } renderers = { renderers } onChange = { onChange} />
+          <div style={styles.alpha}>
+            <Alpha style = { styles.Alpha } rgb = { rgb } hsl = { hsl } renderers = { renderers } onChange = { onChange} />
           </div>
         </div>
         <div style={styles.color}>

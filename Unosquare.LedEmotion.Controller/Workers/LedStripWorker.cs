@@ -26,7 +26,7 @@
             { AnimationType.Image, new ImageAnimation() },
         };
         private Thread _animationThread;
-        
+
         private AnimationType _currentAnimationType = AnimationType.SolidColor;
 
         /// <summary>
@@ -87,7 +87,7 @@
         #region Init, Start and Stop
 
         private IAnimation CurrentAnimation => _animations[_currentAnimationType];
-        
+
         /// <summary>
         /// Sets the start parameters parameters.
         /// </summary>
@@ -197,7 +197,7 @@
         #endregion
 
         #region Animation
-        
+
         /// <summary>
         /// Changes the animation mode to Color
         /// </summary>
