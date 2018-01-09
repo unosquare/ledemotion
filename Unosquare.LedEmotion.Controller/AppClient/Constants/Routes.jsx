@@ -11,7 +11,7 @@ import CropOriginal from 'material-ui-icons/CropOriginal';
 
 const style = {
     overflow: 'visible',
-    color: 'black'
+    color: '#FFFFFF'
 };
 
 const routes = [
@@ -21,7 +21,7 @@ const routes = [
         title: () => <Typography style={style} noWrap type='title' noWrap>Status</Typography>,
         main: () => <Status />,
         linkTo: '/',
-        icon: () => <Info />,
+        icon: () => <Info style = {{ color : '#689F38'}} />,
         iconText: 'Status'
     },
     {
@@ -30,7 +30,7 @@ const routes = [
         title: () => <Typography style={style} noWrap type='title' noWrap>Single Color</Typography>,
         main: () => <SingleColor />,
         linkTo: 'singlecolor',
-        icon: () => <ColorLens />,
+        icon: () => <ColorLens style = {{ color : '#689F38'}} />,
         iconText: 'Single Color'
     },
     {
@@ -39,7 +39,7 @@ const routes = [
         title: () => <Typography style={style} noWrap type='title' noWrap>Transition</Typography>,
         main: () => <Transition />,
         linkTo: 'transition',
-        icon: () => <CompareArrows />,
+        icon: () => <CompareArrows style = {{ color : '#689F38'}} />,
         iconText: 'Transition'
     },
     {
@@ -48,7 +48,7 @@ const routes = [
         title: () => <Typography style={style} noWrap type='title' noWrap>Custom Image</Typography>,
         main: () => <CustomImage />,
         linkTo: 'customimage',
-        icon: () => <CropOriginal />,
+        icon: () => <CropOriginal style = {{ color : '#689F38'}} />,
         iconText: 'Custom Image'
     }
 ];

@@ -56,7 +56,7 @@ const styles = theme => ({
         borderRadius: 6
     },
     paperInfoStyle: {
-        backgroundColor: '#FAFAFA'
+        backgroundColor: '#FFFFFF'
     },
     divSketchPickerStyle: {
         display: 'flex',
@@ -146,7 +146,8 @@ class Transition extends Component {
 
         this.setState(prevState => ({
             colors: [...prevState.colors, { id: this.state.colors.length, name: colorHexadecimal, rgb: { r, g, b } }],
-            selectedColor: color
+            selectedColor: color,
+            displayColorPicker : false
         }));
     }
 
@@ -241,7 +242,7 @@ class Transition extends Component {
                     {/* Color picker */}
                     <div className={classes.divSketchPickerStyle}>
                         <div>
-                            <Button fab color="primary" aria-label="add" className={classes.button} onClick={this.handleClick} >
+                            <Button fab color="primary" aria-label="add" className={classes.button} onClick={this.handleClick} style = {{ background : "#4CAF50" }}>
                                 <AddIcon />
                             </Button>
                         </div>
@@ -284,9 +285,9 @@ class Transition extends Component {
                         <Slider
                             min={1} 
                             max={300}
-                            trackStyle={{ backgroundColor: '#4CAF50', height: 10 }}
+                            trackStyle={{ backgroundColor: '#8BC34A', height: 10 }}
                             handleStyle={{
-                                borderColor: '#4CAF50',
+                                borderColor: '#8BC34A',
                                 height: 28,
                                 width: 28,
                                 marginLeft: -14,
