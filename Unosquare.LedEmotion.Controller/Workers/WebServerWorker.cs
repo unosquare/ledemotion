@@ -34,7 +34,7 @@
         
         public WebServer Server { get; private set; }
 
-        public void Start(int value)
+        public void Start()
         {
             lock (SyncLock)
             {

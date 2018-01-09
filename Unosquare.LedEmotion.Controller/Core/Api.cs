@@ -175,7 +175,7 @@
             try
             {
                 var data = Json.Deserialize<AppSettings>(context.RequestBody());
-                LedStripWorker.Instance.Restart(data.LedCount, data.SpiChannel, data.SpiFrequency, data.FramesPerSecond, 0);
+                LedStripWorker.Instance.Restart(data.LedCount, data.SpiChannel, data.SpiFrequency, data.FramesPerSecond);
 
                 return context.JsonResponseAsync(new
                 {
@@ -243,7 +243,7 @@
                 var data = Json.Deserialize(context.RequestBody()) as Dictionary<string, object>;
                 var value = int.Parse(data["value"].ToString());
 
-                LedStripWorker.Instance.Restart(240, 1, 1000000, 25, value);
+                LedStripWorker.Instance.Restart(240, 1, 1000000, 25);
 
                 return context.JsonResponseAsync(new
                 {

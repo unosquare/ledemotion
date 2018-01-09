@@ -26,7 +26,7 @@
             { AnimationType.Image, new ImageAnimation() },
         };
         private Thread _animationThread;
-        
+
         private AnimationType _currentAnimationType = AnimationType.SolidColor;
 
         /// <summary>
@@ -87,7 +87,7 @@
         #region Init, Start and Stop
 
         private IAnimation CurrentAnimation => _animations[_currentAnimationType];
-        
+
         /// <summary>
         /// Sets the start parameters parameters.
         /// </summary>
@@ -110,7 +110,7 @@
         /// <summary>
         /// Should start the task immediately and asynchronously
         /// </summary>
-        public void Start(int value)
+        public void Start()
         {
             SetParameters(LedCount, SpiChannel, SpiFrequency, FramesPerSecond);
 
@@ -129,34 +129,21 @@
                     LedStrip.ClearPixels();
                     LedStrip.Render();
 
-                    if (value == 1)
+                    for (var i = 0; i < LedCount; i++)
                     {
-                        for (var i = 0; i < LedCount; i++)
-                        {
-                            LedStrip.SetPixel(i, 1f, 0, 0, 255);
-                            LedStrip.Render();
-                            LedStrip.ClearPixels();
-                            LedStrip.Render();
-                        }
+                        LedStrip.SetPixel(i, 1f, 255, 0, 0);
+                        LedStrip.Render();
+                        tickLock.WaitOne(10);
+                    }
 
-                    } else
+                    for (var i = 0; i < 3; i++)
                     {
-                        for (var i = 0; i < LedCount; i++)
-                        {
-                            LedStrip.SetPixel(i, 1f, 255, 0, 0);
-                            LedStrip.Render();
-                            tickLock.WaitOne(10);
-                        }
-
-                        for (var i = 0; i < 3; i++)
-                        {
-                            LedStrip.SetPixels(0, 255, 0);
-                            LedStrip.Render();
-                            tickLock.WaitOne(200);
-                            LedStrip.ClearPixels();
-                            LedStrip.Render();
-                            tickLock.WaitOne(200);
-                        }
+                        LedStrip.SetPixels(0, 255, 0);
+                        LedStrip.Render();
+                        tickLock.WaitOne(200);
+                        LedStrip.ClearPixels();
+                        LedStrip.Render();
+                        tickLock.WaitOne(200);
                     }
 
                     LedStrip.Render();
@@ -174,11 +161,11 @@
         /// <summary>
         /// Restarts the LedStripWorker with the specified parameters
         /// </summary>
-        public void Restart(int ledCount, int spiChannel, int spiFrequency, int framesPerSecond, int value)
+        public void Restart(int ledCount, int spiChannel, int spiFrequency, int framesPerSecond)
         {
             this.Stop();
             this.SetParameters(ledCount, spiChannel, spiFrequency, framesPerSecond);
-            this.Start(value);
+            this.Start();
         }
 
         /// <summary>
@@ -210,7 +197,7 @@
         #endregion
 
         #region Animation
-        
+
         /// <summary>
         /// Changes the animation mode to Color
         /// </summary>

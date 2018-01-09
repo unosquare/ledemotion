@@ -4,8 +4,8 @@ import Paper from 'material-ui/Paper';
 import PropTypes from 'prop-types';
 import { withStyles } from 'material-ui/styles';
 import Card, { CardActions, CardContent } from 'material-ui/Card';
-// import Slider, { Range } from 'rc-slider';
-// import 'rc-slider/assets/index.css';
+import Slider, { Range } from 'rc-slider';
+import 'rc-slider/assets/index.css';
 import Button from 'material-ui/Button';
 import Grid from 'material-ui/Grid';
 import IconButton from 'material-ui/IconButton';
@@ -16,9 +16,6 @@ import Tooltip from 'material-ui/Tooltip';
 import FlashOn from 'material-ui-icons/FlashOn';
 import Dialog from 'material-ui/Dialog/Dialog';
 import styled, { keyframes } from 'styled-components';
-
-import Slider from 'react-rangeslider';
-import 'react-rangeslider/lib/index.css'
 import FlashOff from 'material-ui-icons/FlashOff';
 
 const styles = theme => ({
@@ -250,7 +247,7 @@ class Transition extends Component {
                     <div className={classes.divPaperStyle}>
                         <CustomPaper className={classes.paperStyle} elevation={4}></CustomPaper>
                     </div>
-                    <br /><br />
+                    <br /><br /><br />
 
                     {/* Dialog color picker */}
                     <Dialog open={displayColorPicker} onClose={this.handleClose} aria-labelledby="form-dialog-title">
@@ -265,7 +262,7 @@ class Transition extends Component {
                             </Button>
                         </div>
                     </div>
-                    <br /><br />
+                    <br /><br /><br />
 
                     {/* Array of colors */}
                     <div>
@@ -296,45 +293,45 @@ class Transition extends Component {
                             </Grid>
                         </Grid>
                     </div>
-                    <br /><br />
+                    <br /><br /><br />
 
                     {/* Slider */}
                     <div className = { classes.divRCSliderStyle }>
-                        {/* <Slider min={1} max={300} onChange={this.handleValueSliderChange} className={classes.rcSliderStyle} /> */}
-                        <Slider min = { 1 } max = { 300 } value = { seconds } onChange={this.handleValueSliderChange} orientation = 'horizontal' className = { classes.rcSliderStyle } />
+                        <Slider
+                            min={1} 
+                            max={300}
+                            trackStyle={{ backgroundColor: '#4CAF50', height: 10 }}
+                            handleStyle={{
+                                borderColor: '#4CAF50',
+                                height: 28,
+                                width: 28,
+                                marginLeft: -14,
+                                marginTop: -9,
+                                backgroundColor: '#FFFFFF',
+                            }}
+                            railStyle={{ backgroundColor: '#DCDCDC', height: 10 }}
+                            onChange={this.handleValueSliderChange}
+                            className={classes.rcSliderStyle}
+                        />
                     </div>
-                    <br />
+                    <br /><br />
                     <div className = { classes.divRCSliderStyle }>
                         <Typography type="subheading" component="p">
                             {seconds} seconds
                         </Typography>
                     </div>
-                    <br /><br />
+                    <br /><br /><br />
 
                     {/* Button */}
-                    {
-                        colors.length > 0 &&
-                            <div>
-                                <div>
-                                    <Tooltip placement="left" title={'Animate ' + colors.length + ' colors over ' + seconds + ' seconds'}>
-                                        <Button fab mini color="accent" disabled = {colors.length === 0} onClick={this.setTransition} className={classes.fabButtonAbsoluteStyle} 
-                                                style = { colors.length === 0 ? { color : "#A3A3A3", background : "#DCDCDC" } : { color : "#FFFFFF", background : "#FFD700" } }>
-                                            <FlashOn />
-                                        </Button>
-                                    </Tooltip>
-                                </div>
-                                <br />
-                                <div>
-                                    <Tooltip placement="left" title = {'Reset All'}>
-                                        <Button fab mini color="accent" disabled = {colors.length === 0} onClick={this.stopAll} className={classes.fabButtonAbsoluteStyleAux} 
-                                                style = { colors.length === 0 ? { color : "#A3A3A3", background : "#DCDCDC" } : { color : "#FFFFFF", background : "#000000" } }>
-                                            <FlashOff />
-                                        </Button>
-                                    </Tooltip>
-                                </div>
-                                <br />
-                            </div>
-                    }
+                    <div>
+                        <Tooltip placement="bottom" title={'Animate ' + colors.length + ' colors over ' + seconds + ' seconds'}>
+                            <Button fab color="accent" disabled = {colors.length === 0} onClick={this.setTransition} className={classes.fabButtonAbsoluteStyle} 
+                                    style = { colors.length === 0 ? { color : "#A3A3A3", background : "#DCDCDC" } : { color : "#FFFFFF", background : "#FFD700" } }>
+                                <FlashOn />
+                            </Button>
+                        </Tooltip>
+                    </div>
+                    <br />
 
                 </div>
             </div>

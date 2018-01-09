@@ -8,7 +8,7 @@
         /// <summary>
         /// Should start the task immediately and asynchronously
         /// </summary>
-        void Start(int value);
+        void Start();
 
         /// <summary>
         /// Should stop the task immediately and synchronously
