@@ -60,7 +60,7 @@
         /// <summary>
         /// Gets the spi frequency.
         /// </summary>
-        public int SpiFrequency { get; private set; } = 1000000; // 1MHz is plenty for 240 LEDs at 24 FPS (4 bytes * 240 LEDs * 25 FPS = ~24kHz minimum)
+        public int SpiFrequency { get; private set; } = 100000; // 1MHz is plenty for 240 LEDs at 24 FPS (4 bytes * 240 LEDs * 25 FPS = ~24kHz minimum)
 
         /// <summary>
         /// Gets the milliseconds per frame.
@@ -200,10 +200,15 @@
         /// <summary>
         /// Restarts the LedStripWorker with the specified parameters
         /// </summary>
-        public void Restart(int ledCount, int spiChannel, int spiFrequency, int framesPerSecond)
+        public void Restart(int ledCount, int spiChannel, int spiFrequency, int framesPerSecond, int value = 0)
         {
             this.Stop();
             this.SetParameters(ledCount, spiChannel, spiFrequency, framesPerSecond);
+            
+            if (value == 1)
+            {
+                this.Start();
+            }
         }
 
         /// <summary>
