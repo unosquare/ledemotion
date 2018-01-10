@@ -53,22 +53,22 @@ export const CustomPicker = ({ width, rgb, hex, hsv, hsl, onChange, onSwatchHove
         background: `rgba(${rgb.r},${rgb.g},${rgb.b},${rgb.a})`,
         boxShadow: 'inset 0 0 0 1px rgba(0,0,0,.15), inset 0 0 4px rgba(0,0,0,.25)'
       },
-      hue: {
+      hueDiv: {
         position: 'relative',
         height: '10px',
         overflow: 'hidden'
       },
-      Hue: {
+      hue: {
         radius: '2px',
         shadow: 'inset 0 0 0 1px rgba(0,0,0,.15), inset 0 0 4px rgba(0,0,0,.25)'
       },
-      alpha: {
+      alphaDiv: {
         position: 'relative',
         height: '10px',
         marginTop: '4px',
         overflow: 'hidden'
       },
-      Alpha: {
+      alpha: {
         radius: '2px',
         shadow: 'inset 0 0 0 1px rgba(0,0,0,.15), inset 0 0 4px rgba(0,0,0,.25)'
       },
@@ -83,10 +83,10 @@ export const CustomPicker = ({ width, rgb, hex, hsv, hsl, onChange, onSwatchHove
       color: {
         height: '10px'
       },
-      hue: {
+      hueDiv: {
         height: '10px'
       },
-      alpha: {
+      alphaDiv: {
         display: 'none'
       },
     },
@@ -99,11 +99,11 @@ export const CustomPicker = ({ width, rgb, hex, hsv, hsl, onChange, onSwatchHove
       </div>
       <div style={styles.controls} className="flexbox-fix">
         <div style={styles.sliders}>
-          <div style={styles.hue}>
-            <Hue style = { styles.Hue } hsl = { hsl } onChange = { onChange } />
+          <div style={styles.hueDiv}>
+            <Hue style = { styles.hue } hsl = { hsl } onChange = { onChange } />
           </div>
-          <div style={styles.alpha}>
-            <Alpha style = { styles.Alpha } rgb = { rgb } hsl = { hsl } renderers = { renderers } onChange = { onChange} />
+          <div style={styles.alphaDiv}>
+            <Alpha style = { styles.alpha } rgb = { rgb } hsl = { hsl } renderers = { renderers } onChange = { onChange} />
           </div>
         </div>
         <div style={styles.color}>
