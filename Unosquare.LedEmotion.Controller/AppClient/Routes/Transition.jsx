@@ -93,7 +93,9 @@ class Transition extends Component {
         colors: [],
         selectedColor: {},
         seconds: 1,
-        displayColorPicker: false
+        displayColorPicker: false,
+
+        flag : 0
     };
 
     componentToHex = (c) => {
@@ -148,6 +150,8 @@ class Transition extends Component {
         }).then(response => {
             // placeholder
         });
+
+        this.props.ledStripStatus(1);
     }
 
     /** Stops the transition */
@@ -289,7 +293,7 @@ class Transition extends Component {
                         colors.length > 0 &&
                         <div className = { classes.componentsAlignToCenterStyle }>
                             <div className = { classes.fabButtonStyle }>
-                                <Tooltip placement="bottom" title={'Animate ' + colors.length + ' colors over ' + seconds + ' seconds'}>
+                                <Tooltip placement="top" title={'Animate ' + colors.length + ' colors over ' + seconds + ' seconds'}>
                                     <Button fab color="accent" onClick={this.setTransition} style = {{ color : "#FFFFFF", background : "#FFD700" }}>
                                         <FlashOn />
                                     </Button>

@@ -20,6 +20,10 @@ import AddIcon from 'material-ui-icons/Add';
 import Button from 'material-ui/Button';
 import FlashOff from 'material-ui-icons/FlashOff';
 import Axios from 'axios';
+import Status from './Routes/Status.jsx';
+import SingleColor from './Routes/SingleColor.jsx';
+import Transition from './Routes/Transition.jsx';
+import CustomImage from './Routes/CustomImage.jsx';
 
 const drawerWidth = 240;
 const primary = '#8BC34A';
@@ -103,7 +107,8 @@ const styles = theme => ({
 class App extends Component {
     state = {
         mobileOpen: false,
-        isSettingsDialogOpen: false
+        isSettingsDialogOpen: false,
+        flag : null
     }
   
     handleDrawerToggle = () => this.setState({ 
@@ -127,11 +132,21 @@ class App extends Component {
 
         Axios.put('/api/stop');
 
-        console.log('Stopped');
+        this.setState({
+            flag : null
+        });
+    }
+
+    ledStripStatus = (value) => {
+        this.setState({
+            flag : value
+        });
     }
 
     render() {
         const { classes } = this.props;
+        const { flag } = this.state;
+
         const drawer = (
             <div>
                 <div>
@@ -154,9 +169,13 @@ class App extends Component {
                     </List>
 
                     <div style = {{ padding : '20px 0 20px 0' }} className = { classes.componentsAlignToCenterStyle }>
-                        <Button fab mini color="accent" onClick = { this.stopTransition } style = {{ color : "#FFFFFF", background : "#000000" }}>
-                            <FlashOff />
-                        </Button>
+                        <Tooltip placement="bottom" title={'Stop and Clear All'}>
+                            <Button fab mini color="accent" disabled = { flag === null } onClick = { this.stopTransition } 
+                                style = { flag === null ? { color : "#A3A3A3", background : "#DCDCDC" } : { color : "#FFFFFF", background : "#000000" } }
+                                >
+                                <FlashOff />
+                            </Button>
+                        </Tooltip>
                     </div>
                 </div>
             </div>
@@ -195,9 +214,13 @@ class App extends Component {
                     <main className = { classes.content }>
                         <div className={classes.routes}>
                             <Switch>
-                                {Routes.map((route, index) => (
+                                {/* {Routes.map((route, index) => (
                                     <Route key = { index } path = { route.path } exact = { route.exact } component = { route.main } />
-                                ))}
+                                ))} */}
+                                <Route path = '/' exact = { true } component = { Status } />
+                                <Route path = '/singlecolor' exact = { true } component = { SingleColor } />
+                                <Route path = '/transition' exact = { true } render = { () => <Transition ledStripStatus = { this.ledStripStatus } /> } />
+                                <Route path = '/customimage' exact = { true } component = { CustomImage } />
                             </Switch>
                         </div>
                         <Typography type = 'caption' className = { classes.footer }>
