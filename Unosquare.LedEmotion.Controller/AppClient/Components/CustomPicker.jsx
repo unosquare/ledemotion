@@ -4,11 +4,10 @@ import reactCSS from 'reactcss'
 import { ColorWrap, Saturation, Hue, Alpha, Checkboard } from 'react-color/lib/components/common'
 import SketchFields from 'react-color/lib/components/sketch/SketchFields'
 import SketchPresetColors from 'react-color/lib/components/sketch/SketchPresetColors'
-import IconButton from 'material-ui/IconButton';
-import Button from 'material-ui/Button';
-import AddIcon from 'material-ui-icons/Add';
-import Card, { CardActions, CardContent } from 'material-ui/Card';
-import DeleteIcon from 'material-ui-icons/Delete';
+import Button from 'material-ui/Button'
+import AddIcon from 'material-ui-icons/Add'
+import Card, { CardActions} from 'material-ui/Card'
+import DeleteIcon from 'material-ui-icons/Delete'
 
 export const CustomPicker = ({ width, rgb, hex, hsv, hsl, onChange, onSwatchHover,
   disableAlpha, presetColors, renderers, addAction, deleteAction, className = '', fields = true }) => {

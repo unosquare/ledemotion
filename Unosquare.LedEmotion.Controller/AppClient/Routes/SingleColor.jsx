@@ -15,9 +15,7 @@ import Tooltip from 'material-ui/Tooltip';
 
 const styles = theme => ({
     root: {
-        flexgrow: 1
-    },
-    roote: {
+        flexgrow: 1,
         height: 'auto'
     },
     divStyle: {
@@ -65,13 +63,13 @@ class SingleColor extends Component {
         this.state = {
             mql: mql,
             docked: false,
-            textColor: 'White',
-            colors: [],
             addOpen: false,
+            displayColorPicker: false,
+            textColor: 'White',
             background: '#7ED321',
             presetName: '',
             color: [],
-            displayColorPicker: false,
+            colors: [],
             presetColors: [{ color: '#D0021B', title: 'Red', origin: 'Array' }, { color: '#F5A623', title: 'Orange', origin: 'Array' }, { color: '#F8E71C', title: 'Yellow', origin: 'Array' },
             { color: '#8B572A', title: 'Brown', origin: 'Array' }, { color: '#7ED321', title: 'Green', origin: 'Array' }, { color: '#CC4AE2', title: 'Pink', origin: 'Array' },
             { color: '#9013FE', title: 'Purple', origin: 'Array' }, { color: '#4A90E2', title: 'Blue ', origin: 'Array' }, { color: '#000000', title: 'Off ', origin: 'Array' },
@@ -81,7 +79,7 @@ class SingleColor extends Component {
 
     componentDidMount = () => {
         this.getColors();
-    };
+    }
 
     componentWillMount() {
         mql.addListener(this.mediaQueryChanged);
@@ -126,10 +124,10 @@ class SingleColor extends Component {
         var hex = c.toString(16);
 
         return hex.length === 1 ? `0${hex}` : hex;
-    };
+    }
 
     changeTextColor = (rgb) => {
-        var luma = 0.2126 * rgb.r + 0.7152 * rgb.g + 0.0722 * rgb.b; // per ITU-R BT.709
+        var luma = 0.2126 * rgb.r + 0.7152 * rgb.g + 0.0722 * rgb.b;
 
         if (luma < 170) {
             this.setState({ textColor: 'White' });
@@ -163,18 +161,6 @@ class SingleColor extends Component {
     handleClose = () => {
         this.setState({ displayColorPicker: false });
         this.resetValues();
-    };
-
-    setColor = (color, sendToApi) => {
-        if (sendToApi !== true)
-            return;
-
-        Axios.put('/api/color', {
-            F: 6,
-            R: color.r,
-            G: color.g,
-            B: color.b
-        }).then(() => { this.getColors() });
     }
 
     hexToRGB = (a) => {
@@ -202,16 +188,19 @@ class SingleColor extends Component {
 
     handleAddDialogOpen = (rgb) => {
         this.setState({ addOpen: true, color: rgb });
-    };
+    }
 
     handleAddDialogClose = () => {
         this.setState({ addOpen: false, displayColorPicker: false });
-    };
+    }
 
     deleteColor = () => {
         Axios.delete('/api/preset', {
             data: { Name: this.state.presetName }
-        }).then(() => { this.getColors(), this.resetValues() });
+        }).then(() => {
+            this.resetValues(),
+                this.setColor({ r: 0, g: 0, b: 0 }, true)
+        });
     }
 
     addColor = () => {
@@ -224,7 +213,23 @@ class SingleColor extends Component {
             R: this.state.color.r,
             G: this.state.color.g,
             B: this.state.color.b
-        }).then(() => { this.getColors() }, this.handleAddDialogClose(), this.setState({ origin: 'Json' }));
+        }).then(() => {
+            this.setColor(this.state.color, true),
+                this.handleAddDialogClose(),
+                this.setState({ origin: 'Json' })
+        });
+    }
+
+    setColor = (color, sendToApi) => {
+        if (sendToApi !== true)
+            return;
+
+        Axios.put('/api/color', {
+            F: 6,
+            R: color.r,
+            G: color.g,
+            B: color.b
+        }).then(() => { this.getColors() });
     }
 
     colorCard = (props) => {
@@ -282,7 +287,7 @@ class SingleColor extends Component {
 
                 <div className={props.classes.colorPicker} style={{ width: colorPickerWidth, marginBottom: '40px' }}>
                     <Typography style={{ color: props.textColor, textAlign: 'center' }} type="headline" component="h3">
-                        Pick to set a solid color. You can save a color as a preset
+                        Pick to sets a solid color. You can save a color as a preset
                     </Typography>
                     <br />
                 </div>
@@ -332,52 +337,49 @@ class SingleColor extends Component {
         const { textColor, background } = this.state;
 
         return (
-            <div className={classes.root}  >
-                <div className={classes.roote} style={{ backgroundColor: this.state.background }} >
-
-                    <Dialog
-                        open={this.state.addOpen}
-                        onClose={this.handleAddDialogClose}
-                        aria-labelledby="form-dialog-title"
-                    >
-                        <DialogContent>
-                            <TextField
-                                autoFocus
-                                margin="dense"
-                                id="name"
-                                label="Preset Name"
-                                type="text"
-                                fullWidth
-                                onChange={(event) => this.setState({ presetName: event.target.value })}
-                            />
-                        </DialogContent>
-                        <DialogActions>
-                            <Button onClick={this.handleAddDialogClose} color="primary">
-                                Cancel
+            <div className={classes.root} style={{ backgroundColor: this.state.background }}>
+                <Dialog
+                    open={this.state.addOpen}
+                    onClose={this.handleAddDialogClose}
+                    aria-labelledby="form-dialog-title"
+                >
+                    <DialogContent>
+                        <TextField
+                            autoFocus
+                            margin="dense"
+                            id="name"
+                            label="Preset Name"
+                            type="text"
+                            fullWidth
+                            onChange={(event) => this.setState({ presetName: event.target.value })}
+                        />
+                    </DialogContent>
+                    <DialogActions>
+                        <Button onClick={this.handleAddDialogClose} color="primary">
+                            Cancel
                             </Button>
-                            <Button onClick={this.addColor} color="primary">
-                                Save
+                        <Button onClick={this.addColor} color="primary">
+                            Save
                             </Button>
-                        </DialogActions>
-                    </Dialog>
+                    </DialogActions>
+                </Dialog>
 
-                    <br />
-                    <br />
+                <br />
+                <br />
 
-                    { /* Color picker */}
-                    <this.colorPickerCom classes={classes} background={background} textColor={textColor} />
+                { /* Color picker */}
+                <this.colorPickerCom classes={classes} background={background} textColor={textColor} />
 
-                    { /* Tooltip */}
-                    <this.fab
-                        classes={classes}
-                        textColor={textColor}
-                        background={background}
-                        DeleteColor={this.deleteColor}
-                        origin={this.state.origin}
-                    />
+                { /* Tooltip */}
+                <this.fab
+                    classes={classes}
+                    textColor={textColor}
+                    background={background}
+                    DeleteColor={this.deleteColor}
+                    origin={this.state.origin}
+                />
 
-                    <br />
-                </div>
+                <br />
             </div>
         );
     }

@@ -28,7 +28,7 @@ const styles = theme => ({
     minHeight: '300px',
     borderStyle: 'dotted',
     borderColor: 'Black',
-    backgroundColor: '#e4e1e1',
+    backgroundColor: '#DCEDC8',
     borderRadius: '20px',
     borderWidth: '2px'
   },
@@ -195,16 +195,15 @@ class CustomImage extends Component {
       maxFiles: 1,
       dictDefaultMessage: ReactDOMServer.renderToString(
         <div className={classes.typoStyle}>
-          <Typography type="headline" component="h3">
-            Drop files here to upload
+          <Typography type="title" component="h3">
+            Touch to upload files
           </Typography>
         </div>
       ),
       previewTemplate: ReactDOMServer.renderToString(
         <div className={classes.divImageStyle}>
           <div>
-            <div><span data-dz-name></span></div>
-            <div data-dz-size></div>
+            <br />
             <img style={{ width: '80%' }} data-dz-thumbnail dz-max-files-reached='true' />
             <div><span ></span></div>
           </div>

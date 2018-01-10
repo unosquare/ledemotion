@@ -25,9 +25,6 @@
 
             if (Directory.Exists(ImagesPath) == false)
                 Directory.CreateDirectory(ImagesPath);
-
-            SolidColorPresets.Add(new SolidColorPreset { Name = "Off", R = 0, G = 0, B = 0 });
-            SolidColorPresets.Add(new SolidColorPreset { Name = "Full Brightness", R = 255, G = 255, B = 255 });
         }
     }
 }
