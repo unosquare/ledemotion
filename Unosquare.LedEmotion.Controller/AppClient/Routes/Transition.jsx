@@ -295,13 +295,6 @@ class Transition extends Component {
                                     </Button>
                                 </Tooltip>
                             </div>
-                            <div className = { classes.fabButtonStyle }>
-                                <Tooltip placement="left" title={'Stop Transition'}>
-                                    <Button fab color="accent" onClick={this.stopTransition} style = {{ color : "#FFFFFF", background : "#000000" }}>
-                                        <FlashOff />
-                                    </Button>
-                                </Tooltip>
-                            </div>
                         </div>
                     }
                 </div>

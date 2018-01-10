@@ -16,6 +16,10 @@ import { Link, Redirect, HashRouter as Router, Route, Switch, withRouter } from 
 import List, { ListItem, ListItemIcon, ListItemText } from 'material-ui/List';
 import WbSunny from 'material-ui-icons/WbSunny';
 import SettingsDialog from './Components/SettingsDialog.jsx';
+import AddIcon from 'material-ui-icons/Add';
+import Button from 'material-ui/Button';
+import FlashOff from 'material-ui-icons/FlashOff';
+import Axios from 'axios';
 
 const drawerWidth = 240;
 const primary = '#8BC34A';
@@ -88,6 +92,11 @@ const styles = theme => ({
     footer: {
         padding: 16,
         textAlign: 'center'
+    },
+    componentsAlignToCenterStyle : {
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center'
     }
   });
 
@@ -103,11 +112,23 @@ class App extends Component {
 
     handleDialogClose = () => this.setState({
             isSettingsDialogOpen : false
-        })
+    });
 
     handleDialogOpen = () => this.setState({
             isSettingsDialogOpen : true
+    });
+
+    /** Stops the transition */
+    stopTransition = () => {
+        this.setState({
+            colors : [],
+            seconds : 1
         })
+
+        Axios.put('/api/stop');
+
+        console.log('Stopped');
+    }
 
     render() {
         const { classes } = this.props;
@@ -131,7 +152,12 @@ class App extends Component {
                         )
                     }
                     </List>
-                    
+
+                    <div style = {{ padding : '20px 0 20px 0' }} className = { classes.componentsAlignToCenterStyle }>
+                        <Button fab mini color="accent" onClick = { this.stopTransition } style = {{ color : "#FFFFFF", background : "#000000" }}>
+                            <FlashOff />
+                        </Button>
+                    </div>
                 </div>
             </div>
       );

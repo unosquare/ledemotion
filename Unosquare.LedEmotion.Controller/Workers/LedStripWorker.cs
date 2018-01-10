@@ -60,7 +60,7 @@
         /// <summary>
         /// Gets the spi frequency.
         /// </summary>
-        public int SpiFrequency { get; private set; } = 100000; // 1MHz is plenty for 240 LEDs at 24 FPS (4 bytes * 240 LEDs * 25 FPS = ~24kHz minimum)
+        public int SpiFrequency { get; private set; } = 1000000; // 1MHz is plenty for 240 LEDs at 24 FPS (4 bytes * 240 LEDs * 25 FPS = ~24kHz minimum)
 
         /// <summary>
         /// Gets the milliseconds per frame.
