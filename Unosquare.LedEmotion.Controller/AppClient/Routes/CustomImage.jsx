@@ -180,8 +180,7 @@ class CustomImage extends Component {
 
     var componentConfig = {
       iconFiletypes: ['.jpg', '.png', '.gif'],
-      showFiletypeIcon: true,
-      postUrl: 'no-url'
+      showFiletypeIcon: true
     };
 
     var eventHandlers = {

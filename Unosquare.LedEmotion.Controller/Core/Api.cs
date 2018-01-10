@@ -246,18 +246,18 @@
 
                 var stringIm = data.Data.Replace(data.Type, string.Empty).Substring(13);
                 byte[] bytes = Convert.FromBase64String(stringIm);
-                var imageColors = new List<byte[]>();
 
                 var transitionTime = TimeSpan.FromMilliseconds(LedStripWorker.Instance.MillisecondsPerFrame * frames);
                 
-                int maxwidth = 240;
-                int maxheight = 140;
-
                 Bitmap img = (Bitmap)new ImageConverter().ConvertFrom(bytes);
-                Bitmap bitmap = new Bitmap(maxwidth, maxheight);
+
+                int width = LedStripWorker.Instance.LedCount;
+                int height = (img.Height * width) / img.Width;
+                
+                Bitmap bitmap = new Bitmap(width, height);
 
                 using (Graphics graphics = Graphics.FromImage(bitmap))
-                    graphics.DrawImage(img, 0, 0, maxwidth, maxheight);
+                    graphics.DrawImage(img, 0, 0, width, height);
                 img = bitmap;
                 
                 LedStripWorker.Instance.SetImage(img);

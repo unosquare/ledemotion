@@ -19,7 +19,7 @@
         #region Static Declarations
 
         public static readonly byte[] StartFrame = new byte[4];
-        public static readonly byte[] EndFrame = { 0xFF, 0xFF, 0xFF, 0xFF };
+        public static readonly byte[] EndFrame = new byte[4];
 
         internal const byte BrightnessSetMask = 0xE0;
         internal const byte BrightnessGetMask = 0x1F;
