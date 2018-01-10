@@ -93,8 +93,7 @@ class Transition extends Component {
         colors: [],
         selectedColor: {},
         seconds: 1,
-        displayColorPicker: false, 
-        activeTransition : true
+        displayColorPicker: false
     };
 
     componentToHex = (c) => {
@@ -149,18 +148,13 @@ class Transition extends Component {
         }).then(response => {
             // placeholder
         });
-
-        this.setState({
-            activeTransition : true
-        });
     }
 
     /** Stops the transition */
     stopTransition = () => {
         this.setState({
             colors : [],
-            seconds : 1,
-            activeTransition : false
+            seconds : 1
         })
 
         Axios.put('/api/stop');
@@ -181,7 +175,7 @@ class Transition extends Component {
 
     render() {
         const { classes } = this.props;
-        const { colors, selectedColor, seconds, displayColorPicker, activeTransition } = this.state;
+        const { colors, selectedColor, seconds, displayColorPicker } = this.state;
 
         const gradient = keyframes`
             0% {
@@ -294,16 +288,13 @@ class Transition extends Component {
                     {
                         colors.length > 0 &&
                         <div className = { classes.componentsAlignToCenterStyle }>
-                            {
-                                activeTransition === true &&
-                                <div className = { classes.fabButtonStyle }>
-                                    <Tooltip placement="bottom" title={'Animate ' + colors.length + ' colors over ' + seconds + ' seconds'}>
-                                        <Button fab color="accent" onClick={this.setTransition} style = {{ color : "#FFFFFF", background : "#FFD700" }}>
-                                            <FlashOn />
-                                        </Button>
-                                    </Tooltip>
-                                </div>
-                            }
+                            <div className = { classes.fabButtonStyle }>
+                                <Tooltip placement="bottom" title={'Animate ' + colors.length + ' colors over ' + seconds + ' seconds'}>
+                                    <Button fab color="accent" onClick={this.setTransition} style = {{ color : "#FFFFFF", background : "#FFD700" }}>
+                                        <FlashOn />
+                                    </Button>
+                                </Tooltip>
+                            </div>
                             <div className = { classes.fabButtonStyle }>
                                 <Tooltip placement="left" title={'Stop Transition'}>
                                     <Button fab color="accent" onClick={this.stopTransition} style = {{ color : "#FFFFFF", background : "#000000" }}>
