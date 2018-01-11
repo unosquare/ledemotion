@@ -102,13 +102,33 @@ const styles = theme => ({
         alignItems: 'center',
         justifyContent: 'center'
     }
-  });
+});
+
+const mql = window.matchMedia(`(min-width: 960px)`);
 
 class App extends Component {
     state = {
+        mql: mql,
+        docked: false,
         mobileOpen: false,
         isSettingsDialogOpen: false,
         flag : null
+    }
+
+    componentWillMount() {
+        mql.addListener(this.mediaQueryChanged.bind(this));
+        this.setState({ mql: mql, docked: mql.matches });
+    }
+
+    componentWillUnmount() {
+        this.state.mql.removeListener(this.mediaQueryChanged);
+    }
+
+    mediaQueryChanged() {
+        this.setState({
+            mql: mql,
+            docked: mql.matches
+        });
     }
   
     handleDrawerToggle = () => this.setState({ 
@@ -170,11 +190,13 @@ class App extends Component {
 
                     <div style = {{ padding : '20px 0 20px 0' }} className = { classes.componentsAlignToCenterStyle }>
                         <Tooltip placement="bottom" title={'Stop and Clear All'}>
+                        <div>
                             <Button fab mini color="accent" disabled = { flag === null } onClick = { this.stopTransition } 
                                 style = { flag === null ? { color : "#A3A3A3", background : "#DCDCDC" } : { color : "#FFFFFF", background : "#000000" } }
                                 >
                                 <FlashOff />
                             </Button>
+                        </div>
                         </Tooltip>
                     </div>
                 </div>
@@ -206,17 +228,12 @@ class App extends Component {
                             {drawer}
                         </Drawer>
                     </Hidden>
-                    <Hidden mdDown implementation = 'css'>
-                        <Drawer type = 'permanent' open classes = {{ paper: classes.drawerPaper }}>
-                            {drawer}
-                        </Drawer>
-                    </Hidden>
+                    <Drawer type = 'permanent' open style={this.state.docked === true ? {display:"flex" } : {display:"none" } } classes = {{ paper: classes.drawerPaper }}>
+                        {drawer}
+                    </Drawer>
                     <main className = { classes.content }>
                         <div className={classes.routes}>
                             <Switch>
-                                {/* {Routes.map((route, index) => (
-                                    <Route key = { index } path = { route.path } exact = { route.exact } component = { route.main } />
-                                ))} */}
                                 <Route path = '/' exact = { true } component = { Status } />
                                 <Route path = '/singlecolor' exact = { true } component = { SingleColor } />
                                 <Route path = '/transition' exact = { true } render = { () => <Transition ledStripStatus = { this.ledStripStatus } /> } />
