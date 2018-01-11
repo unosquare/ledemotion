@@ -283,37 +283,22 @@
 
                 var stringIm = data.Data.Replace(data.Type, string.Empty).Substring(13);
                 byte[] bytes = Convert.FromBase64String(stringIm);
-                var imageColors = new List<byte[]>();
 
                 var transitionTime = TimeSpan.FromMilliseconds(LedStripWorker.Instance.MillisecondsPerFrame * frames);
                 
-                int maxwidth = 300;
-                int maxheight = 300;
-
                 Bitmap img = (Bitmap)new ImageConverter().ConvertFrom(bytes);
-                Bitmap bitmap = new Bitmap(maxwidth, maxheight);
+
+                int width = LedStripWorker.Instance.LedCount;
+                int height = (img.Height * width) / img.Width;
+                
+                Bitmap bitmap = new Bitmap(width, height);
 
                 using (Graphics graphics = Graphics.FromImage(bitmap))
-                    graphics.DrawImage(img, 0, 0, maxwidth, maxheight);
+                    graphics.DrawImage(img, 0, 0, width, height);
                 img = bitmap;
                 
-                // Bitmap image = (Bitmap)new ImageConverter().ConvertFrom(bytes);
-                for (int i = 0; i < img.Width; i++)
-                {
-                    for (int j = 0; j < img.Height; j++)
-                    {
-                        imageColors.Add(new[]
-                        {
-                            Convert.ToByte((decimal) img.GetPixel(i, j).R),
-                            Convert.ToByte((decimal) img.GetPixel(i, j).G),
-                            Convert.ToByte((decimal) img.GetPixel(i, j).B)
-                        });
-                    }
-                }
+                LedStripWorker.Instance.SetImage(img);
                 
-                LedStripWorker.Instance.SetImage(imageColors, transitionTime);
-                
-                // img.Save(AppDomain.CurrentDomain.BaseDirectory + @"\imageArc.jpeg", System.Drawing.Imaging.ImageFormat.Jpeg);
                 return context.JsonResponseAsync(Program.State);
             }
             catch (Exception ex)

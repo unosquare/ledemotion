@@ -82,7 +82,7 @@ export const CustomPicker = ({ width, rgb, hex, hsv, hsl, onChange, onSwatchHove
       color: {
         height: '10px'
       },
-      hue: {
+      hueDiv: {
         height: '10px'
       },
       alphaDiv: {
@@ -98,11 +98,11 @@ export const CustomPicker = ({ width, rgb, hex, hsv, hsl, onChange, onSwatchHove
       </div>
       <div style={styles.controls} className="flexbox-fix">
         <div style={styles.sliders}>
-          <div style={styles.hue}>
-            <Hue style = { styles.Hue } hsl = { hsl } onChange = { onChange } />
+          <div style={styles.hueDiv}>
+            <Hue style = { styles.hue } hsl = { hsl } onChange = { onChange } />
           </div>
-          <div style={styles.alpha}>
-            <Alpha style = { styles.Alpha } rgb = { rgb } hsl = { hsl } renderers = { renderers } onChange = { onChange} />
+          <div style={styles.alphaDiv}>
+            <Alpha style = { styles.alpha } rgb = { rgb } hsl = { hsl } renderers = { renderers } onChange = { onChange} />
           </div>
         </div>
         <div style={styles.color}>

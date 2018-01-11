@@ -71,9 +71,9 @@ class SingleColor extends Component {
             color: [],
             colors: [],
             presetColors: [{ color: '#D0021B', title: 'Red', origin: 'Array' }, { color: '#F5A623', title: 'Orange', origin: 'Array' }, { color: '#F8E71C', title: 'Yellow', origin: 'Array' },
-            { color: '#8B572A', title: 'Brown', origin: 'Array' }, { color: '#7ED321', title: 'Green', origin: 'Array' }, { color: '#3A5F0B', title: 'Green Leaf', origin: 'Array' },
-            { color: '#CC4AE2', title: 'Pink', origin: 'Array' }, { color: '#9013FE', title: 'Purple', origin: 'Array' }, { color: '#4A90E2', title: 'Blue ', origin: 'Array' },
-            { color: '#FFFFFF', title: 'Full Brightness', origin: 'Array' }, { color: '#000000', title: 'Off ', origin: 'Array' }]
+            { color: '#8B572A', title: 'Brown', origin: 'Array' }, { color: '#7ED321', title: 'Green', origin: 'Array' }, { color: '#CC4AE2', title: 'Pink', origin: 'Array' },
+            { color: '#9013FE', title: 'Purple', origin: 'Array' }, { color: '#4A90E2', title: 'Blue ', origin: 'Array' }, { color: '#000000', title: 'Off ', origin: 'Array' },
+            { color: '#FFFFFF', title: 'Full Brightness ', origin: 'Array' }]
         };
     }
 
@@ -84,6 +84,7 @@ class SingleColor extends Component {
     componentWillMount() {
         mql.addListener(this.mediaQueryChanged.bind(this));
         this.setState({ mql: mql, docked: mql.matches });
+        this.stopAnimateImage();
     }
 
     componentWillUnmount() {
@@ -95,6 +96,10 @@ class SingleColor extends Component {
             mql: mql,
             docked: this.state.mql.matches
         });
+    }
+
+    stopAnimateImage = () => {
+        Axios.put('/api/stop');
     }
 
     getColors = () => {

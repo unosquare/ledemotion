@@ -9,24 +9,16 @@
     public class ImageAnimation : IAnimation
     {
         private readonly object _syncLock = new object();
-        private readonly SolidColorAnimation _currentAnimation = new SolidColorAnimation();
-        private readonly List<byte[]> _colorSteps = new List<byte[]>();
-        private int _currentColorStep;
-
-        public TimeSpan TransitionTimePerPixel { get; private set; }
+        private BitmapBuffer pixels = null;
+        private int currentRow = 0;
+        private int currentDirection = 1;
         
-        public void SetImage(List<byte[]> imageColors, TimeSpan totalTransitionTime)
+        public void SetImage(Bitmap imageColors)
         {
             lock (_syncLock)
             {
-                _colorSteps.Clear();
-
-                foreach (var color in imageColors)
-                    _colorSteps.Add(color);
-
-                TransitionTimePerPixel =
-                    TimeSpan.FromMilliseconds(totalTransitionTime.TotalMilliseconds / _colorSteps.Count);
-                _currentColorStep = 0;
+                currentRow = 0;
+                pixels = new BitmapBuffer(imageColors);
             }
         }
 
@@ -35,14 +27,24 @@
             // TODO: Implement!
             lock (_syncLock)
             {
-                _currentAnimation.PaintNextFrame();
-
-                var targetColor = _colorSteps[_currentColorStep];
-
+                // _currentAnimation.PaintNextFrame();
+                // var targetColor = _colorSteps[_currentColorStep];
                 // _currentAnimation.EnqueueColor(targetColor, TransitionTimePerPixel);
-                // var currentRow = 1;
-                // BitmapBuffer pixels = null;
-                // LedStripWorker.Instance.LedStrip.SetPixels(pixels, 0, currentRow);
+                // Bitmap arc = null;
+                // BitmapBuffer pixels = arc;
+                currentRow += currentDirection;
+                if (currentRow >= pixels.ImageHeight)
+                {
+                    currentRow = pixels.ImageHeight - 2;
+                    currentDirection = -1;
+                }
+                else if (currentRow <= 0)
+                {
+                    currentRow = 1;
+                    currentDirection = 1;
+                }
+
+                LedStripWorker.Instance.LedStrip.SetPixels(pixels, 0, currentRow);
             }
         }
     }

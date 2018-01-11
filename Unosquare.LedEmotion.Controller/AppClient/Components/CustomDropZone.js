@@ -502,6 +502,9 @@
                                         return null != e.previewElement && null != e.previewElement.parentNode && e.previewElement.parentNode.removeChild(e.previewElement), this._updateMaxFilesReachedClass()
                                     },
                                     thumbnail: function (e, t) {
+                                        
+                                        this.emit("complete", e, t, e)
+                                        
                                         if (e.previewElement) {
                                             e.previewElement.classList.remove("dz-file-preview");
                                             for (var i = 0, n = n = e.previewElement.querySelectorAll("[data-dz-thumbnail]"); ;) {
@@ -1226,7 +1229,7 @@
                                 for (var b = 0; b < t.length; b++) {
                                     var F = t[b];
                                     p.append(F.name, F.data, F.filename)
-                                }/* console.log("---------------"),console.log(e),console.log("---------------") */
+                                }
                                 this.submitRequest(n, p, e)
                             }
                         }, {
@@ -1328,9 +1331,7 @@
                         }, {
                             key: "submitRequest",
                             value: function (e, t, i) {
-                                /* this.emit("success", e, t, i)
-                                this.emit("complete", e, t, i) */
-                                e.send("")
+                                /* e.send("") */
                             }
                         }, {
                             key: "_finished",

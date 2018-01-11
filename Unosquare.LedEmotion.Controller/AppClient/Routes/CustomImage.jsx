@@ -3,14 +3,14 @@ import Axios from 'axios';
 import PropTypes from 'prop-types';
 import { withStyles } from 'material-ui/styles';
 import Typography from 'material-ui/Typography';
-/* import DropzoneComponent from 'react-dropzone-component'; */
-/* import DropzoneComponent from 'react-dropzone-component/src/react-dropzone.js'; */
 import DropzoneComponent from '../Components/CustomDropZone.js';
 import ReactDOM from 'react-dom';
 import IconButton from 'material-ui/IconButton';
 import DeleteIcon from 'material-ui-icons/Delete';
 import AddIcon from 'material-ui-icons/Add';
 import Tooltip from 'material-ui/Tooltip';
+import FlashOn from 'material-ui-icons/FlashOn';
+import FlashOff from 'material-ui-icons/FlashOff';
 
 const styles = theme => ({
   root: {
@@ -38,10 +38,19 @@ const styles = theme => ({
   divImageStyle: {
     margin: '12px auto 30px auto'
   },
-  fabButtonAbsoluteStyle: {
+  deleteButtonStyle: {
     flip: false,
     position: 'absolute',
+    background: 'red',
+    color: 'white',
     bottom: 32,
+    right: 32,
+    transition: 'none'
+  },
+  animateButtonStyle: {
+    flip: false,
+    position: 'absolute',
+    bottom: 90,
     right: 32,
     transition: 'none'
   },
@@ -59,16 +68,20 @@ class CustomImage extends Component {
     this.state = {
       mql: mql,
       docked: false,
-      width: ''
+      width: '',
+      image: "",
+      imageType: "",
+      status: "Off"
     }
 
     this.mediaQueryChanged = this.mediaQueryChanged.bind(this);
   }
 
   componentWillMount() {
-    this.mediaQueryChanged()
+    this.mediaQueryChanged();
     mql.addListener(this.mediaQueryChanged);
     this.setState({ mql: mql, docked: mql.matches });
+    this.stopAnimateImage();
   }
 
   componentWillUnmount() {
@@ -92,18 +105,73 @@ class CustomImage extends Component {
   }
 
   complete = (file) => {
-    console.log('complete')
-    console.log(file)
-    /* console.log(file.dataURL) */
+    this.setState({ image: file.dataURL, imageType: file.type });
+  };
+
+  animateImage = () => {
+    if (this.state.image == null || this.state.imageType == '') {
+      return;
+    }
+
+    this.setState({ status: "On" });
 
     Axios.post('/api/image', {
-      Data: file.dataURL,
-      /* R:36,
-      G:57,
-      B:12, */
-      Type: file.type
-    })
+      Data: this.state.image,
+      Type: this.state.imageType
+    });
+  }
+
+  stopAnimateImage = () => {
+    this.setState({ status: "Off" });
+
+    Axios.put('/api/stop');
+  }
+
+  complete = (file) => {
+    this.setState({ image: file.dataURL, imageType: file.type });
   };
+
+  delete = () => {
+    this.setState({ image: "", imageType: "" });
+
+    if (this.state.status == "On") {
+      this.stopAnimateImage();
+    }
+  }
+
+  animateButton = (props) => {
+    if (this.state.image != "") {
+      if (this.state.status == "Off") {
+        return (
+          <Tooltip placement="bottom" title={'Animate Image'}>
+            <IconButton
+              className={props.classes.animateButtonStyle}
+              onClick={this.animateImage}
+              style={{ background: "yellow", color: "black" }}
+            >
+              <FlashOn />
+            </IconButton>
+          </Tooltip>
+        )
+      }
+
+      return (
+        <Tooltip placement="bottom" title={'Stop Image Animation'}>
+          <IconButton
+            className={props.classes.animateButtonStyle}
+            onClick={this.stopAnimateImage}
+            style={{ background: "black", color: "white" }}
+          >
+            <FlashOff />
+          </IconButton>
+        </Tooltip>
+      )
+    }
+
+    return (
+      <div />
+    )
+  }
 
   render() {
     const { classes } = this.props;
@@ -112,12 +180,11 @@ class CustomImage extends Component {
 
     var componentConfig = {
       iconFiletypes: ['.jpg', '.png', '.gif'],
-      showFiletypeIcon: true,
-      postUrl: 'no-url'
+      showFiletypeIcon: true
     };
 
     var eventHandlers = {
-      /* init: dz => console.log(dz), */
+      removedfile: () => this.delete(),
       complete: (file) => this.complete(file)
     }
 
@@ -142,8 +209,11 @@ class CustomImage extends Component {
           </div>
 
           <div>
-            <Tooltip placement="bottom" title={"Delete Selected Color"}>
-              <IconButton className={classes.fabButtonAbsoluteStyle} style={{ color: "White", backgroundColor: "#D32F2F" }} data-dz-remove>
+            <Tooltip placement="bottom" title={"Delete Image"}>
+              <IconButton
+                className={classes.deleteButtonStyle}
+                data-dz-remove
+              >
                 <DeleteIcon />
               </IconButton>
             </Tooltip>
@@ -161,6 +231,10 @@ class CustomImage extends Component {
             className={classes.dropzone}
           >
           </DropzoneComponent>
+
+          <this.animateButton
+            classes={classes}
+          />
         </div>
       </div>
     );

@@ -117,7 +117,7 @@
             lock (SyncLock)
             {
                 if (LedStrip != null) return;
-
+                
                 using (var tickLock = new ManualResetEvent(false))
                 {
                     LedStrip = new DotStarLedStrip(
@@ -197,6 +197,43 @@
             this.Restart(LedCount, SpiChannel, SpiFrequency, FramesPerSecond);
         }
 
+        private void RestartAnimation()
+        {
+            SetParameters(LedCount, SpiChannel, SpiFrequency, FramesPerSecond);
+
+            lock (SyncLock)
+            {
+                if (LedStrip != null)
+                    return;
+
+                using (var tickLock = new ManualResetEvent(false))
+                {
+                    LedStrip = new DotStarLedStrip(
+                        ledCount: LedCount,
+                        spiChannel: SpiChannel,
+                        spiFrequency: SpiFrequency,
+                        reverseRgb: true);
+
+                    LedStrip.ClearPixels();
+                    LedStrip.Render();
+
+                    IsPendingStop = false;
+
+                    _animationThread = new Thread(AnimateContinuosly)
+                    {
+                        IsBackground = true
+                    };
+                    
+                    _animationThread.Start();
+                }
+            }
+        }
+
+        public void Restart()
+        {
+            this.Restart(LedCount, SpiChannel, SpiFrequency, FramesPerSecond);
+        }
+
         /// <summary>
         /// Restarts the LedStripWorker with the specified parameters
         /// </summary>
@@ -259,6 +296,7 @@
                 var animation = _animations[AnimationType.SolidColor] as SolidColorAnimation;
                 animation.EnqueueColor(rgbValue, transitionTime);
                 _currentAnimationType = AnimationType.SolidColor;
+                this.RestartAnimation();
             }
         }
 
@@ -273,14 +311,15 @@
             }
         }
 
-        public void SetImage(List<byte[]> imageColors, TimeSpan totalTransitionTime)
+        public void SetImage(Bitmap imageColors)
         {
             lock (SyncLock)
             {
                 var animation = _animations[AnimationType.Image] as ImageAnimation;
 
-                animation.SetImage(imageColors, totalTransitionTime);
+                animation.SetImage(imageColors);
                 _currentAnimationType = AnimationType.Image;
+                this.RestartAnimation();
             }
         }
 
