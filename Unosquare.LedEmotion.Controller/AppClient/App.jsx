@@ -24,6 +24,8 @@ import Status from './Routes/Status.jsx';
 import SingleColor from './Routes/SingleColor.jsx';
 import Transition from './Routes/Transition.jsx';
 import CustomImage from './Routes/CustomImage.jsx';
+import MaterialSwitch from 'material-ui/Switch';
+import { FormControlLabel, FormGroup } from 'material-ui/Form';
 
 const drawerWidth = 240;
 const primary = '#8BC34A';
@@ -101,14 +103,22 @@ const styles = theme => ({
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center'
-    }
+    },
+    bar: {},
+    checked: {
+        color: '#689F38',
+        '& + $bar': {
+          backgroundColor: '#8BC34A',
+        },
+      },
   });
 
 class App extends Component {
     state = {
         mobileOpen: false,
         isSettingsDialogOpen: false,
-        flag : null
+        flag : null,
+        checked : true
     }
   
     handleDrawerToggle = () => this.setState({ 
@@ -139,13 +149,14 @@ class App extends Component {
 
     ledStripStatus = (value) => {
         this.setState({
-            flag : value
+            flag : value,
+            checked : true
         });
     }
 
     render() {
         const { classes } = this.props;
-        const { flag } = this.state;
+        const { flag, checked } = this.state;
 
         const drawer = (
             <div>
@@ -169,13 +180,23 @@ class App extends Component {
                     </List>
 
                     <div style = {{ padding : '20px 0 20px 0' }} className = { classes.componentsAlignToCenterStyle }>
-                        <Tooltip placement="bottom" title={'Stop and Clear All'}>
-                            <Button fab mini color="accent" disabled = { flag === null } onClick = { this.stopTransition } 
-                                style = { flag === null ? { color : "#A3A3A3", background : "#DCDCDC" } : { color : "#FFFFFF", background : "#000000" } }
-                                >
-                                <FlashOff />
-                            </Button>
-                        </Tooltip>
+                        <FormGroup>
+                            <FormControlLabel
+                                control={
+                                    <MaterialSwitch
+                                        classes={{
+                                            checked: classes.checked,
+                                            bar: classes.bar,
+                                        }}
+                                        disabled = { flag === null }
+                                        checked={ checked } 
+                                        onChange={ this.stopTransition } 
+                                        aria-label="Off" 
+                                    />
+                                }
+                                label="Stop"
+                            />
+                        </FormGroup>
                     </div>
                 </div>
             </div>
@@ -214,9 +235,6 @@ class App extends Component {
                     <main className = { classes.content }>
                         <div className={classes.routes}>
                             <Switch>
-                                {/* {Routes.map((route, index) => (
-                                    <Route key = { index } path = { route.path } exact = { route.exact } component = { route.main } />
-                                ))} */}
                                 <Route path = '/' exact = { true } component = { Status } />
                                 <Route path = '/singlecolor' exact = { true } component = { SingleColor } />
                                 <Route path = '/transition' exact = { true } render = { () => <Transition ledStripStatus = { this.ledStripStatus } /> } />
