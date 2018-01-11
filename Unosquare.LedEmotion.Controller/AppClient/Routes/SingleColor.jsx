@@ -229,7 +229,7 @@ class SingleColor extends Component {
             R: color.r,
             G: color.g,
             B: color.b
-        }).then(() => { this.getColors() });
+        }).then(() => { this.getColors(), this.props.ledStripStatus(1) });
     }
 
     colorCard = (props) => {

@@ -7,47 +7,47 @@ import { withStyles } from 'material-ui/styles';
 import Axios from 'axios';
 
 const styles = theme => ({
-  root : {
-    flexGrow : 1,
+  root: {
+    flexGrow: 1,
     marginTop: 20,
-    paddingLeft : 50,
+    paddingLeft: 50,
     paddingRight: 50
   },
-  tableStyle : {
-    minWidth : 700,
+  tableStyle: {
+    minWidth: 700,
   },
-  responsiveTableStyle : {
-    overflowX : 'auto'
+  responsiveTableStyle: {
+    overflowX: 'auto'
   }
 });
 
 class Status extends Component {
   state = {
-    ConnectionType : [],
-    LocalIPs : [],
+    ConnectionType: [],
+    LocalIPs: [],
     PublicIP: ""
   };
 
   componentDidMount = () => {
     Axios.get("api/status")
-    .then(response =>{
-      this.setState({
-        ConnectionType : response.data.ConnectionType,
-        LocalIPs : response.data.LocalIPs,
-        PublicIP : response.data.PublicIP
+      .then(response => {
+        this.setState({
+          ConnectionType: response.data.ConnectionType,
+          LocalIPs: response.data.LocalIPs,
+          PublicIP: response.data.PublicIP
+        });
       });
-    });
-  } 
+  }
 
   render() {
     const { classes } = this.props;
     const { LocalIPs, PublicIP, ConnectionType } = this.state;
 
     return (
-      <div className = { classes.root }>
-        <Typography type = "headline" component = "h3">Network LED Controller Status</Typography>
-        <div className = { classes.responsiveTableStyle }>
-          <Table className = { classes.tableStyle }>
+      <div className={classes.root}>
+        <Typography type="headline" component="h3">Network LED Controller Status</Typography>
+        <div className={classes.responsiveTableStyle}>
+          <Table className={classes.tableStyle}>
             <TableHead>
               <TableRow>
                 <TableCell>Item</TableCell>
@@ -63,12 +63,12 @@ class Status extends Component {
               </TableRow>
               <TableRow>
                 <TableCell>Local IP Addresses</TableCell>
-                <TableCell>{ LocalIPs.join(",") }</TableCell>
+                <TableCell>{LocalIPs.join(",")}</TableCell>
                 <TableCell>The network IPv4 addresses of this controller</TableCell>
               </TableRow>
               <TableRow>
                 <TableCell>Public IP Address</TableCell>
-                <TableCell>{ PublicIP }</TableCell>
+                <TableCell>{PublicIP}</TableCell>
                 <TableCell>The public network IPv4 address of this controller</TableCell>
               </TableRow>
             </TableBody>
@@ -80,7 +80,7 @@ class Status extends Component {
 }
 
 Status.propTypes = {
-  classes : PropTypes.object.isRequired,
+  classes: PropTypes.object.isRequired,
 };
 
 export default withStyles(styles)(Status);

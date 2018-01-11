@@ -191,44 +191,7 @@
                 }
             }
         }
-
-        public void Restart()
-        {
-            this.Restart(LedCount, SpiChannel, SpiFrequency, FramesPerSecond);
-        }
-
-        private void RestartAnimation()
-        {
-            SetParameters(LedCount, SpiChannel, SpiFrequency, FramesPerSecond);
-
-            lock (SyncLock)
-            {
-                if (LedStrip != null)
-                    return;
-
-                using (var tickLock = new ManualResetEvent(false))
-                {
-                    LedStrip = new DotStarLedStrip(
-                        ledCount: LedCount,
-                        spiChannel: SpiChannel,
-                        spiFrequency: SpiFrequency,
-                        reverseRgb: true);
-
-                    LedStrip.ClearPixels();
-                    LedStrip.Render();
-
-                    IsPendingStop = false;
-
-                    _animationThread = new Thread(AnimateContinuosly)
-                    {
-                        IsBackground = true
-                    };
-                    
-                    _animationThread.Start();
-                }
-            }
-        }
-
+        
         public void Restart()
         {
             this.Restart(LedCount, SpiChannel, SpiFrequency, FramesPerSecond);

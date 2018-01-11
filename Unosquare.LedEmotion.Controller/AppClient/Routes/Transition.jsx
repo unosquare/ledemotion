@@ -78,10 +78,10 @@ const styles = theme => ({
     rcSliderStyle: {
         width: 500
     },
-    fabButtonStyle : {
-        padding : '0 10px 0 10px'
+    fabButtonStyle: {
+        padding: '0 10px 0 10px'
     },
-    componentsAlignToCenterStyle : {
+    componentsAlignToCenterStyle: {
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center'
@@ -95,7 +95,7 @@ class Transition extends Component {
         seconds: 1,
         displayColorPicker: false,
 
-        flag : 0
+        flag: 0
     };
 
     componentToHex = (c) => {
@@ -116,7 +116,7 @@ class Transition extends Component {
         this.setState(prevState => ({
             colors: [...prevState.colors, { id: this.state.colors.length, name: colorHexadecimal, rgb: { r, g, b } }],
             selectedColor: color,
-            displayColorPicker : false
+            displayColorPicker: false
         }));
     }
 
@@ -157,8 +157,8 @@ class Transition extends Component {
     /** Stops the transition */
     stopTransition = () => {
         this.setState({
-            colors : [],
-            seconds : 1
+            colors: [],
+            seconds: 1
         })
 
         Axios.put('/api/stop');
@@ -196,8 +196,8 @@ class Transition extends Component {
         const CustomPaper = styled(Paper) `
             && {
                 background: ${ (colors.length === 0) ? `${'#FFFFFF'}` :
-                                (colors.length === 1) ? `${colors.map((color) => color.name)}` :
-                                 `linear-gradient(to right, ${colors.map((color) => color.name)})`}; 
+                (colors.length === 1) ? `${colors.map((color) => color.name)}` :
+                    `linear-gradient(to right, ${colors.map((color) => color.name)})`}; 
                 background-size: 200% 200%;
                 background-position: 0 0;
                 background-repeat: repeat-x;
@@ -223,7 +223,7 @@ class Transition extends Component {
                     {/* Color picker */}
                     <div className={classes.componentsAlignToCenterStyle}>
                         <div>
-                            <Button fab color="primary" aria-label="add" className={classes.button} onClick={this.handleClick} style = {{ background : "#4CAF50" }}>
+                            <Button fab color="primary" aria-label="add" className={classes.button} onClick={this.handleClick} style={{ background: "#4CAF50" }}>
                                 <AddIcon />
                             </Button>
                         </div>
@@ -262,9 +262,9 @@ class Transition extends Component {
                     <br /><br />
 
                     {/* Slider */}
-                    <div className = { classes.componentsAlignToCenterStyle }>
+                    <div className={classes.componentsAlignToCenterStyle}>
                         <Slider
-                            min={1} 
+                            min={1}
                             max={300}
                             trackStyle={{ backgroundColor: '#8BC34A', height: 10 }}
                             handleStyle={{
@@ -281,7 +281,7 @@ class Transition extends Component {
                         />
                     </div>
                     <br /><br />
-                    <div className = { classes.componentsAlignToCenterStyle }>
+                    <div className={classes.componentsAlignToCenterStyle}>
                         <Typography type="subheading" component="p">
                             {seconds} seconds
                         </Typography>
@@ -291,10 +291,10 @@ class Transition extends Component {
                     {/* Buttons */}
                     {
                         colors.length > 0 &&
-                        <div className = { classes.componentsAlignToCenterStyle }>
-                            <div className = { classes.fabButtonStyle }>
+                        <div className={classes.componentsAlignToCenterStyle}>
+                            <div className={classes.fabButtonStyle}>
                                 <Tooltip placement="top" title={'Animate ' + colors.length + ' colors over ' + seconds + ' seconds'}>
-                                    <Button fab color="accent" onClick={this.setTransition} style = {{ color : "#FFFFFF", background : "#FFD700" }}>
+                                    <Button fab color="accent" onClick={this.setTransition} style={{ color: "#FFFFFF", background: "#FFD700" }}>
                                         <FlashOn />
                                     </Button>
                                 </Tooltip>

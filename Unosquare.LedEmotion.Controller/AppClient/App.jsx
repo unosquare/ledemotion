@@ -85,9 +85,9 @@ const styles = theme => ({
         textDecoration: 'none',
         color: '#FFFFFF'
     },
-    unosquareLink : {
+    unosquareLink: {
         textDecoration: 'none',
-        color : "#8BC34A",
+        color: "#8BC34A",
     },
     spacer: {
         flex: '1 1 100%'
@@ -96,7 +96,7 @@ const styles = theme => ({
         padding: 16,
         textAlign: 'center'
     },
-    componentsAlignToCenterStyle : {
+    componentsAlignToCenterStyle: {
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center'
@@ -105,10 +105,10 @@ const styles = theme => ({
     checked: {
         color: '#689F38',
         '& + $bar': {
-          backgroundColor: '#8BC34A',
+            backgroundColor: '#8BC34A',
         },
-      },
-  });
+    },
+});
 
 const mql = window.matchMedia(`(min-width: 960px)`);
 
@@ -118,8 +118,8 @@ class App extends Component {
         docked: false,
         mobileOpen: false,
         isSettingsDialogOpen: false,
-        flag : null,
-        checked : true
+        flag: null,
+        checked: true
     }
 
     componentWillMount() {
@@ -137,40 +137,40 @@ class App extends Component {
             docked: mql.matches
         });
     }
-  
-    handleDrawerToggle = () => this.setState({ 
-        mobileOpen : !this.state.mobileOpen 
+
+    handleDrawerToggle = () => this.setState({
+        mobileOpen: !this.state.mobileOpen
     });
 
     handleDialogClose = () => this.setState({
-            isSettingsDialogOpen : false
+        isSettingsDialogOpen: false
     });
 
     handleDialogOpen = () => this.setState({
-            isSettingsDialogOpen : true
+        isSettingsDialogOpen: true
     });
 
     /** Stops the transition */
     stopTransition = () => {
-        if(this.state.flag!=1)
+        if (this.state.flag != 1)
             return;
 
         this.setState({
-            colors : [],
-            seconds : 1
+            colors: [],
+            seconds: 1
         })
 
         Axios.put('/api/stop');
 
         this.setState({
-            flag : null
+            flag: null
         });
     }
 
     ledStripStatus = (value) => {
         this.setState({
-            flag : value,
-            checked : true
+            flag: value,
+            checked: true
         });
     }
 
@@ -182,24 +182,24 @@ class App extends Component {
             <div>
                 <div>
                     <div className={classes.drawerHeader} style={{ display: 'flex', justifyContent: 'center' }} >
-                        <Typography style = {{overflow : 'visible', margin: 'auto', width: 'auto', display: 'block'}} type='title' noWrap><WbSunny /> LED Emotion</Typography>
+                        <Typography style={{ overflow: 'visible', margin: 'auto', width: 'auto', display: 'block' }} type='title' noWrap><WbSunny /> LED Emotion</Typography>
                     </div>
                     <Divider />
                     <List>
-                    {
-                        Routes.map((route, index) =>
-                            route.linkTo && 
+                        {
+                            Routes.map((route, index) =>
+                                route.linkTo &&
                                 <Link key={index} className={classes.link} to={route.linkTo}>
                                     <ListItem button>
-                                        <ListItemIcon>{ route.icon() }</ListItemIcon>
-                                        <ListItemText primary = {route.iconText} />
+                                        <ListItemIcon>{route.icon()}</ListItemIcon>
+                                        <ListItemText primary={route.iconText} />
                                     </ListItem>
                                 </Link>
-                        )
-                    }
+                            )
+                        }
                     </List>
 
-                    <div style = {{ padding : '20px 0 20px 0' }} className = { classes.componentsAlignToCenterStyle }>
+                    <div style={{ padding: '20px 0 20px 0' }} className={classes.componentsAlignToCenterStyle}>
                         <FormGroup>
                             <FormControlLabel
                                 control={
@@ -208,70 +208,70 @@ class App extends Component {
                                             checked: classes.checked,
                                             bar: classes.bar,
                                         }}
-                                        checked={ flag !== null } 
-                                        onChange={ this.stopTransition } 
-                                        aria-label = "Off" 
+                                        checked={flag !== null}
+                                        onChange={this.stopTransition}
+                                        aria-label="Off"
                                     />
                                 }
-                                label={ this.state.flag === 1 ? "On" : "Off"}
+                                label={this.state.flag === 1 ? "On" : "Off"}
                             />
                         </FormGroup>
                     </div>
                 </div>
             </div>
-      );
+        );
 
-      return (
-          <Router>
-            <div className = { classes.root }>
-                <div className = { classes.appFrame }>
-                    <AppBar className = { classes.appBar }>
-                        <Toolbar>
-                            <IconButton color = 'default' aria-label = 'open drawer' onClick = { this.handleDrawerToggle } className = { classes.navIconHide }>
-                                <MenuIcon color = "contrast" />
-                            </IconButton>
-                            {Routes.map((route, index) => (
-                                <Route key={index} path={route.path} exact={route.exact} component={route.title} />
-                            ))}
-                            <div className={classes.spacer}></div>
-                            <IconButton onClick={this.handleDialogOpen}>
-                                <SettingsIcon color = "contrast" />
-                            </IconButton>
-                        </Toolbar>
-                    </AppBar>
-                    <Hidden mdUp>
-                        <Drawer type='temporary' open={this.state.mobileOpen} classes = {{ paper: classes.drawerPaper }} onClose = { this.handleDrawerToggle } ModalProps = {{
+        return (
+            <Router>
+                <div className={classes.root}>
+                    <div className={classes.appFrame}>
+                        <AppBar className={classes.appBar}>
+                            <Toolbar>
+                                <IconButton color='default' aria-label='open drawer' onClick={this.handleDrawerToggle} className={classes.navIconHide}>
+                                    <MenuIcon color="contrast" />
+                                </IconButton>
+                                {Routes.map((route, index) => (
+                                    <Route key={index} path={route.path} exact={route.exact} component={route.title} />
+                                ))}
+                                <div className={classes.spacer}></div>
+                                <IconButton onClick={this.handleDialogOpen}>
+                                    <SettingsIcon color="contrast" />
+                                </IconButton>
+                            </Toolbar>
+                        </AppBar>
+                        <Hidden mdUp>
+                            <Drawer type='temporary' open={this.state.mobileOpen} classes={{ paper: classes.drawerPaper }} onClose={this.handleDrawerToggle} ModalProps={{
                                 keepMounted: true // Better open performance on mobile.
                             }}>
+                                {drawer}
+                            </Drawer>
+                        </Hidden>
+                        <Drawer type='permanent' open style={this.state.docked === true ? { display: "flex" } : { display: "none" }} classes={{ paper: classes.drawerPaper }}>
                             {drawer}
                         </Drawer>
-                    </Hidden>
-                    <Drawer type = 'permanent' open style={this.state.docked === true ? {display:"flex" } : {display:"none" } } classes = {{ paper: classes.drawerPaper }}>
-                        {drawer}
-                    </Drawer>
-                    <main className = { classes.content }>
-                        <div className={classes.routes}>
-                            <Switch>
-                                <Route path = '/' exact = { true } component = { Status } />
-                                <Route path = '/singlecolor' exact = { true } component = { SingleColor } />
-                                <Route path = '/transition' exact = { true } render = { () => <Transition ledStripStatus = { this.ledStripStatus } /> } />
-                                <Route path = '/customimage' exact = { true } component = { CustomImage } />
-                            </Switch>
-                        </div>
-                        <Typography type = 'caption' className = { classes.footer }>
-                            Copyright © 2017 - 2018 <a href = 'https://www.unosquare.com/' target = '_blank' className = { classes.unosquareLink }>Unosquare</a> - All rights reserved
+                        <main className={classes.content}>
+                            <div className={classes.routes}>
+                                <Switch>
+                                    <Route path='/' exact={true} component={Status} />
+                                    <Route path='/singlecolor' exact={true} render={() => <SingleColor ledStripStatus={this.ledStripStatus} />} />
+                                    <Route path='/transition' exact={true} render={() => <Transition ledStripStatus={this.ledStripStatus} />} />
+                                    <Route path='/customimage' exact={true} render={() => <CustomImage ledStripStatus={this.ledStripStatus} />} />
+                                </Switch>
+                            </div>
+                            <Typography type='caption' className={classes.footer}>
+                                Copyright © 2017 - 2018 <a href='https://www.unosquare.com/' target='_blank' className={classes.unosquareLink}>Unosquare</a> - All rights reserved
                         </Typography>
-                    </main>
-                </div>                
-                <SettingsDialog open={this.state.isSettingsDialogOpen} handleClose={this.handleDialogClose} /> 
-            </div>
-        </Router>
-      );
+                        </main>
+                    </div>
+                    <SettingsDialog open={this.state.isSettingsDialogOpen} handleClose={this.handleDialogClose} />
+                </div>
+            </Router>
+        );
     }
-  }
+}
 
 App.propTypes = {
-    classes : PropTypes.object.isRequired
+    classes: PropTypes.object.isRequired
 };
 
 export default withStyles(styles)(App);

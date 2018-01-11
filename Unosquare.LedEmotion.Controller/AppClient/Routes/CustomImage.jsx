@@ -118,7 +118,7 @@ class CustomImage extends Component {
     Axios.post('/api/image', {
       Data: this.state.image,
       Type: this.state.imageType
-    });
+    }).then(() => { this.props.ledStripStatus(1) });
   }
 
   stopAnimateImage = () => {
