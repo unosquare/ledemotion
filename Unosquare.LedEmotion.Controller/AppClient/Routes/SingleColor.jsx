@@ -68,6 +68,7 @@ class SingleColor extends Component {
             textColor: 'White',
             background: '#7ED321',
             presetName: '',
+            activeColor: '',
             color: [],
             colors: [],
             presetColors: [{ color: '#D0021B', title: 'Red', origin: 'Array' }, { color: '#F5A623', title: 'Orange', origin: 'Array' }, { color: '#F8E71C', title: 'Yellow', origin: 'Array' },
@@ -151,11 +152,15 @@ class SingleColor extends Component {
 
     selectColor = (color) => {
         var rgb = this.hexToRGB(color.color);
-        this.setState({ presetName: color.title });
-        this.setState({ origin: color.origin });
+        this.setState({ 
+            presetName: color.title, 
+            origin: color.origin, 
+            activeColor: rgb 
+        }, () => {
+            this.setColor() 
+        });
         this.changeTextColor(rgb);
         this.changeBackgroundColor(color.color);
-        this.setColor(rgb, true);
     }
 
     handleClose = () => {
@@ -199,7 +204,11 @@ class SingleColor extends Component {
             data: { Name: this.state.presetName }
         }).then(() => {
             this.resetValues(),
-                this.setColor({ r: 0, g: 0, b: 0 }, true)
+                this.setState({ 
+                    activeColor: { r: 0, g: 0, b: 0 } 
+                }, () => {
+                    this.setColor() 
+                });
         });
     }
 
@@ -214,22 +223,29 @@ class SingleColor extends Component {
             G: this.state.color.g,
             B: this.state.color.b
         }).then(() => {
-            this.setColor(this.state.color, true),
                 this.handleAddDialogClose(),
-                this.setState({ origin: 'Json' })
+                this.setState({ 
+                    activeColor: this.state.color, 
+                    origin: 'Json' 
+                }, () => {
+                    this.setColor() 
+                });
         });
     }
 
-    setColor = (color, sendToApi) => {
-        if (sendToApi !== true)
-            return;
-
+    setColor = () => {
+        console.log("Lok'tar Ogar")
+        console.log(this.state.activeColor)
         Axios.put('/api/color', {
             F: 6,
-            R: color.r,
-            G: color.g,
-            B: color.b
-        }).then(() => { this.getColors(), this.props.ledStripStatus(1) });
+            R: this.state.activeColor.r,
+            G: this.state.activeColor.g,
+            B: this.state.activeColor.b
+        }).then(() => { 
+            this.getColors(), 
+            this.props.ledStripStatus(1),
+            this.props.funcArc(this.setColor.bind(this)) 
+        });
     }
 
     colorCard = (props) => {

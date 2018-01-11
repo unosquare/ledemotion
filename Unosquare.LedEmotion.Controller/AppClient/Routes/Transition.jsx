@@ -94,7 +94,6 @@ class Transition extends Component {
         selectedColor: {},
         seconds: 1,
         displayColorPicker: false,
-
         flag: 0
     };
 
@@ -140,7 +139,7 @@ class Transition extends Component {
     setTransition = () => {
         const colors = this.state.colors;
         const delay = this.state.seconds;
-
+        /* console.log("Lok'tar Ogar") */
         Axios.put('/api/transition', {
             Colors: colors.map((color) => {
                 const { r, g, b } = color.rgb;
@@ -148,10 +147,11 @@ class Transition extends Component {
             }),
             Delay: delay
         }).then(response => {
-            // placeholder
+            this.props.ledStripStatus(1),
+            this.props.funcArc(this.setTransition.bind(this))
         });
 
-        this.props.ledStripStatus(1);
+        
     }
 
     /** Stops the transition */
