@@ -22,6 +22,9 @@
         {
             lock (_syncLock)
             {
+                if (LedStripWorker.Instance.CurrentAnimationType == AnimationType.SolidColor)
+                    _colorQueue.Clear();
+                
                 if (_colorQueue.Count == 0)
                     _colorQueue.Enqueue(new byte[3]);
 

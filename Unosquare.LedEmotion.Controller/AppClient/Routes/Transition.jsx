@@ -145,7 +145,7 @@ class Transition extends Component {
     setTransition = () => {
         const colors = this.state.colors;
         const delay = this.state.seconds;
-        /* console.log("Lok'tar Ogar") */
+
         Axios.put('/api/transition', {
             Colors: colors.map((color) => {
                 const { r, g, b } = color.rgb;
@@ -154,10 +154,10 @@ class Transition extends Component {
             Delay: delay
         }).then(response => {
             this.props.ledStripStatus(1),
-            this.props.funcArc(this.setTransition.bind(this))
+            this.props.switchFunction(this.setTransition.bind(this))
         });
 
-        
+
     }
 
     /** Stops the transition */
@@ -297,14 +297,14 @@ class Transition extends Component {
                     {/* Buttons */}
                     {
                         colors.length > 0 &&
-                            <div>
-                                <Tooltip placement="left" title={'Animate ' + colors.length + ' colors over ' + seconds + ' seconds'}>
-                                    <Button fab color="accent" onClick={this.setTransition} className={classes.fabButtonAbsoluteStyle} 
-                                            style = {{ color : "#FFFFFF", background : "#FFD700" }}>
-                                        <FlashOn />
-                                    </Button>
-                                </Tooltip>
-                            </div>
+                        <div>
+                            <Tooltip placement="left" title={'Animate ' + colors.length + ' colors over ' + seconds + ' seconds'}>
+                                <Button fab color="accent" onClick={this.setTransition} className={classes.fabButtonAbsoluteStyle}
+                                    style={{ color: "#FFFFFF", background: "#FFD700" }}>
+                                    <FlashOn />
+                                </Button>
+                            </Tooltip>
+                        </div>
                     }
                 </div>
             </div>

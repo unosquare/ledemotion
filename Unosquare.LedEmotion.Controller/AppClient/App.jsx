@@ -120,7 +120,7 @@ class App extends Component {
         isSettingsDialogOpen: false,
         flag: null,
         checked: true,
-        func: null
+        function: null
     }
 
     componentWillMount() {
@@ -153,15 +153,15 @@ class App extends Component {
 
     /** Stops the transition */
     stopTransition = () => {
-        if (this.state.flag != 1){
-            this.state.func();
-            /* console.log(this.state.func) */
+        if (this.state.flag != 1) {
+            this.state.function();
+
             this.setState({
                 flag: 1
             });
             return;
         }
-            
+
         this.setState({
             colors: [],
             seconds: 1
@@ -174,13 +174,11 @@ class App extends Component {
         });
     }
 
-
-    funcArc = (func) =>{
-        console.log("Suicide Mission")
+    switchFunction = (func) => {
         this.setState({
-            func: func
+            function: func
         });
-    } 
+    }
 
     ledStripStatus = (value) => {
         this.setState({
@@ -268,9 +266,9 @@ class App extends Component {
                             <div className={classes.routes}>
                                 <Switch>
                                     <Route path='/' exact={true} component={Status} />
-                                    <Route path='/singlecolor' exact={true} render={() => <SingleColor ledStripStatus={this.ledStripStatus} funcArc={this.funcArc}/>} />
-                                    <Route path='/transition' exact={true} render={() => <Transition ledStripStatus={this.ledStripStatus} funcArc={this.funcArc} />} />
-                                    <Route path='/customimage' exact={true} render={() => <CustomImage ledStripStatus={this.ledStripStatus} funcArc={this.funcArc}/>} />
+                                    <Route path='/singlecolor' exact={true} render={() => <SingleColor ledStripStatus={this.ledStripStatus} switchFunction={this.switchFunction} />} />
+                                    <Route path='/transition' exact={true} render={() => <Transition ledStripStatus={this.ledStripStatus} switchFunction={this.switchFunction} />} />
+                                    <Route path='/customimage' exact={true} render={() => <CustomImage ledStripStatus={this.ledStripStatus} switchFunction={this.switchFunction} />} />
                                 </Switch>
                             </div>
                             <Typography type='caption' className={classes.footer}>

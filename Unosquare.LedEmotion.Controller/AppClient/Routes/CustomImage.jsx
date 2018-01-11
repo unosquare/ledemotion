@@ -119,15 +119,15 @@ class CustomImage extends Component {
     Axios.post('/api/image', {
       Data: this.state.image,
       Type: this.state.imageType
-    }).then(() => { 
+    }).then(() => {
       this.props.ledStripStatus(1),
-      this.props.funcArc(this.animateImage.bind(this))
+        this.props.switchFunction(this.animateImage.bind(this))
     });
   }
 
   stopAnimateImage = () => {
     this.setState({ status: "Off" });
-
+    this.props.ledStripStatus(null)
     Axios.put('/api/stop');
   }
 
@@ -145,20 +145,10 @@ class CustomImage extends Component {
 
   animateButton = (props) => {
     if (this.state.image != "") {
-      if (this.state.status == "Off") {
-        return (
-          <Tooltip placement="left" title={'Animate Image'}>
-            <Button fab className={props.classes.animateButtonStyle} onClick={this.animateImage} style={{ background: "#FFD700", color: "#FFFFFF" }}>
-              <FlashOn />
-            </Button>
-          </Tooltip>
-        )
-      }
-
       return (
-        <Tooltip placement="left" title={'Stop Image Animation'}>
-          <Button fab className={props.classes.animateButtonStyle} onClick={this.stopAnimateImage} style={{ background: "#212121", color: "#FFFFFF" }}>
-            <FlashOff />
+        <Tooltip placement="left" title={'Animate Image'}>
+          <Button fab className={props.classes.animateButtonStyle} onClick={this.animateImage} style={{ background: "#FFD700", color: "#FFFFFF" }}>
+            <FlashOn />
           </Button>
         </Tooltip>
       )
@@ -205,8 +195,8 @@ class CustomImage extends Component {
           </div>
 
           <div>
-            <Tooltip placement="left" title={ 'Delete image' }>
-              <Button fab className={classes.deleteButtonStyle} data-dz-remove style = {{ background : "#D32F2F", color : "#FFFFFF" }}>
+            <Tooltip placement="left" title={'Delete image'}>
+              <Button fab className={classes.deleteButtonStyle} data-dz-remove style={{ background: "#D32F2F", color: "#FFFFFF" }}>
                 <DeleteIcon />
               </Button>
             </Tooltip>

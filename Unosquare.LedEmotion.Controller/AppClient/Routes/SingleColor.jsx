@@ -85,7 +85,6 @@ class SingleColor extends Component {
     componentWillMount() {
         mql.addListener(this.mediaQueryChanged.bind(this));
         this.setState({ mql: mql, docked: mql.matches });
-        this.stopAnimateImage();
     }
 
     componentWillUnmount() {
@@ -97,10 +96,6 @@ class SingleColor extends Component {
             mql: mql,
             docked: this.state.mql.matches
         });
-    }
-
-    stopAnimateImage = () => {
-        Axios.put('/api/stop');
     }
 
     getColors = () => {
@@ -152,12 +147,12 @@ class SingleColor extends Component {
 
     selectColor = (color) => {
         var rgb = this.hexToRGB(color.color);
-        this.setState({ 
-            presetName: color.title, 
-            origin: color.origin, 
-            activeColor: rgb 
+        this.setState({
+            presetName: color.title,
+            origin: color.origin,
+            activeColor: rgb
         }, () => {
-            this.setColor() 
+            this.setColor()
         });
         this.changeTextColor(rgb);
         this.changeBackgroundColor(color.color);
@@ -204,10 +199,10 @@ class SingleColor extends Component {
             data: { Name: this.state.presetName }
         }).then(() => {
             this.resetValues(),
-                this.setState({ 
-                    activeColor: { r: 0, g: 0, b: 0 } 
+                this.setState({
+                    activeColor: { r: 0, g: 0, b: 0 }
                 }, () => {
-                    this.setColor() 
+                    this.setColor()
                 });
         });
     }
@@ -223,28 +218,26 @@ class SingleColor extends Component {
             G: this.state.color.g,
             B: this.state.color.b
         }).then(() => {
-                this.handleAddDialogClose(),
-                this.setState({ 
-                    activeColor: this.state.color, 
-                    origin: 'Json' 
+            this.handleAddDialogClose(),
+                this.setState({
+                    activeColor: this.state.color,
+                    origin: 'Json'
                 }, () => {
-                    this.setColor() 
+                    this.setColor()
                 });
         });
     }
 
     setColor = () => {
-        console.log("Lok'tar Ogar")
-        console.log(this.state.activeColor)
         Axios.put('/api/color', {
             F: 6,
             R: this.state.activeColor.r,
             G: this.state.activeColor.g,
             B: this.state.activeColor.b
-        }).then(() => { 
-            this.getColors(), 
-            this.props.ledStripStatus(1),
-            this.props.funcArc(this.setColor.bind(this)) 
+        }).then(() => {
+            this.getColors(),
+                this.props.ledStripStatus(1),
+                this.props.switchFunction(this.setColor.bind(this))
         });
     }
 

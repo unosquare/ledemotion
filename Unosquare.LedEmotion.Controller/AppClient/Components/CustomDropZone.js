@@ -502,9 +502,9 @@
                                         return null != e.previewElement && null != e.previewElement.parentNode && e.previewElement.parentNode.removeChild(e.previewElement), this._updateMaxFilesReachedClass()
                                     },
                                     thumbnail: function (e, t) {
-                                        
+
                                         this.emit("complete", e, t, e)
-                                        
+
                                         if (e.previewElement) {
                                             e.previewElement.classList.remove("dz-file-preview");
                                             for (var i = 0, n = n = e.previewElement.querySelectorAll("[data-dz-thumbnail]"); ;) {

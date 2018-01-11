@@ -86,8 +86,10 @@
 
         #region Init, Start and Stop
 
-        private IAnimation CurrentAnimation => _animations[_currentAnimationType];
+        public AnimationType CurrentAnimationType { get => _currentAnimationType; set => _currentAnimationType = value; }
 
+        private IAnimation CurrentAnimation => _animations[CurrentAnimationType];
+        
         /// <summary>
         /// Sets the start parameters parameters.
         /// </summary>
@@ -257,8 +259,8 @@
                     transitionTime = TimeSpan.FromMilliseconds(MillisecondsPerFrame * 1024);
 
                 var animation = _animations[AnimationType.SolidColor] as SolidColorAnimation;
+                CurrentAnimationType = AnimationType.SolidColor;
                 animation.EnqueueColor(rgbValue, transitionTime);
-                _currentAnimationType = AnimationType.SolidColor;
                 this.RestartAnimation();
             }
         }
@@ -269,7 +271,7 @@
             {
                 var animation = _animations[AnimationType.Transition] as TransitionColorAnimation;
                 animation.SetTransitions(rgbValues, totalTransitionTime);
-                _currentAnimationType = AnimationType.Transition;
+                CurrentAnimationType = AnimationType.Transition;
                 this.RestartAnimation();
             }
         }
@@ -281,7 +283,7 @@
                 var animation = _animations[AnimationType.Image] as ImageAnimation;
 
                 animation.SetImage(imageColors);
-                _currentAnimationType = AnimationType.Image;
+                CurrentAnimationType = AnimationType.Image;
                 this.RestartAnimation();
             }
         }
