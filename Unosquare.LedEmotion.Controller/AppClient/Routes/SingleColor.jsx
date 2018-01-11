@@ -82,7 +82,7 @@ class SingleColor extends Component {
     }
 
     componentWillMount() {
-        mql.addListener(this.mediaQueryChanged);
+        mql.addListener(this.mediaQueryChanged.bind(this));
         this.setState({ mql: mql, docked: mql.matches });
         this.stopAnimateImage();
     }

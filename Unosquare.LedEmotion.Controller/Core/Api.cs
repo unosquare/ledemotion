@@ -213,7 +213,7 @@
             try
             {
                 var data = Json.Deserialize<AppSettings>(context.RequestBody());
-                LedStripWorker.Instance.Restart(data.LedCount, data.SpiChannel, data.SpiFrequency, data.FramesPerSecond);
+                LedStripWorker.Instance.Restart(data.LedCount, data.SpiChannel, data.SpiFrequency, data.FramesPerSecond, 1);
 
                 return context.JsonResponseAsync(new
                 {
@@ -322,7 +322,7 @@
 
                 return context.JsonResponseAsync(new
                 {
-                    Status = "ok"
+                    Status = "OK"
                 });
             }
             catch (Exception ex)
