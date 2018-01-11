@@ -16,14 +16,13 @@ import { Link, Redirect, HashRouter as Router, Route, Switch, withRouter } from 
 import List, { ListItem, ListItemIcon, ListItemText } from 'material-ui/List';
 import WbSunny from 'material-ui-icons/WbSunny';
 import SettingsDialog from './Components/SettingsDialog.jsx';
-import AddIcon from 'material-ui-icons/Add';
-import Button from 'material-ui/Button';
-import FlashOff from 'material-ui-icons/FlashOff';
 import Axios from 'axios';
 import Status from './Routes/Status.jsx';
 import SingleColor from './Routes/SingleColor.jsx';
 import Transition from './Routes/Transition.jsx';
 import CustomImage from './Routes/CustomImage.jsx';
+import MaterialSwitch from 'material-ui/Switch';
+import { FormControlLabel, FormGroup } from 'material-ui/Form';
 
 const drawerWidth = 240;
 const primary = '#8BC34A';
@@ -101,8 +100,15 @@ const styles = theme => ({
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center'
-    }
-});
+    },
+    bar: {},
+    checked: {
+        color: '#689F38',
+        '& + $bar': {
+          backgroundColor: '#8BC34A',
+        },
+      },
+  });
 
 const mql = window.matchMedia(`(min-width: 960px)`);
 
@@ -112,7 +118,8 @@ class App extends Component {
         docked: false,
         mobileOpen: false,
         isSettingsDialogOpen: false,
-        flag : null
+        flag : null,
+        checked : true
     }
 
     componentWillMount() {
@@ -159,13 +166,14 @@ class App extends Component {
 
     ledStripStatus = (value) => {
         this.setState({
-            flag : value
+            flag : value,
+            checked : true
         });
     }
 
     render() {
         const { classes } = this.props;
-        const { flag } = this.state;
+        const { flag, checked } = this.state;
 
         const drawer = (
             <div>
@@ -189,15 +197,23 @@ class App extends Component {
                     </List>
 
                     <div style = {{ padding : '20px 0 20px 0' }} className = { classes.componentsAlignToCenterStyle }>
-                        <Tooltip placement="bottom" title={'Stop and Clear All'}>
-                        <div>
-                            <Button fab mini color="accent" disabled = { flag === null } onClick = { this.stopTransition } 
-                                style = { flag === null ? { color : "#A3A3A3", background : "#DCDCDC" } : { color : "#FFFFFF", background : "#000000" } }
-                                >
-                                <FlashOff />
-                            </Button>
-                        </div>
-                        </Tooltip>
+                        <FormGroup>
+                            <FormControlLabel
+                                control={
+                                    <MaterialSwitch
+                                        classes={{
+                                            checked: classes.checked,
+                                            bar: classes.bar,
+                                        }}
+                                        disabled = { flag === null }
+                                        checked={ checked } 
+                                        onChange={ this.stopTransition } 
+                                        aria-label="Off" 
+                                    />
+                                }
+                                label="Stop"
+                            />
+                        </FormGroup>
                     </div>
                 </div>
             </div>
