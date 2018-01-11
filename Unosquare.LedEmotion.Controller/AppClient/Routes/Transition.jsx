@@ -81,6 +81,12 @@ const styles = theme => ({
     fabButtonStyle: {
         padding: '0 10px 0 10px'
     },
+    fabButtonAbsoluteStyle: {
+        flip: false,
+        position: 'absolute',
+        bottom: 32,
+        right: 32
+    },
     componentsAlignToCenterStyle: {
         display: 'flex',
         alignItems: 'center',
@@ -291,15 +297,14 @@ class Transition extends Component {
                     {/* Buttons */}
                     {
                         colors.length > 0 &&
-                        <div className={classes.componentsAlignToCenterStyle}>
-                            <div className={classes.fabButtonStyle}>
-                                <Tooltip placement="top" title={'Animate ' + colors.length + ' colors over ' + seconds + ' seconds'}>
-                                    <Button fab color="accent" onClick={this.setTransition} style={{ color: "#FFFFFF", background: "#FFD700" }}>
+                            <div>
+                                <Tooltip placement="left" title={'Animate ' + colors.length + ' colors over ' + seconds + ' seconds'}>
+                                    <Button fab color="accent" onClick={this.setTransition} className={classes.fabButtonAbsoluteStyle} 
+                                            style = {{ color : "#FFFFFF", background : "#FFD700" }}>
                                         <FlashOn />
                                     </Button>
                                 </Tooltip>
                             </div>
-                        </div>
                     }
                 </div>
             </div>
