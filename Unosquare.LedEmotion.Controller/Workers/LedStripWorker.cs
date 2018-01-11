@@ -148,6 +148,40 @@
 
                     LedStrip.Render();
 
+                    IsPendingStop = false;
+
+                    _animationThread = new Thread(AnimateContinuosly)
+                    {
+                        IsBackground = true
+                    };
+
+                    _animationThread.Start();
+                }
+            }
+        }
+        
+        private void RestartAnimation()
+        {
+            SetParameters(LedCount, SpiChannel, SpiFrequency, FramesPerSecond);
+
+            lock (SyncLock)
+            {
+                if (LedStrip != null)
+                    return;
+
+                using (var tickLock = new ManualResetEvent(false))
+                {
+                    LedStrip = new DotStarLedStrip(
+                        ledCount: LedCount,
+                        spiChannel: SpiChannel,
+                        spiFrequency: SpiFrequency,
+                        reverseRgb: true);
+
+                    LedStrip.ClearPixels();
+                    LedStrip.Render();
+
+                    IsPendingStop = false;
+
                     _animationThread = new Thread(AnimateContinuosly)
                     {
                         IsBackground = true
@@ -158,14 +192,23 @@
             }
         }
 
+        public void Restart()
+        {
+            this.Restart(LedCount, SpiChannel, SpiFrequency, FramesPerSecond);
+        }
+
         /// <summary>
         /// Restarts the LedStripWorker with the specified parameters
         /// </summary>
-        public void Restart(int ledCount, int spiChannel, int spiFrequency, int framesPerSecond)
+        public void Restart(int ledCount, int spiChannel, int spiFrequency, int framesPerSecond, int value = 0)
         {
             this.Stop();
             this.SetParameters(ledCount, spiChannel, spiFrequency, framesPerSecond);
-            this.Start();
+            
+            if (value == 1)
+            {
+                this.Start();
+            }
         }
 
         /// <summary>
@@ -226,6 +269,7 @@
                 var animation = _animations[AnimationType.Transition] as TransitionColorAnimation;
                 animation.SetTransitions(rgbValues, totalTransitionTime);
                 _currentAnimationType = AnimationType.Transition;
+                this.RestartAnimation();
             }
         }
 
@@ -245,8 +289,6 @@
         /// </summary>
         private void AnimateContinuosly()
         {
-            IsPendingStop = false;
-
             var startFrameTime = DateTime.UtcNow;
 
             using (var tickLock = new ManualResetEvent(false))
@@ -273,8 +315,6 @@
                     tickLock.WaitOne(elapsedToFrame);
                 }
             }
-
-            IsPendingStop = false;
         }
 
         #endregion

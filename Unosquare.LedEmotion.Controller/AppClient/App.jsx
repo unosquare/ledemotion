@@ -16,6 +16,13 @@ import { Link, Redirect, HashRouter as Router, Route, Switch, withRouter } from 
 import List, { ListItem, ListItemIcon, ListItemText } from 'material-ui/List';
 import WbSunny from 'material-ui-icons/WbSunny';
 import SettingsDialog from './Components/SettingsDialog.jsx';
+import Axios from 'axios';
+import Status from './Routes/Status.jsx';
+import SingleColor from './Routes/SingleColor.jsx';
+import Transition from './Routes/Transition.jsx';
+import CustomImage from './Routes/CustomImage.jsx';
+import MaterialSwitch from 'material-ui/Switch';
+import { FormControlLabel, FormGroup } from 'material-ui/Form';
 
 const drawerWidth = 240;
 const primary = '#8BC34A';
@@ -88,13 +95,47 @@ const styles = theme => ({
     footer: {
         padding: 16,
         textAlign: 'center'
-    }
+    },
+    componentsAlignToCenterStyle : {
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center'
+    },
+    bar: {},
+    checked: {
+        color: '#689F38',
+        '& + $bar': {
+          backgroundColor: '#8BC34A',
+        },
+      },
   });
+
+const mql = window.matchMedia(`(min-width: 960px)`);
 
 class App extends Component {
     state = {
+        mql: mql,
+        docked: false,
         mobileOpen: false,
-        isSettingsDialogOpen: false
+        isSettingsDialogOpen: false,
+        flag : null,
+        checked : true
+    }
+
+    componentWillMount() {
+        mql.addListener(this.mediaQueryChanged.bind(this));
+        this.setState({ mql: mql, docked: mql.matches });
+    }
+
+    componentWillUnmount() {
+        this.state.mql.removeListener(this.mediaQueryChanged);
+    }
+
+    mediaQueryChanged() {
+        this.setState({
+            mql: mql,
+            docked: mql.matches
+        });
     }
   
     handleDrawerToggle = () => this.setState({ 
@@ -103,14 +144,40 @@ class App extends Component {
 
     handleDialogClose = () => this.setState({
             isSettingsDialogOpen : false
-        })
+    });
 
     handleDialogOpen = () => this.setState({
             isSettingsDialogOpen : true
+    });
+
+    /** Stops the transition */
+    stopTransition = () => {
+        if(this.state.flag!=1)
+            return;
+
+        this.setState({
+            colors : [],
+            seconds : 1
         })
+
+        Axios.put('/api/stop');
+
+        this.setState({
+            flag : null
+        });
+    }
+
+    ledStripStatus = (value) => {
+        this.setState({
+            flag : value,
+            checked : true
+        });
+    }
 
     render() {
         const { classes } = this.props;
+        const { flag, checked } = this.state;
+
         const drawer = (
             <div>
                 <div>
@@ -131,7 +198,25 @@ class App extends Component {
                         )
                     }
                     </List>
-                    
+
+                    <div style = {{ padding : '20px 0 20px 0' }} className = { classes.componentsAlignToCenterStyle }>
+                        <FormGroup>
+                            <FormControlLabel
+                                control={
+                                    <MaterialSwitch
+                                        classes={{
+                                            checked: classes.checked,
+                                            bar: classes.bar,
+                                        }}
+                                        checked={ flag !== null } 
+                                        onChange={ this.stopTransition } 
+                                        aria-label = "Off" 
+                                    />
+                                }
+                                label={ this.state.flag === 1 ? "On" : "Off"}
+                            />
+                        </FormGroup>
+                    </div>
                 </div>
             </div>
       );
@@ -161,17 +246,16 @@ class App extends Component {
                             {drawer}
                         </Drawer>
                     </Hidden>
-                    <Hidden mdDown implementation = 'css'>
-                        <Drawer type = 'permanent' open classes = {{ paper: classes.drawerPaper }}>
-                            {drawer}
-                        </Drawer>
-                    </Hidden>
+                    <Drawer type = 'permanent' open style={this.state.docked === true ? {display:"flex" } : {display:"none" } } classes = {{ paper: classes.drawerPaper }}>
+                        {drawer}
+                    </Drawer>
                     <main className = { classes.content }>
                         <div className={classes.routes}>
                             <Switch>
-                                {Routes.map((route, index) => (
-                                    <Route key = { index } path = { route.path } exact = { route.exact } component = { route.main } />
-                                ))}
+                                <Route path = '/' exact = { true } component = { Status } />
+                                <Route path = '/singlecolor' exact = { true } component = { SingleColor } />
+                                <Route path = '/transition' exact = { true } render = { () => <Transition ledStripStatus = { this.ledStripStatus } /> } />
+                                <Route path = '/customimage' exact = { true } component = { CustomImage } />
                             </Switch>
                         </div>
                         <Typography type = 'caption' className = { classes.footer }>

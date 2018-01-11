@@ -213,7 +213,7 @@
             try
             {
                 var data = Json.Deserialize<AppSettings>(context.RequestBody());
-                LedStripWorker.Instance.Restart(data.LedCount, data.SpiChannel, data.SpiFrequency, data.FramesPerSecond);
+                LedStripWorker.Instance.Restart(data.LedCount, data.SpiChannel, data.SpiFrequency, data.FramesPerSecond, 1);
 
                 return context.JsonResponseAsync(new
                 {
@@ -315,6 +315,30 @@
                 
                 // img.Save(AppDomain.CurrentDomain.BaseDirectory + @"\imageArc.jpeg", System.Drawing.Imaging.ImageFormat.Jpeg);
                 return context.JsonResponseAsync(Program.State);
+            }
+            catch (Exception ex)
+            {
+                context.Response.StatusCode = 400;
+
+                return context.JsonResponseAsync(new
+                {
+                    ErrorType = ex.GetType().ToString(),
+                    ex.Message
+                });
+            }
+        }
+
+        [WebApiHandler(HttpVerbs.Put, RelativePath + "stop")]
+        public Task<bool> StopAnimation(WebServer server, HttpListenerContext context)
+        {
+            try
+            {
+                LedStripWorker.Instance.Restart();
+
+                return context.JsonResponseAsync(new
+                {
+                    Status = "OK"
+                });
             }
             catch (Exception ex)
             {
