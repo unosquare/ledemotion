@@ -11,6 +11,7 @@ import AddIcon from 'material-ui-icons/Add';
 import Tooltip from 'material-ui/Tooltip';
 import FlashOn from 'material-ui-icons/FlashOn';
 import FlashOff from 'material-ui-icons/FlashOff';
+import Button from 'material-ui/Button';
 
 const styles = theme => ({
   root: {
@@ -50,7 +51,7 @@ const styles = theme => ({
   animateButtonStyle: {
     flip: false,
     position: 'absolute',
-    bottom: 90,
+    bottom: 96,
     right: 32,
     transition: 'none'
   },
@@ -146,27 +147,19 @@ class CustomImage extends Component {
     if (this.state.image != "") {
       if (this.state.status == "Off") {
         return (
-          <Tooltip placement="bottom" title={'Animate Image'}>
-            <IconButton
-              className={props.classes.animateButtonStyle}
-              onClick={this.animateImage}
-              style={{ background: "yellow", color: "black" }}
-            >
+          <Tooltip placement="left" title={'Animate Image'}>
+            <Button fab className={props.classes.animateButtonStyle} onClick={this.animateImage} style={{ background: "#FFD700", color: "#FFFFFF" }}>
               <FlashOn />
-            </IconButton>
+            </Button>
           </Tooltip>
         )
       }
 
       return (
-        <Tooltip placement="bottom" title={'Stop Image Animation'}>
-          <IconButton
-            className={props.classes.animateButtonStyle}
-            onClick={this.stopAnimateImage}
-            style={{ background: "black", color: "white" }}
-          >
+        <Tooltip placement="left" title={'Stop Image Animation'}>
+          <Button fab className={props.classes.animateButtonStyle} onClick={this.stopAnimateImage} style={{ background: "#212121", color: "#FFFFFF" }}>
             <FlashOff />
-          </IconButton>
+          </Button>
         </Tooltip>
       )
     }
@@ -212,13 +205,10 @@ class CustomImage extends Component {
           </div>
 
           <div>
-            <Tooltip placement="bottom" title={"Delete Image"}>
-              <IconButton
-                className={classes.deleteButtonStyle}
-                data-dz-remove
-              >
+            <Tooltip placement="left" title={ 'Delete image' }>
+              <Button fab className={classes.deleteButtonStyle} data-dz-remove style = {{ background : "#D32F2F", color : "#FFFFFF" }}>
                 <DeleteIcon />
-              </IconButton>
+              </Button>
             </Tooltip>
           </div>
         </div>

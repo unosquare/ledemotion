@@ -140,9 +140,9 @@ function CardComp(props) {
   if (props.addAction != null || props.deleteAction != null) {
     return (
       <Card style={props.styles.cardStyle}>
-        <CardActions>
-          <AddButton rgb = { props.rgb } action = { props.addAction } styles = { props.styles } />
-          <DeleteButton action = { props.deleteAction } styles = { props.styles } />
+        <CardActions style = {{ float : 'right' }}>
+            <AddButton rgb = { props.rgb } action = { props.addAction } styles = { props.styles } />
+            <DeleteButton action = { props.deleteAction } styles = { props.styles } />
         </CardActions>
       </Card>
     )
@@ -173,7 +173,7 @@ function AddButton(props) {
   if (props.action != null) {
     return (
       <div style={props.styles.buttonStyle}>
-        <Button fab mini onClick = { () => props.action(props.rgb) } color = 'primary'>
+        <Button fab mini onClick = { () => props.action(props.rgb) } color = 'primary' style = {{ background : "#2196F3" }}>
           <AddIcon />
         </Button>
       </div>
