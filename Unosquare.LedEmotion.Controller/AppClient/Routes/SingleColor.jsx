@@ -140,7 +140,6 @@ class SingleColor extends Component {
     }
 
     handleChange = (color, event) => {
-        console.log("Lok'tar Ogar")
         this.changeTextColor(color.rgb);
         this.changeBackgroundColor(color.hex);
         this.setState({ origin: 'Json' });

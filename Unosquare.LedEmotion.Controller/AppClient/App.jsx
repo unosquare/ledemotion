@@ -152,6 +152,9 @@ class App extends Component {
 
     /** Stops the transition */
     stopTransition = () => {
+        if(this.state.flag!=1)
+            return;
+
         this.setState({
             colors : [],
             seconds : 1
@@ -205,13 +208,13 @@ class App extends Component {
                                             checked: classes.checked,
                                             bar: classes.bar,
                                         }}
-                                        disabled = { flag === null }
-                                        checked={ checked } 
+                                        checked={ flag !== null } 
                                         onChange={ this.stopTransition } 
                                         aria-label="Off" 
                                     />
                                 }
-                                label="Stop"
+                                
+                                label={this.state.flag===1 ? "Stop": ""}
                             />
                         </FormGroup>
                     </div>
