@@ -210,11 +210,10 @@ class App extends Component {
                                         }}
                                         checked={ flag !== null } 
                                         onChange={ this.stopTransition } 
-                                        aria-label="Off" 
+                                        aria-label = "Off" 
                                     />
                                 }
-                                
-                                label={this.state.flag===1 ? "Stop": ""}
+                                label={ this.state.flag === 1 ? "On" : "Off"}
                             />
                         </FormGroup>
                     </div>
