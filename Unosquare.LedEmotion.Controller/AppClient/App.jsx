@@ -103,11 +103,11 @@ const styles = theme => ({
     },
     bar: {},
     checked: {
-        color: '#689F38',
+        color: '#FFFFFF',
         '& + $bar': {
-            backgroundColor: '#8BC34A',
+            backgroundColor: '#FFFFFF',
         },
-    },
+    }
 });
 
 const mql = window.matchMedia(`(min-width: 960px)`);
@@ -211,25 +211,6 @@ class App extends Component {
                             )
                         }
                     </List>
-
-                    <div style={{ padding: '20px 0 20px 0' }} className={classes.componentsAlignToCenterStyle}>
-                        <FormGroup>
-                            <FormControlLabel
-                                control={
-                                    <MaterialSwitch
-                                        classes={{
-                                            checked: classes.checked,
-                                            bar: classes.bar,
-                                        }}
-                                        checked={flag !== null}
-                                        onChange={this.stopTransition}
-                                        aria-label="Off"
-                                    />
-                                }
-                                label={this.state.flag === 1 ? "On" : "Off"}
-                            />
-                        </FormGroup>
-                    </div>
                 </div>
             </div>
         );
@@ -247,6 +228,30 @@ class App extends Component {
                                     <Route key={index} path={route.path} exact={route.exact} component={route.title} />
                                 ))}
                                 <div className={classes.spacer}></div>
+
+                                {/* On/Off */}
+                                <FormGroup>
+                                    <FormControlLabel
+                                        control={
+                                            <MaterialSwitch
+                                                classes={{
+                                                    checked: classes.checked,
+                                                    bar: classes.bar,
+                                                }}
+                                                checked={flag !== null}
+                                                onChange={this.stopTransition}
+                                                aria-label="Off"
+                                            />
+                                        }
+                                        className = { classes.test }
+                                        label = {
+                                            <span style={{ color: '#FFFFFF' }}>
+                                                {this.state.flag === 1 ? "On" : "Off"}
+                                            </span>
+                                        }
+                                    />
+                                </FormGroup>
+
                                 <IconButton onClick={this.handleDialogOpen}>
                                     <SettingsIcon color="contrast" />
                                 </IconButton>
