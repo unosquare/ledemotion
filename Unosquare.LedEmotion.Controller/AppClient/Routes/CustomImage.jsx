@@ -82,7 +82,6 @@ class CustomImage extends Component {
     this.mediaQueryChanged();
     mql.addListener(this.mediaQueryChanged);
     this.setState({ mql: mql, docked: mql.matches });
-    this.stopAnimateImage();
   }
 
   componentWillUnmount() {
