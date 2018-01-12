@@ -347,14 +347,14 @@ class SingleColor extends Component {
         if (props.origin == "Json") {
             return (
                 <div>
-                    <Tooltip placement="bottom" title={'Delete Selected Color'}>
-                        <IconButton
+                    <Tooltip placement="left" title={'Delete Selected Color'}>
+                        <Button fab
                             className={props.classes.fabButtonAbsoluteStyle}
                             onClick={props.deleteColor}
                             style={{ color: props.textColor, backgroundColor: props.background }}
                         >
                             <DeleteIcon />
-                        </IconButton>
+                        </Button>
                     </Tooltip>
                 </div>
             )
