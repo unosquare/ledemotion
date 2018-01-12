@@ -159,12 +159,11 @@ class Transition extends Component {
             if(response.status === 200) {
                 this.props.ledStripStatus(1),
                 this.props.switchFunction(this.setTransition.bind(this))
+            } else if(response.status === 400) {
+                this.showSnackbar('The resource wasn\'t found');
             }
         }).catch(error => {
             if(!error.response){
-                // this.setState({
-                //     snackbarMessage : 'The server is stopped'
-                // })
                 this.showSnackbar('The server was stopped');
             }
         });
@@ -177,7 +176,15 @@ class Transition extends Component {
             seconds: 1
         })
 
-        Axios.put('/api/stop');
+        Axios.put('/api/stop').then(response => {
+            if(response.status === 400) {
+                this.showSnackbar('The resource wasn\'t found');
+            }
+        }).catch(error => {
+            if(!error.response){
+                this.showSnackbar('The server was stopped');
+            }
+        });
     }
 
     /** Popover for the color picker */
@@ -333,7 +340,7 @@ class Transition extends Component {
                     <Snackbar
                         open={ isSnackbarOpen }
                         onClose={ this.hideSnackbar }
-                        autoHideDuration = { 5000 }
+                        autoHideDuration = { 4000 }
                         message={<span id="message-id">{ snackbarMessage }</span>}
                         anchorOrigin={{
                             vertical: 'bottom',
