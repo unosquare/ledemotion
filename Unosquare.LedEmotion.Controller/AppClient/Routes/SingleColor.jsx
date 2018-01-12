@@ -12,6 +12,7 @@ import Button from 'material-ui/Button';
 import TextField from 'material-ui/TextField';
 import AddIcon from 'material-ui-icons/Add';
 import Tooltip from 'material-ui/Tooltip';
+import Snackbar from 'material-ui/Snackbar';
 
 const styles = theme => ({
     root: {
@@ -51,6 +52,10 @@ const styles = theme => ({
         bottom: 32,
         right: 32,
         transition: 'none'
+    },
+    snackbar: {
+        width: '70%',
+        margin: 'auto',
     }
 });
 
@@ -63,6 +68,7 @@ class SingleColor extends Component {
         this.state = {
             mql: mql,
             docked: false,
+            errorHandler: false,
             addOpen: false,
             displayColorPicker: false,
             textColor: 'White',
@@ -101,7 +107,7 @@ class SingleColor extends Component {
     getColors = () => {
         Axios.get('/api/appstate')
             .then(response => {
-                this.setState({ colors: this.state.presetColors });
+                this.setState({ colors: this.state.presetColors, errorHandler: false });
                 response.data.SolidColorPresets.forEach(element => {
                     var hexColor = '#' + this.byteToHex(element.R) + this.byteToHex(element.G) + this.byteToHex(element.B);
 
@@ -113,6 +119,8 @@ class SingleColor extends Component {
                 this.setState({
                     colors: this.state.colors.concat({ color: 'White', title: 'Add Color' })
                 });
+            }).catch((error) => {
+                this.setState({ errorHandler: true });
             });
     }
 
@@ -200,10 +208,13 @@ class SingleColor extends Component {
         }).then(() => {
             this.resetValues(),
                 this.setState({
-                    activeColor: { r: 0, g: 0, b: 0 }
+                    activeColor: { r: 0, g: 0, b: 0 },
+                    errorHandler: false
                 }, () => {
                     this.setColor()
                 });
+        }).catch((error) => {
+            this.setState({ errorHandler: true });
         });
     }
 
@@ -221,10 +232,13 @@ class SingleColor extends Component {
             this.handleAddDialogClose(),
                 this.setState({
                     activeColor: this.state.color,
-                    origin: 'Json'
+                    origin: 'Json',
+                    errorHandler: false
                 }, () => {
                     this.setColor()
                 });
+        }).catch((error) => {
+            this.setState({ errorHandler: true });
         });
     }
 
@@ -235,9 +249,12 @@ class SingleColor extends Component {
             G: this.state.activeColor.g,
             B: this.state.activeColor.b
         }).then(() => {
+            this.setState({ errorHandler: false })
             this.getColors(),
-                this.props.ledStripStatus(1),
-                this.props.switchFunction(this.setColor.bind(this))
+            this.props.ledStripStatus(1),
+            this.props.switchFunction(this.setColor.bind(this))
+        }).catch((error) => {
+            this.setState({ errorHandler: true });
         });
     }
 
@@ -293,6 +310,18 @@ class SingleColor extends Component {
                         onChangeComplete={this.handleChange.bind(this)}
                     />
                 </Dialog>
+
+                <Snackbar
+                    className={props.classes.snackbar}
+                    anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
+                    open={this.state.errorHandler}
+                    autoHideDuration={4000}
+                    onClose={() => this.setState({ errorHandler: false })}
+                    SnackbarContentProps={{
+                        'aria-describedby': 'message-id',
+                    }}
+                    message={<span style={{ color: 'white', textAlign: 'center' }}>Problems with the server connection</span>}
+                />
 
                 <div className={props.classes.colorPicker} style={{ width: colorPickerWidth, marginBottom: '40px' }}>
                     <Typography style={{ color: props.textColor, textAlign: 'center' }} type="headline" component="h3">
