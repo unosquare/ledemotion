@@ -13,6 +13,8 @@ import TextField from 'material-ui/TextField';
 import AddIcon from 'material-ui-icons/Add';
 import Tooltip from 'material-ui/Tooltip';
 import Snackbar from 'material-ui/Snackbar';
+import Avatar from 'material-ui/Avatar';
+import CardHeader from 'material-ui/Card/CardHeader';
 
 const styles = theme => ({
     root: {
@@ -56,6 +58,11 @@ const styles = theme => ({
     snackbar: {
         width: '70%',
         margin: 'auto',
+    },
+    avatarStyle: {
+        width:'60px', 
+        height:'60px', 
+        borderRadius:'50%'
     }
 });
 
@@ -70,6 +77,7 @@ class SingleColor extends Component {
             docked: false,
             errorHandler: false,
             addOpen: false,
+            deleteOpen: false,
             displayColorPicker: false,
             textColor: 'White',
             background: '#7ED321',
@@ -202,7 +210,16 @@ class SingleColor extends Component {
         this.setState({ addOpen: false, displayColorPicker: false });
     }
 
+    handleDeleteDialogOpen = () => {
+        this.setState({ deleteOpen: true });
+    }
+
+    handleDeleteDialogClose = () => {
+        this.setState({ deleteOpen: false });
+    }
+
     deleteColor = () => {
+        this.handleDeleteDialogClose();
         Axios.delete('/api/preset', {
             data: { Name: this.state.presetName }
         }).then(() => {
@@ -251,8 +268,8 @@ class SingleColor extends Component {
         }).then(() => {
             this.setState({ errorHandler: false })
             this.getColors(),
-            this.props.ledStripStatus(1),
-            this.props.switchFunction(this.setColor.bind(this))
+                this.props.ledStripStatus(1),
+                this.props.switchFunction(this.setColor.bind(this))
         }).catch((error) => {
             this.setState({ errorHandler: true });
         });
@@ -299,29 +316,6 @@ class SingleColor extends Component {
 
         return (
             <div style={{ display: display, alignItems: 'center', justifyContent: 'center', width: '80%', margin: '0 auto' }} >
-                <Dialog open={this.state.displayColorPicker} onClose={this.handleClose} aria-labelledby="form-dialog-title">
-                    <CustomPicker
-                        addAction={this.handleAddDialogOpen.bind(this)}
-                        presetColors={[]}
-                        disableAlpha
-                        fields={false}
-                        width={250}
-                        color={props.background}
-                        onChangeComplete={this.handleChange.bind(this)}
-                    />
-                </Dialog>
-
-                <Snackbar
-                    className={props.classes.snackbar}
-                    anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
-                    open={this.state.errorHandler}
-                    autoHideDuration={4000}
-                    onClose={() => this.setState({ errorHandler: false })}
-                    SnackbarContentProps={{
-                        'aria-describedby': 'message-id',
-                    }}
-                    message={<span style={{ color: 'white', textAlign: 'center' }}>Problems with the server connection</span>}
-                />
 
                 <div className={props.classes.colorPicker} style={{ width: colorPickerWidth, marginBottom: '40px' }}>
                     <Typography style={{ color: props.textColor, textAlign: 'center' }} type="headline" component="h3">
@@ -356,7 +350,7 @@ class SingleColor extends Component {
                     <Tooltip placement="bottom" title={'Delete Selected Color'}>
                         <IconButton
                             className={props.classes.fabButtonAbsoluteStyle}
-                            onClick={props.DeleteColor}
+                            onClick={props.deleteColor}
                             style={{ color: props.textColor, backgroundColor: props.background }}
                         >
                             <DeleteIcon />
@@ -376,6 +370,19 @@ class SingleColor extends Component {
 
         return (
             <div className={classes.root} style={{ backgroundColor: this.state.background }}>
+
+                <Dialog open={this.state.displayColorPicker} onClose={this.handleClose} aria-labelledby="form-dialog-title">
+                    <CustomPicker
+                        addAction={this.handleAddDialogOpen.bind(this)}
+                        presetColors={[]}
+                        disableAlpha
+                        fields={false}
+                        width={250}
+                        color={background}
+                        onChangeComplete={this.handleChange.bind(this)}
+                    />
+                </Dialog>
+
                 <Dialog
                     open={this.state.addOpen}
                     onClose={this.handleAddDialogClose}
@@ -402,18 +409,58 @@ class SingleColor extends Component {
                     </DialogActions>
                 </Dialog>
 
+                <Dialog
+                    /* style={{background: 'black'}} */
+                    open={this.state.deleteOpen}
+                    onClose={this.handleDeleteDialogClose}
+                    aria-labelledby="form-dialog-title"
+                >
+                    <DialogContent style={{padding:'24px 24px 15px 24px'}}>
+                        <Card style={{boxShadow:'none'}}>
+                            <CardHeader
+                            style={{padding:'0px', paddingBottom:'0px'}}
+                            avatar={<Avatar className={classes.avatarStyle} style={{background: background, color: textColor}}/>}
+                            title={<Typography style={{ fontSize: '20px'}} type="headline" component="h3">
+                                Are you sure you want to delete this color?
+                            </Typography>}
+                            />
+                        </Card>
+                        
+                    </DialogContent>
+                    <DialogActions style={{paddingBottom:'10px'}}>
+                        <Button onClick={this.handleDeleteDialogClose} color="primary">
+                            Cancel
+                        </Button>
+                        <Button onClick={this.deleteColor} color="primary">
+                            Delete
+                        </Button>
+                    </DialogActions>
+                </Dialog>
+
                 <br />
                 <br />
 
                 { /* Color picker */}
                 <this.colorPickerCom classes={classes} background={background} textColor={textColor} />
 
+                <Snackbar
+                    className={classes.snackbar}
+                    anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
+                    open={this.state.errorHandler}
+                    autoHideDuration={4000}
+                    onClose={() => this.setState({ errorHandler: false })}
+                    SnackbarContentProps={{
+                        'aria-describedby': 'message-id',
+                    }}
+                    message={<span style={{ color: 'white', textAlign: 'center' }}>Problems with the server connection</span>}
+                />
+
                 { /* Tooltip */}
                 <this.fab
                     classes={classes}
                     textColor={textColor}
                     background={background}
-                    DeleteColor={this.deleteColor}
+                    deleteColor={this.handleDeleteDialogOpen}
                     origin={this.state.origin}
                 />
 
