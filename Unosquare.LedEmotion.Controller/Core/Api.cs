@@ -92,11 +92,6 @@
 
                 var transitionTime = TimeSpan.FromMilliseconds(LedStripWorker.Instance.MillisecondsPerFrame * frames);
 
-                $"F: {data["F"]}".Info();
-                $"R: {data["R"]}".Info();
-                $"G: {data["G"]}".Info();
-                $"B: {data["B"]}".Info();
-
                 rgb[0] = byte.Parse(data["R"].ToString());
                 rgb[1] = byte.Parse(data["G"].ToString());
                 rgb[2] = byte.Parse(data["B"].ToString());
