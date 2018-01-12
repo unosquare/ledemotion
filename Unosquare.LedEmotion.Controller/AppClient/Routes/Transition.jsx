@@ -17,6 +17,7 @@ import FlashOn from 'material-ui-icons/FlashOn';
 import Dialog from 'material-ui/Dialog/Dialog';
 import styled, { keyframes } from 'styled-components';
 import FlashOff from 'material-ui-icons/FlashOff';
+import Snackbar from 'material-ui/Snackbar';
 
 const styles = theme => ({
     root: {
@@ -100,7 +101,9 @@ class Transition extends Component {
         selectedColor: {},
         seconds: 1,
         displayColorPicker: false,
-        flag: 0
+        flag: 0,
+        isSnackbarOpen : false,
+        snackbarMessage : ''
     };
 
     componentToHex = (c) => {
@@ -153,11 +156,18 @@ class Transition extends Component {
             }),
             Delay: delay
         }).then(response => {
-            this.props.ledStripStatus(1),
-            this.props.switchFunction(this.setTransition.bind(this))
+            if(response.status === 200) {
+                this.props.ledStripStatus(1),
+                this.props.switchFunction(this.setTransition.bind(this))
+            }
+        }).catch(error => {
+            if(!error.response){
+                // this.setState({
+                //     snackbarMessage : 'The server is stopped'
+                // })
+                this.showSnackbar('The server was stopped');
+            }
         });
-
-
     }
 
     /** Stops the transition */
@@ -183,9 +193,21 @@ class Transition extends Component {
         });
     }
 
+    /** Snackbar */
+    showSnackbar = (message) => {
+        this.setState({ 
+          isSnackbarOpen: true,
+          snackbarMessage : message
+        });
+      };
+
+    hideSnackbar = () => {
+        this.setState({ isSnackbarOpen: false });
+    };
+
     render() {
         const { classes } = this.props;
-        const { colors, selectedColor, seconds, displayColorPicker } = this.state;
+        const { colors, selectedColor, seconds, displayColorPicker, isSnackbarOpen, snackbarMessage } = this.state;
 
         const gradient = keyframes`
             0% {
@@ -306,6 +328,18 @@ class Transition extends Component {
                             </Tooltip>
                         </div>
                     }
+
+                    {/* Snackbar */}
+                    <Snackbar
+                        open={ isSnackbarOpen }
+                        onClose={ this.hideSnackbar }
+                        autoHideDuration = { 5000 }
+                        message={<span id="message-id">{ snackbarMessage }</span>}
+                        anchorOrigin={{
+                            vertical: 'bottom',
+                            horizontal: 'left'
+                        }}
+                    />    
                 </div>
             </div>
         );
