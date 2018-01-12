@@ -100,7 +100,6 @@
 
                 if (File.Exists(StateFilename) == false)
                 {
-                    State.LoadDefaults();
                     SaveState();
                 }
 

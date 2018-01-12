@@ -19,15 +19,15 @@
         #region Private Declarations
 
         private static readonly object SyncLock = new object();
+
         private readonly Dictionary<AnimationType, IAnimation> _animations = new Dictionary<AnimationType, IAnimation>()
         {
-            { AnimationType.SolidColor, new SolidColorAnimation() },
-            { AnimationType.Transition, new TransitionColorAnimation() },
-            { AnimationType.Image, new ImageAnimation() },
+            {AnimationType.SolidColor, new SolidColorAnimation()},
+            {AnimationType.Transition, new TransitionColorAnimation()},
+            {AnimationType.Image, new ImageAnimation()},
         };
-        private Thread _animationThread;
 
-        private AnimationType _currentAnimationType = AnimationType.SolidColor;
+        private Thread _animationThread;
 
         /// <summary>
         /// Prevents a default instance of the <see cref="LedStripWorker"/> class from being created.
@@ -60,7 +60,8 @@
         /// <summary>
         /// Gets the spi frequency.
         /// </summary>
-        public int SpiFrequency { get; private set; } = 1000000; // 1MHz is plenty for 240 LEDs at 24 FPS (4 bytes * 240 LEDs * 25 FPS = ~24kHz minimum)
+        public int SpiFrequency { get; private set; } =
+            1000000; // 1MHz is plenty for 240 LEDs at 24 FPS (4 bytes * 240 LEDs * 25 FPS = ~24kHz minimum)
 
         /// <summary>
         /// Gets the milliseconds per frame.
@@ -86,10 +87,16 @@
 
         #region Init, Start and Stop
 
-        public AnimationType CurrentAnimationType { get => _currentAnimationType; set => _currentAnimationType = value; }
+        /// <summary>
+        /// Gets or sets the type of the current animation.
+        /// </summary>
+        /// <value>
+        /// The type of the current animation.
+        /// </value>
+        public AnimationType CurrentAnimationType { get; set; } = AnimationType.SolidColor;
 
         private IAnimation CurrentAnimation => _animations[CurrentAnimationType];
-        
+
         /// <summary>
         /// Sets the start parameters parameters.
         /// </summary>
@@ -119,7 +126,7 @@
             lock (SyncLock)
             {
                 if (LedStrip != null) return;
-                
+
                 using (var tickLock = new ManualResetEvent(false))
                 {
                     LedStrip = new DotStarLedStrip(
@@ -161,7 +168,7 @@
                 }
             }
         }
-        
+
         private void RestartAnimation()
         {
             SetParameters(LedCount, SpiChannel, SpiFrequency, FramesPerSecond);
@@ -171,45 +178,50 @@
                 if (LedStrip != null)
                     return;
 
-                using (var tickLock = new ManualResetEvent(false))
+                LedStrip = new DotStarLedStrip(
+                    ledCount: LedCount,
+                    spiChannel: SpiChannel,
+                    spiFrequency: SpiFrequency,
+                    reverseRgb: true);
+
+                LedStrip.ClearPixels();
+                LedStrip.Render();
+
+                IsPendingStop = false;
+
+                _animationThread = new Thread(AnimateContinuosly)
                 {
-                    LedStrip = new DotStarLedStrip(
-                        ledCount: LedCount,
-                        spiChannel: SpiChannel,
-                        spiFrequency: SpiFrequency,
-                        reverseRgb: true);
+                    IsBackground = true
+                };
 
-                    LedStrip.ClearPixels();
-                    LedStrip.Render();
-
-                    IsPendingStop = false;
-
-                    _animationThread = new Thread(AnimateContinuosly)
-                    {
-                        IsBackground = true
-                    };
-
-                    _animationThread.Start();
-                }
+                _animationThread.Start();
             }
         }
-        
+
+        /// <summary>
+        /// Restarts this instance.
+        /// </summary>
         public void Restart()
         {
-            this.Restart(LedCount, SpiChannel, SpiFrequency, FramesPerSecond);
+            Restart(LedCount, SpiChannel, SpiFrequency, FramesPerSecond);
         }
 
         /// <summary>
         /// Restarts the LedStripWorker with the specified parameters
         /// </summary>
+        /// <param name="ledCount">The led count.</param>
+        /// <param name="spiChannel">The spi channel.</param>
+        /// <param name="spiFrequency">The spi frequency.</param>
+        /// <param name="framesPerSecond">The frames per second.</param>
+        /// <param name="value">The value.</param>
         public void Restart(int ledCount, int spiChannel, int spiFrequency, int framesPerSecond, int value = 0)
         {
-            this.Stop();
-            this.SetParameters(ledCount, spiChannel, spiFrequency, framesPerSecond);
-            
+            Stop();
+            SetParameters(ledCount, spiChannel, spiFrequency, framesPerSecond);
+
             if (value == 1)
             {
-                this.Start();
+                Start();
             }
         }
 
@@ -261,7 +273,7 @@
                 var animation = _animations[AnimationType.SolidColor] as SolidColorAnimation;
                 CurrentAnimationType = AnimationType.SolidColor;
                 animation.EnqueueColor(rgbValue, transitionTime);
-                this.RestartAnimation();
+                RestartAnimation();
             }
         }
 
@@ -272,7 +284,7 @@
                 var animation = _animations[AnimationType.Transition] as TransitionColorAnimation;
                 animation.SetTransitions(rgbValues, totalTransitionTime);
                 CurrentAnimationType = AnimationType.Transition;
-                this.RestartAnimation();
+                RestartAnimation();
             }
         }
 
@@ -284,7 +296,7 @@
 
                 animation.SetImage(imageColors);
                 CurrentAnimationType = AnimationType.Image;
-                this.RestartAnimation();
+                RestartAnimation();
             }
         }
 
@@ -308,11 +320,13 @@
                         LedStrip.Render();
                     }
 
-                    var elapsedToFrame = MillisecondsPerFrame - Convert.ToInt32(DateTime.UtcNow.Subtract(startFrameTime).TotalMilliseconds);
+                    var elapsedToFrame = MillisecondsPerFrame -
+                                         Convert.ToInt32(DateTime.UtcNow.Subtract(startFrameTime).TotalMilliseconds);
 
                     if (elapsedToFrame <= 0)
                     {
-                        "Frames are lagging. Increase the frequency or simplify the rendering logic.".Warn(); // typeof(LedStripWorker));
+                        "Frames are lagging. Increase the frequency or simplify the rendering logic."
+                            .Warn(); // typeof(LedStripWorker));
                         continue;
                     }
 

@@ -8,7 +8,6 @@
     public class SolidColorAnimation : IAnimation
     {
         private readonly byte[] _lastRenderedColor = new byte[3];
-        private readonly byte[] _targetColor = new byte[3];
         private readonly Queue<byte[]> _colorQueue = new Queue<byte[]>();
         private readonly object _syncLock = new object();
 
@@ -16,7 +15,7 @@
 
         public bool IsTransitionComplete => _colorQueue.Count <= 1;
 
-        public byte[] TargetColor => _targetColor;
+        public byte[] TargetColor { get; } = new byte[3];
 
         public void EnqueueColor(byte[] rgb, TimeSpan transitionTime)
         {

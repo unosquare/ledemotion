@@ -51,19 +51,15 @@
                         name = item.Substring(0, item.IndexOf(':'));
                     }
 
-                    if (item.IndexOf("RX packets") != -1)
-                    {
-                        var packets = item.Substring(item.IndexOf("RX packets") + 11, 5);
-                        var index = packets.IndexOf(' ');
-                        var packetsValue = index != -1 ? Int32.Parse(packets.Substring(0, index)) : Int32.Parse(packets);
-                        
-                        if (packetsValue > 0)
-                        {
-                            name = name.StartsWith("eth") ? "Wired" : name;
-                            name = name.StartsWith("wlan") ? "Wireless" : name;
-                            nameList.Add(name);
-                        }
-                    }
+                    if (item.IndexOf("RX packets") == -1) continue;
+                    var packets = item.Substring(item.IndexOf("RX packets") + 11, 5);
+                    var index = packets.IndexOf(' ');
+                    var packetsValue = index != -1 ? int.Parse(packets.Substring(0, index)) : int.Parse(packets);
+
+                    if (packetsValue <= 0) continue;
+                    name = name.StartsWith("eth") ? "Wired" : name;
+                    name = name.StartsWith("wlan") ? "Wireless" : name;
+                    nameList.Add(name);
                 }
             }
             catch (Exception)
@@ -96,10 +92,10 @@
 
                 var transitionTime = TimeSpan.FromMilliseconds(LedStripWorker.Instance.MillisecondsPerFrame * frames);
 
-                $"F: {data["F"].ToString()}".Info();
-                $"R: {data["R"].ToString()}".Info();
-                $"G: {data["G"].ToString()}".Info();
-                $"B: {data["B"].ToString()}".Info();
+                $"F: {data["F"]}".Info();
+                $"R: {data["R"]}".Info();
+                $"G: {data["G"]}".Info();
+                $"B: {data["B"]}".Info();
 
                 rgb[0] = byte.Parse(data["R"].ToString());
                 rgb[1] = byte.Parse(data["G"].ToString());

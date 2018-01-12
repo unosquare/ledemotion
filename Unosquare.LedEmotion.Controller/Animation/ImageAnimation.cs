@@ -1,50 +1,42 @@
 ﻿namespace Unosquare.LedEmotion.Controller.Animation
 {
-    using System;
-    using System.Collections.Generic;
     using System.Drawing;
+    using Swan.Formatters;
     using Workers;
-    using Unosquare.Swan.Formatters;
 
     public class ImageAnimation : IAnimation
     {
         private readonly object _syncLock = new object();
-        private BitmapBuffer pixels = null;
-        private int currentRow = 0;
-        private int currentDirection = 1;
-        
+        private BitmapBuffer _pixels;
+        private int _currentRow;
+        private int _currentDirection = 1;
+
         public void SetImage(Bitmap imageColors)
         {
             lock (_syncLock)
             {
-                currentRow = 0;
-                pixels = new BitmapBuffer(imageColors);
+                _currentRow = 0;
+                _pixels = new BitmapBuffer(imageColors);
             }
         }
 
         public void PaintNextFrame()
         {
-            // TODO: Implement!
             lock (_syncLock)
             {
-                // _currentAnimation.PaintNextFrame();
-                // var targetColor = _colorSteps[_currentColorStep];
-                // _currentAnimation.EnqueueColor(targetColor, TransitionTimePerPixel);
-                // Bitmap arc = null;
-                // BitmapBuffer pixels = arc;
-                currentRow += currentDirection;
-                if (currentRow >= pixels.ImageHeight)
+                _currentRow += _currentDirection;
+                if (_currentRow >= _pixels.ImageHeight)
                 {
-                    currentRow = pixels.ImageHeight - 2;
-                    currentDirection = -1;
+                    _currentRow = _pixels.ImageHeight - 2;
+                    _currentDirection = -1;
                 }
-                else if (currentRow <= 0)
+                else if (_currentRow <= 0)
                 {
-                    currentRow = 1;
-                    currentDirection = 1;
+                    _currentRow = 1;
+                    _currentDirection = 1;
                 }
 
-                LedStripWorker.Instance.LedStrip.SetPixels(pixels, 0, currentRow);
+                LedStripWorker.Instance.LedStrip.SetPixels(_pixels, 0, _currentRow);
             }
         }
     }
