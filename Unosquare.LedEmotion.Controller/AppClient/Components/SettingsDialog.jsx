@@ -49,6 +49,11 @@ class SettingsDialog extends Component {
         this.showSnackbar(SettingsDialog.snackbarMessages.Error);
 
         this.setState({savingSettings:false});
+      }).catch(error => {
+        if(!error.response){
+          this.showSnackbar('The server was stopped');
+          this.props.handleClose();
+        }
       });
   }
 
@@ -137,7 +142,7 @@ class SettingsDialog extends Component {
         <Snackbar
           open={isSnackbarOpen}
           onClose={this.hideSnackbar}
-          autoHideDuration={1500}
+          autoHideDuration={ 4000 }
           message={<span id="message-id">{snackbarMessage}</span>}
           anchorOrigin={{
               vertical: 'bottom',
