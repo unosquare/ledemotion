@@ -12,6 +12,7 @@ import Tooltip from 'material-ui/Tooltip';
 import FlashOn from 'material-ui-icons/FlashOn';
 import FlashOff from 'material-ui-icons/FlashOff';
 import Button from 'material-ui/Button';
+import Snackbar from 'material-ui/Snackbar';
 
 const styles = theme => ({
   root: {
@@ -57,6 +58,10 @@ const styles = theme => ({
   },
   typoStyle: {
     marginTop: '20px'
+  },
+  snackbar: {
+      width: '70%',
+      margin: 'auto',
   }
 });
 
@@ -69,6 +74,7 @@ class CustomImage extends Component {
     this.state = {
       mql: mql,
       docked: false,
+      errorHandler: false,
       width: '',
       image: "",
       imageType: "",
@@ -119,8 +125,11 @@ class CustomImage extends Component {
       Data: this.state.image,
       Type: this.state.imageType
     }).then(() => {
+      this.setState({ errorHandler: false });
       this.props.ledStripStatus(1),
         this.props.switchFunction(this.animateImage.bind(this))
+    }).catch((error) => {
+      this.setState({ errorHandler: true });
     });
   }
 
@@ -206,6 +215,19 @@ class CustomImage extends Component {
 
     return (
       <div className={classes.root}>
+
+        <Snackbar
+          className={classes.snackbar}
+          anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
+          open={this.state.errorHandler}
+          autoHideDuration={4000}
+          onClose={() => this.setState({ errorHandler: false })}
+          SnackbarContentProps={{
+            'aria-describedby': 'message-id',
+          }}
+          message={<span style={{ color: 'white', textAlign: 'center' }}>Problems with the server connection</span>}
+        />
+
         <div className={classes.dropzoneComponent} style={{ width: this.state.width }}>
           <DropzoneComponent config={componentConfig}
             eventHandlers={eventHandlers}
