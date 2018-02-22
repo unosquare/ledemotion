@@ -324,7 +324,7 @@ class SingleColor extends Component {
 
                 <div className={props.classes.colorPicker} style={{ width: colorPickerWidth, marginBottom: '40px' }}>
                     <Typography style={{ color: props.textColor, textAlign: 'center' }} type="headline" component="h3">
-                        Pick to sets a solid color. You can save a color as a preset
+                        Pick to set a solid color. You can save a color as a preset
                     </Typography>
                     <br />
                 </div>
@@ -376,7 +376,7 @@ class SingleColor extends Component {
         return (
             <div className={classes.root} style={{ backgroundColor: this.state.background }}>
 
-                <Dialog open={this.state.displayColorPicker} onClose={this.handleClose} aria-labelledby="form-dialog-title">
+                <Dialog open={this.state.displayColorPicker} onRequestClose={this.handleClose} aria-labelledby="form-dialog-title">
                     <CustomPicker
                         addAction={this.handleAddDialogOpen.bind(this)}
                         presetColors={[]}
@@ -390,7 +390,7 @@ class SingleColor extends Component {
 
                 <Dialog
                     open={this.state.addOpen}
-                    onClose={this.handleAddDialogClose}
+                    onRequestClose={this.handleAddDialogClose}
                     aria-labelledby="form-dialog-title"
                 >
                     <DialogContent>
@@ -415,9 +415,8 @@ class SingleColor extends Component {
                 </Dialog>
 
                 <Dialog
-                    /* style={{background: 'black'}} */
                     open={this.state.deleteOpen}
-                    onClose={this.handleDeleteDialogClose}
+                    onRequestClose={this.handleDeleteDialogClose}
                     aria-labelledby="form-dialog-title"
                 >
                     <DialogContent style={{padding:'24px 24px 15px 24px'}}>
@@ -453,7 +452,7 @@ class SingleColor extends Component {
                     anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
                     open={this.state.errorHandler}
                     autoHideDuration={4000}
-                    onClose={() => this.setState({ errorHandler: false })}
+                    onRequestClose={() => this.setState({ errorHandler: false })}
                     SnackbarContentProps={{
                         'aria-describedby': 'message-id',
                     }}
