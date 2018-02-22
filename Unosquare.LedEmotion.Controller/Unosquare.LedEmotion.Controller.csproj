@@ -5,7 +5,7 @@
     <TargetFramework>net46</TargetFramework>
     <CodeAnalysisRuleSet>..\StyleCop.Analyzers.ruleset</CodeAnalysisRuleSet>
     <RunPostBuildEvent>OnBuildSuccess</RunPostBuildEvent>
-    <SshDeployHost>172.16.17.138</SshDeployHost>
+    <SshDeployHost>172.16.17.54</SshDeployHost>
     <SshDeployTargetPath>/home/pi/ledemotion</SshDeployTargetPath>
     <SshDeployUsername>pi</SshDeployUsername>
     <SshDeployPassword>raspberry</SshDeployPassword>

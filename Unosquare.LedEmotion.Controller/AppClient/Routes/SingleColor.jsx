@@ -158,7 +158,12 @@ class SingleColor extends Component {
     handleChange = (color, event) => {
         this.changeTextColor(color.rgb);
         this.changeBackgroundColor(color.hex);
-        this.setState({ origin: 'Json' });
+        this.setState({
+            activeColor: { r: color.rgb.r, g: color.rgb.g, b: color.rgb.b },
+            origin: 'Json'
+        },  () => {
+            this.setColor()
+        });
     }
 
     selectColor = (color) => {
