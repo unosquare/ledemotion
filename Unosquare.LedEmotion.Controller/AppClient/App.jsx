@@ -203,7 +203,7 @@ class App extends Component {
                             Routes.map((route, index) =>
                                 route.linkTo &&
                                 <Link key={index} className={classes.link} to={route.linkTo}>
-                                    <ListItem button>
+                                    <ListItem button onClick={this.handleDrawerToggle}>
                                         <ListItemIcon>{route.icon()}</ListItemIcon>
                                         <ListItemText primary={route.iconText} />
                                     </ListItem>
@@ -258,7 +258,7 @@ class App extends Component {
                             </Toolbar>
                         </AppBar>
                         <Hidden mdUp>
-                            <Drawer type='temporary' open={this.state.mobileOpen} classes={{ paper: classes.drawerPaper }} onClose={this.handleDrawerToggle} ModalProps={{
+                            <Drawer type='temporary' open={this.state.mobileOpen} classes={{ paper: classes.drawerPaper }} onRequestClose={this.handleDrawerToggle} ModalProps={{
                                 keepMounted: true // Better open performance on mobile.
                             }}>
                                 {drawer}
