@@ -85,7 +85,7 @@ class SettingsDialog extends Component {
 
     return (
       <div>
-        <Dialog open={this.props.open} onClose={this.props.handleClose} aria-labelledby="form-dialog-title" maxWidth="xs">
+        <Dialog open={this.props.open} onRequestClose={this.props.handleClose} aria-labelledby="form-dialog-title" maxWidth="xs">
           <DialogTitle id="form-dialog-title">Settings</DialogTitle>
           <DialogContent>
             <TextField
@@ -141,7 +141,7 @@ class SettingsDialog extends Component {
         
         <Snackbar
           open={isSnackbarOpen}
-          onClose={this.hideSnackbar}
+          onRequestClose={this.hideSnackbar}
           autoHideDuration={ 4000 }
           message={<span id="message-id">{snackbarMessage}</span>}
           anchorOrigin={{

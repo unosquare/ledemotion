@@ -203,7 +203,7 @@ class App extends Component {
                             Routes.map((route, index) =>
                                 route.linkTo &&
                                 <Link key={index} className={classes.link} to={route.linkTo}>
-                                    <ListItem button>
+                                    <ListItem button onClick={this.handleDrawerToggle}>
                                         <ListItemIcon>{route.icon()}</ListItemIcon>
                                         <ListItemText primary={route.iconText} />
                                     </ListItem>

@@ -251,7 +251,7 @@ class Transition extends Component {
                     <br /><br />
 
                     {/* Dialog color picker */}
-                    <Dialog open={displayColorPicker} onClose={this.handleClose} aria-labelledby="form-dialog-title">
+                    <Dialog open={displayColorPicker} onRequestClose={this.handleClose} aria-labelledby="form-dialog-title">
                         <CustomPicker fields={false} presetColors={[]} disableAlpha color={selectedColor} addAction={this.handleChangeComplete} />
                     </Dialog>
 
@@ -339,7 +339,7 @@ class Transition extends Component {
                     {/* Snackbar */}
                     <Snackbar
                         open={ isSnackbarOpen }
-                        onClose={ this.hideSnackbar }
+                        onRequestClose={ this.hideSnackbar }
                         autoHideDuration = { 4000 }
                         message={<span id="message-id">{ snackbarMessage }</span>}
                         anchorOrigin={{

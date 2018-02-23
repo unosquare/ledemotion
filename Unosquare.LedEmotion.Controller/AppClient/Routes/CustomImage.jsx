@@ -221,7 +221,7 @@ class CustomImage extends Component {
           anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
           open={this.state.errorHandler}
           autoHideDuration={4000}
-          onClose={() => this.setState({ errorHandler: false })}
+          onRequestClose={() => this.setState({ errorHandler: false })}
           SnackbarContentProps={{
             'aria-describedby': 'message-id',
           }}
