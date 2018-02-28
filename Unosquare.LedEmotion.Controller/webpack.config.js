@@ -23,6 +23,22 @@ module.exports = env => ({
       { test: /\.(png|woff|woff2|eot|ttf|svg)$/, loader: 'url-loader?limit=100000' }
     ]
   },
-  plugins: [HtmlWebpackPluginConfig]
-
+  plugins: [
+      HtmlWebpackPluginConfig,
+      new CopyWebpackPlugin([
+          {
+              "from": "./AppClient/assets",
+              "to": path.resolve(env.dev == 'true' ? 'bin/Debug/net46/wwwroot/assets/' : 'wwwroot/assets/')
+          },
+          {
+              "from": "./AppClient/manifest.json",
+              "to": path.resolve(env.dev == 'true' ? 'bin/Debug/net46/wwwroot/' : 'wwwroot'),
+          },
+          {
+              "from": "./AppClient/favicon.ico",
+              "to": path.resolve(env.dev == 'true' ? 'bin/Debug/net46/wwwroot/' : 'wwwroot'),
+              
+          }
+      ])
+  ]
 });
