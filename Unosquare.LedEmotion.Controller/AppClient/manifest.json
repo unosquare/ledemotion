@@ -1,0 +1,18 @@
+﻿{
+  "name": "LedEmotion",
+  "short_name": "LedEmotion",
+  "descritpion": " A very cool, Web-based RGB LED strip controller for the Raspberry Pi",
+  "homepage_url": "https://github.com/unosquare/ledemotion",
+  "default_locale": "en",
+
+  "start_url": ".",
+  "display": "standalone",
+  "theme_color": "#8BC34A",
+
+  "icons": [
+    {
+      "src": "assets/images/passcore-logo.png",
+      "type": "image/png"
+    }
+  ]
+}
