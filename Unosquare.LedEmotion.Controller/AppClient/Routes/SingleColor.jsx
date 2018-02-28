@@ -63,6 +63,12 @@ const styles = theme => ({
         width:'60px', 
         height:'60px', 
         borderRadius:'50%'
+    },
+    paper: {
+        borderRadius: '4%',
+        width: '350px',
+        height: '320px',
+        margin: 0
     }
 });
 
@@ -155,17 +161,6 @@ class SingleColor extends Component {
         }));
     }
 
-    handleChange = (color, event) => {
-        this.changeTextColor(color.rgb);
-        this.changeBackgroundColor(color.hex);
-        this.setState({
-            activeColor: { r: color.rgb.r, g: color.rgb.g, b: color.rgb.b },
-            origin: 'Json'
-        },  () => {
-            this.setColor()
-        });
-    }
-
     selectColor = (color) => {
         var rgb = this.hexToRGB(color.color);
         this.setState({
@@ -205,6 +200,17 @@ class SingleColor extends Component {
 
     resetValues = () => {
         this.setState({ presetName: '', color: [], origin: '' });
+    }
+
+    handleChange = (color, event) => {
+        this.changeTextColor(color.rgb);
+        this.changeBackgroundColor(color.hex);
+        this.setState({
+            activeColor: { r: color.rgb.r, g: color.rgb.g, b: color.rgb.b },
+            origin: 'Json'
+        },  () => {
+            this.setColor()
+        });
     }
 
     handleAddDialogOpen = (rgb) => {
@@ -376,15 +382,11 @@ class SingleColor extends Component {
         return (
             <div className={classes.root} style={{ backgroundColor: this.state.background }}>
 
-                <Dialog open={this.state.displayColorPicker} onRequestClose={this.handleClose} aria-labelledby="form-dialog-title">
+                <Dialog classes={{ paper: classes.paper }} open={this.state.displayColorPicker} onRequestClose={this.handleClose} aria-labelledby="form-dialog-title">
                     <CustomPicker
-                        addAction={this.handleAddDialogOpen.bind(this)}
-                        presetColors={[]}
-                        disableAlpha
-                        fields={false}
-                        width={250}
-                        color={background}
+                        action={this.handleAddDialogOpen.bind(this)}
                         onChangeComplete={this.handleChange.bind(this)}
+                        id='colorPicker'
                     />
                 </Dialog>
 
@@ -474,4 +476,4 @@ class SingleColor extends Component {
     }
 }
 
-export default withStyles(styles)(SingleColor);;
+export default withStyles(styles)(SingleColor);

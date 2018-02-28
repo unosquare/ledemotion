@@ -1,219 +1,272 @@
-import React from 'react'
-import PropTypes from 'prop-types'
-import reactCSS from 'reactcss'
-import { ColorWrap, Saturation, Hue, Alpha, Checkboard } from 'react-color/lib/components/common'
-import SketchFields from 'react-color/lib/components/sketch/SketchFields'
-import SketchPresetColors from 'react-color/lib/components/sketch/SketchPresetColors'
-import Button from 'material-ui/Button'
-import AddIcon from 'material-ui-icons/Add'
-import Card, { CardActions} from 'material-ui/Card'
-import DeleteIcon from 'material-ui-icons/Delete'
+import AddIcon from 'material-ui-icons/Add';
+import Button from 'material-ui/Button';
+import Card, { CardActions} from 'material-ui/Card';
+import Input from 'material-ui/Input';
+import React from 'react';
+import { withStyles } from 'material-ui/styles';
 
-export const CustomPicker = ({ width, rgb, hex, hsv, hsl, onChange, onSwatchHover,
-  disableAlpha, presetColors, renderers, addAction, deleteAction, className = '', fields = true }) => {
-  const styles = reactCSS({
-    'default': {
-      picker: {
-        width,
-        padding: '10px 10px 0',
-        boxSizing: 'initial',
-        background: '#fff',
-        borderRadius: '4px',
-        boxShadow: '0 0 0 1px rgba(0,0,0,.15), 0 8px 16px rgba(0,0,0,.15)'
-      },
-      saturation: {
-        width: '100%',
-        paddingBottom: '75%',
-        position: 'relative',
-        overflow: 'hidden'
-      },
-      Saturation: {
-        radius: '3px',
-        shadow: 'inset 0 0 0 1px rgba(0,0,0,.15), inset 0 0 4px rgba(0,0,0,.25)'
-      },
-      controls: {
-        display: 'flex'
-      },
-      sliders: {
-        padding: '4px 0',
-        flex: '1'
-      },
-      color: {
-        width: '24px',
-        height: '24px',
-        position: 'relative',
-        marginTop: '4px',
-        marginLeft: '4px',
-        borderRadius: '3px'
-      },
-      activeColor: {
-        absolute: '0px 0px 0px 0px',
-        borderRadius: '2px',
-        background: `rgba(${rgb.r},${rgb.g},${rgb.b},${rgb.a})`,
-        boxShadow: 'inset 0 0 0 1px rgba(0,0,0,.15), inset 0 0 4px rgba(0,0,0,.25)'
-      },
-      hueDiv: {
-        position: 'relative',
-        height: '10px',
-        overflow: 'hidden'
-      },
-      hue: {
-        radius: '2px',
-        shadow: 'inset 0 0 0 1px rgba(0,0,0,.15), inset 0 0 4px rgba(0,0,0,.25)'
-      },
-      alphaDiv: {
-        position: 'relative',
-        height: '10px',
-        marginTop: '4px',
-        overflow: 'hidden'
-      },
-      alpha: {
-        radius: '2px',
-        shadow: 'inset 0 0 0 1px rgba(0,0,0,.15), inset 0 0 4px rgba(0,0,0,.25)'
-      },
-      cardStyle: {
-        boxShadow: 'none'
-      },
-      buttonStyle: {
-        margin: 'auto'
-      }
+const styles = theme => ({
+    root: {
+        flexgrow: 1,
+        height: 'auto'
     },
-    'disableAlpha': {
-      color: {
-        height: '10px'
-      },
-      hueDiv: {
-        height: '10px'
-      },
-      alphaDiv: {
-        display: 'none'
-      },
+    buttonStyle: {
+      margin: 'auto'
     },
-  }, { disableAlpha })
+    cardStyle: {
+      boxShadow: 'none'
+    }
+});
 
-  return (
-    <div style={styles.picker} className={`sketch-picker ${className}`}>
-      <div style={styles.saturation}>
-        <Saturation style = { styles.Saturation } hsl = { hsl } hsv = { hsv } onChange = { onChange } />
-      </div>
-      <div style={styles.controls} className="flexbox-fix">
-        <div style={styles.sliders}>
-          <div style={styles.hueDiv}>
-            <Hue style = { styles.hue } hsl = { hsl } onChange = { onChange } />
-          </div>
-          <div style={styles.alphaDiv}>
-            <Alpha style = { styles.alpha } rgb = { rgb } hsl = { hsl } renderers = { renderers } onChange = { onChange} />
-          </div>
-        </div>
-        <div style={styles.color}>
-          <Checkboard />
-          <div style={styles.activeColor} />
-        </div>
-      </div>
+class ColorPickerPalette extends React.Component {
+    constructor() {
+        super();
+        this.drawingContext = null;
+        this.styles = {
+            previewColorCanvas: {
+                width: null,
+                height: null
+            },
+            previewColorHovered: {
+                backgroundColor: '#ffffff'
+            },
+            previewColorSelected: {
+                backgroundColor: '#ffffff'
+            },
+            marker: {
+                width: null,
+                height: null
+            }
+        };
+        this.state = {
+            selectedColor: {
+                rgb: {
+                    r: 0,
+                    g: 0,
+                    b: 0
+                },
+                hex: '#ffffff'
+            },
+            hoveredColor: {
+                rgb: {
+                    r: 0,
+                    g: 0,
+                    b: 0
+                },
+                hex: '#ffffff'
+            },
+            mouse: 'MouseUp',
+            textColor: 'Black'
+        };
+    }
+    
+    getDrawingContex() {
+        this.drawingContext = this.refs.previewColorCanvas.getContext('2d');
+    }
 
-      <Fields
-        rgb={rgb}
-        hsl={hsl}
-        hex={hex}
-        onChange={onChange}
-        disableAlpha={disableAlpha}
-        fields={fields}
-      />
+    componentToHex(color) {
+        var hex = color.toString(16);
+        return hex.length == 1 ? '0' + hex : hex;
+    }
 
-      <SketchPresetColors
-        colors={presetColors}
-        onClick={onChange}
-        onSwatchHover={onSwatchHover}
-      />
+    rgbToHex(r, g, b) {
+        return `#${this.componentToHex(r)}${this.componentToHex(g)}${this.componentToHex(b)}`;
+    }
 
-      <CardComp
-        addAction={addAction}
-        deleteAction={deleteAction}
-        rgb={rgb}
-        styles={styles}
-      />
-    </div>
-  )
+    createColorPalette() {
+        let gradient = this.drawingContext.createLinearGradient(0, 0, this.styles.previewColorCanvas.width, 0);
+        gradient.addColorStop(0, 'rgb(255, 0, 0)');
+        gradient.addColorStop(0.15, 'rgb(255, 0, 255)');
+        gradient.addColorStop(0.33, 'rgb(0, 0, 255)');
+        gradient.addColorStop(0.49, 'rgb(0, 255, 255)');
+        gradient.addColorStop(0.67, 'rgb(0, 255, 0)');
+        gradient.addColorStop(0.84, 'rgb(255, 255, 0)');
+        gradient.addColorStop(1, 'rgb(255, 0, 0)');
+        this.drawingContext.fillStyle = gradient;
+        this.drawingContext.fillRect(0, 0, this.drawingContext.canvas.width, this.styles.previewColorCanvas.height);
+        gradient = this.drawingContext.createLinearGradient(0, 0, 0, this.styles.previewColorCanvas.height);
+        gradient.addColorStop(0, 'rgba(255, 255, 255, 1)');
+        gradient.addColorStop(0.5, 'rgba(255, 255, 255, 0)');
+        gradient.addColorStop(0.5, 'rgba(0, 0, 0, 0)');
+        gradient.addColorStop(1, 'rgba(0, 0, 0, 1)');
+        this.drawingContext.fillStyle = gradient;
+        this.drawingContext.fillRect(0, 0, this.drawingContext.canvas.width, this.styles.previewColorCanvas.height);
+    }
+
+    selectColor(event, handler) {
+        let canvasRect = this.drawingContext.canvas.getBoundingClientRect(),
+            imageData;
+
+        if(handler === 'TouchMove') {
+            this.colorEventX = event.changedTouches[0].pageX - canvasRect.left;
+            this.colorEventY = event.changedTouches[0].pageY - canvasRect.top;
+        } else {
+            this.colorEventX = event.pageX - canvasRect.left;
+            this.colorEventY = event.pageY - canvasRect.top;
+        }
+
+        imageData = this.drawingContext.getImageData(this.colorEventX, this.colorEventY, 1, 1);
+        
+        const rgb = {
+            r: imageData.data[0],
+            g: imageData.data[1],
+            b: imageData.data[2]
+        };
+
+        this.changeTextColor(rgb);
+
+        return rgb;
+    }
+
+    changeTextColor = (rgb) => {
+        var luma = 0.2126 * rgb.r + 0.7152 * rgb.g + 0.0722 * rgb.b;
+
+        if (luma < 170) {
+            this.setState({ textColor: 'White' });
+        }
+        else {
+            this.setState({ textColor: 'Black' });
+        }
+    }
+    
+    handlePaletteTouchMove(event) {
+        const rgb = this.selectColor(event, 'TouchMove');
+        this.setState({
+            hoveredColor: {
+                rgb: rgb,
+                hex: this.rgbToHex(rgb.r, rgb.g, rgb.b)
+            }
+        }, () =>{
+            this.props.onChangeComplete({ rgb: this.state.hoveredColor.rgb, hex: this.state.hoveredColor.hex })
+            this.setState({
+                selectedColor: this.state.hoveredColor
+            });
+        });
+    }
+
+    handlePaletteMouseMove(event) {
+        if(this.state.mouse === 'MouseUp')
+            return
+        
+        const rgb = this.selectColor(event, 'MouseMove');
+        this.setState({
+            hoveredColor: {
+                rgb: rgb,
+                hex: this.rgbToHex(rgb.r, rgb.g, rgb.b)
+            }
+        }, () =>{
+            this.props.onChangeComplete({ rgb: this.state.hoveredColor.rgb, hex: this.state.hoveredColor.hex })
+            this.setState({
+                selectedColor: this.state.hoveredColor
+            });
+        });
+    }
+
+    handlePaletteMouseClick(event) {
+        const rgb = this.selectColor(event, 'Click');
+        
+        this.setState({
+            hoveredColor: {
+                rgb: rgb,
+                hex: this.rgbToHex(rgb.r, rgb.g, rgb.b)
+            }
+        }, () =>{
+            this.props.onChangeComplete({ rgb: this.state.hoveredColor.rgb, hex: this.state.hoveredColor.hex })
+            this.setState({
+                selectedColor: this.state.hoveredColor
+            });
+        });
+    }
+
+    handleInputMouseClick(event) {
+        let target = event.currentTarget,
+            value = target.value;
+        target.setSelectionRange(0, value.length);
+    }
+
+    getDimensionsPalette() {
+        var canvas = this.refs.previewColorCanvas.getBoundingClientRect();
+        
+        this.styles.previewColorCanvas.width = canvas.width;
+        this.styles.previewColorCanvas.height = canvas.height;
+    }
+
+    getDimensionsMarker() {
+        var rect = this.refs.previewColorMarker.getBoundingClientRect();
+        this.styles.marker.width = rect.width;
+        this.styles.marker.height = rect.height;
+    }
+
+    handleMouseDown() {
+        if (this.refs.previewColorCanvas)
+            this.setState({ mouse: 'MouseDown' });
+    }
+
+    handleMouseUp() {
+        if (this.refs.previewColorCanvas)
+            this.setState({ mouse: 'MouseUp' });
+    }
+    
+    logic() {
+        this.getDimensionsPalette();
+        this.getDimensionsMarker();
+        this.getDrawingContex();
+        this.createColorPalette();
+    }
+
+    componentDidMount() {
+        this.logic();
+        
+        document.addEventListener('mousedown', () => this.handleMouseDown());
+        document.addEventListener('mouseup', () => this.handleMouseUp());
+    }
+
+    componentWillUnmount() {
+        document.removeEventListener('mousedown', () => this.handleMouseDown());
+        document.removeEventListener('mouseup', () => this.handleMouseUp());
+    }
+
+    render() {
+        let id = this.props.id,
+            colorPickerId = `colorpicker-${id}`,
+            previewColorMarkerId = `preview-color-marker-${id}`,
+            previewColorCanvasId = `preview-color-canvas-${id}`;
+
+        return (
+            <div
+                ref='colorPicker'
+                id={colorPickerId}
+                className="colorPickerPalette">
+                <div
+                    ref='previewColorMarker'
+                    id={previewColorMarkerId}
+                    className="colorPickerPalette--previewColorMarker"
+                    >
+                </div>
+
+                <canvas
+                    ref='previewColorCanvas'
+                    id={previewColorCanvasId}
+                    width="350"
+                    height="260"
+                    onMouseMove={this.handlePaletteMouseMove.bind(this)}
+                    onTouchMove={this.handlePaletteTouchMove.bind(this)}
+                    onClick={this.handlePaletteMouseClick.bind(this)}
+                    >
+                </canvas>
+
+                <Card className={this.props.classes.cardStyle}>
+                    <CardActions style = {{ float : 'right' }}>
+                        <div className={this.props.classes.buttonStyle}>
+                            <Button fab mini onClick = { () => this.props.action(this.state.hoveredColor.rgb) } color = 'primary' style = {{ color: this.state.textColor, background : this.state.selectedColor.hex }}>
+                                <AddIcon />
+                            </Button>
+                        </div>
+                    </CardActions>
+                </Card>
+            </div>
+        );
+    }
 }
 
-function CardComp(props) {
-  if (props.addAction != null || props.deleteAction != null) {
-    return (
-      <Card style={props.styles.cardStyle}>
-        <CardActions style = {{ float : 'right' }}>
-            <AddButton rgb = { props.rgb } action = { props.addAction } styles = { props.styles } />
-            <DeleteButton action = { props.deleteAction } styles = { props.styles } />
-        </CardActions>
-      </Card>
-    )
-  }
-
-  return (
-    <div />
-  );
-}
-
-function DeleteButton(props) {
-  if (props.action != null) {
-    return (
-      <div style={props.styles.buttonStyle}>
-        <Button fab mini onClick = { () => props.action() } color = 'default' style = {{ background : '#FF0000' }}>
-          <DeleteIcon />
-        </Button>
-      </div>
-    );
-  }
-
-  return (
-    <div />
-  );
-}
-
-function AddButton(props) {
-  if (props.action != null) {
-    return (
-      <div style={props.styles.buttonStyle}>
-        <Button fab mini onClick = { () => props.action(props.rgb) } color = 'primary' style = {{ background : "#2196F3" }}>
-          <AddIcon />
-        </Button>
-      </div>
-    );
-  }
-
-  return (
-    <div />
-  );
-}
-
-function Fields(props) {
-  if (props.fields === true) {
-    return (
-      <SketchFields
-        rgb={props.rgb}
-        hsl={props.hsl}
-        hex={props.hex}
-        onChange={props.onChange}
-        disableAlpha={props.disableAlpha}
-      />
-    );
-  }
-
-  return (
-    <div />
-  );
-}
-
-CustomPicker.propTypes = {
-  disableAlpha: PropTypes.bool,
-  width: PropTypes.oneOfType([PropTypes.string, PropTypes.number])
-}
-
-CustomPicker.defaultProps = {
-  disableAlpha: false,
-  width: 200,
-  presetColors: ['#D0021B', '#F5A623', '#F8E71C', '#8B572A', '#7ED321', '#417505',
-    '#BD10E0', '#9013FE', '#4A90E2', '#50E3C2', '#B8E986', '#000000',
-    '#4A4A4A', '#9B9B9B', '#FFFFFF']
-}
-
-export default ColorWrap(CustomPicker)
+export default withStyles(styles)(ColorPickerPalette);
