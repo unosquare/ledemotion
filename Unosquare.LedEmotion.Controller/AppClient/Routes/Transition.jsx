@@ -92,16 +92,20 @@ const styles = theme => ({
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center'
+    },
+    paper: {
+        borderRadius: '4%',
+        width: '90%',
+        height: '320px',
+        margin: 0
     }
 });
 
 class Transition extends Component {
     state = {
         colors: [],
-        selectedColor: {},
         seconds: 1,
         displayColorPicker: false,
-        flag: 0,
         isSnackbarOpen : false,
         snackbarMessage : ''
     };
@@ -214,7 +218,7 @@ class Transition extends Component {
 
     render() {
         const { classes } = this.props;
-        const { colors, selectedColor, seconds, displayColorPicker, isSnackbarOpen, snackbarMessage } = this.state;
+        const { colors, seconds, displayColorPicker, isSnackbarOpen, snackbarMessage } = this.state;
 
         const gradient = keyframes`
             0% {
@@ -251,8 +255,17 @@ class Transition extends Component {
                     <br /><br />
 
                     {/* Dialog color picker */}
-                    <Dialog open={displayColorPicker} onRequestClose={this.handleClose} aria-labelledby="form-dialog-title">
-                        <CustomPicker fields={false} presetColors={[]} disableAlpha color={selectedColor} addAction={this.handleChangeComplete} />
+                    <Dialog 
+                        classes={{ paper: classes.paper }}
+                        open={displayColorPicker} 
+                        onRequestClose={this.handleClose} 
+                        aria-labelledby="form-dialog-title"
+                    >
+                        <CustomPicker
+                            action={this.handleChangeComplete.bind(this)}
+                            onChangeComplete={color => this.setState({ backgroundColor: color.hex })}
+                            id='colorPicker'
+                        />
                     </Dialog>
 
                     {/* Color picker */}

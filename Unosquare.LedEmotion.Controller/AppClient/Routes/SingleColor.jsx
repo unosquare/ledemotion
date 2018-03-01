@@ -9,6 +9,7 @@ import CustomPicker from '../Components/CustomPicker.jsx';
 import Grid from 'material-ui/Grid';
 import Dialog, { DialogActions, DialogContent } from 'material-ui/Dialog';
 import Button from 'material-ui/Button';
+import Input from 'material-ui/Input';
 import TextField from 'material-ui/TextField';
 import AddIcon from 'material-ui-icons/Add';
 import Tooltip from 'material-ui/Tooltip';
@@ -63,6 +64,15 @@ const styles = theme => ({
         width:'60px', 
         height:'60px', 
         borderRadius:'50%'
+    },
+    paper: {
+        borderRadius: '4%',
+        width: '90%',
+        height: '320px',
+        margin: 0
+    },
+    disabled: {
+        backgroundImage: 'none'
     }
 });
 
@@ -80,7 +90,7 @@ class SingleColor extends Component {
             deleteOpen: false,
             displayColorPicker: false,
             textColor: 'White',
-            background: '#7ED321',
+            background: '#FFFFFF',
             presetName: '',
             activeColor: '',
             color: [],
@@ -150,19 +160,8 @@ class SingleColor extends Component {
     }
 
     changeBackgroundColor = (color) => {
-        this.setState(prevState => ({
-            background: color
-        }));
-    }
-
-    handleChange = (color, event) => {
-        this.changeTextColor(color.rgb);
-        this.changeBackgroundColor(color.hex);
         this.setState({
-            activeColor: { r: color.rgb.r, g: color.rgb.g, b: color.rgb.b },
-            origin: 'Json'
-        },  () => {
-            this.setColor()
+            background: color
         });
     }
 
@@ -205,6 +204,17 @@ class SingleColor extends Component {
 
     resetValues = () => {
         this.setState({ presetName: '', color: [], origin: '' });
+    }
+
+    handleChange = (color, event) => {
+        this.changeTextColor(color.rgb);
+        this.changeBackgroundColor(color.hex);
+        this.setState({
+            activeColor: { r: color.rgb.r, g: color.rgb.g, b: color.rgb.b },
+            origin: 'Json'
+        },  () => {
+            this.setColor()
+        });
     }
 
     handleAddDialogOpen = (rgb) => {
@@ -287,9 +297,16 @@ class SingleColor extends Component {
                     <Card aria-label="Recipe" className={props.classes.cardStyle} style={{ backgroundColor: props.color.color }} title={props.color.title}>
                         <CardActions style={{ padding: '0px' }}>
                             <IconButton className={props.classes.iconButtonStyle} aria-label="Select" onClick={() => props.action(props.color)} />
+                            {
+                                !this.state.docked && 
+                                <Typography style={{ fontSize: '22px', paddingLeft: '20px', color: 'black' }} variant="headline" component="h2">
+                                    {props.color.title}
+                                </Typography>
+                            }
                         </CardActions>
                     </Card>
                 </div>
+               
             );
         }
         else {
@@ -323,16 +340,16 @@ class SingleColor extends Component {
             <div style={{ display: display, alignItems: 'center', justifyContent: 'center', width: '80%', margin: '0 auto' }} >
 
                 <div className={props.classes.colorPicker} style={{ width: colorPickerWidth, marginBottom: '40px' }}>
-                    <Typography style={{ color: props.textColor, textAlign: 'center' }} type="headline" component="h3">
+                    <Typography style={{ textAlign: 'center' }} type="subheading" component="h3">
                         Pick to set a solid color. You can save a color as a preset
                     </Typography>
                     <br />
                 </div>
-
+                
                 <div className={props.classes.presetColorStyle} style={{ width: presetColorWidth, marginBottom: '40px' }}>
                     <Grid container className={props.classes.root}>
                         <Grid item xs={8} className={props.classes.divStyle}>
-                            <Grid container justify="center" spacing={Number(8)}>
+                            <Grid container style={ this.state.docked ? { display: 'flex' } : { display: 'block' }} justify="center" spacing={Number(8)}>
                                 {
                                     this.state.colors.map((color, key) =>
                                         <Grid key={key} item>
@@ -374,17 +391,13 @@ class SingleColor extends Component {
         const { textColor, background } = this.state;
 
         return (
-            <div className={classes.root} style={{ backgroundColor: this.state.background }}>
+            <div className={classes.root}>
 
-                <Dialog open={this.state.displayColorPicker} onRequestClose={this.handleClose} aria-labelledby="form-dialog-title">
+                <Dialog classes={{ paper: classes.paper }} open={this.state.displayColorPicker} onRequestClose={this.handleClose} aria-labelledby="form-dialog-title">
                     <CustomPicker
-                        addAction={this.handleAddDialogOpen.bind(this)}
-                        presetColors={[]}
-                        disableAlpha
-                        fields={false}
-                        width={250}
-                        color={background}
+                        action={this.handleAddDialogOpen.bind(this)}
                         onChangeComplete={this.handleChange.bind(this)}
+                        id='colorPicker'
                     />
                 </Dialog>
 
@@ -443,7 +456,20 @@ class SingleColor extends Component {
 
                 <br />
                 <br />
-
+                <Input
+                    disableUnderline={true}
+                    disabled 
+                    style={{ 
+                        background: this.state.background, 
+                        borderRadius: '10px', 
+                        height: '40px', 
+                        width: '80%', 
+                        margin: '0 auto', 
+                        display: 'flex' 
+                    }} 
+                />
+                <br />
+                <br />
                 { /* Color picker */}
                 <this.colorPickerCom classes={classes} background={background} textColor={textColor} />
 
@@ -474,4 +500,4 @@ class SingleColor extends Component {
     }
 }
 
-export default withStyles(styles)(SingleColor);;
+export default withStyles(styles)(SingleColor);
