@@ -95,7 +95,7 @@ const styles = theme => ({
     },
     paper: {
         borderRadius: '4%',
-        width: '350px',
+        width: '90%',
         height: '320px',
         margin: 0
     }

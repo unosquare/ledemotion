@@ -9,6 +9,7 @@ import CustomPicker from '../Components/CustomPicker.jsx';
 import Grid from 'material-ui/Grid';
 import Dialog, { DialogActions, DialogContent } from 'material-ui/Dialog';
 import Button from 'material-ui/Button';
+import Input from 'material-ui/Input';
 import TextField from 'material-ui/TextField';
 import AddIcon from 'material-ui-icons/Add';
 import Tooltip from 'material-ui/Tooltip';
@@ -66,9 +67,12 @@ const styles = theme => ({
     },
     paper: {
         borderRadius: '4%',
-        width: '350px',
+        width: '90%',
         height: '320px',
         margin: 0
+    },
+    disabled: {
+        backgroundImage: 'none'
     }
 });
 
@@ -86,7 +90,7 @@ class SingleColor extends Component {
             deleteOpen: false,
             displayColorPicker: false,
             textColor: 'White',
-            background: '#7ED321',
+            background: '#FFFFFF',
             presetName: '',
             activeColor: '',
             color: [],
@@ -156,9 +160,9 @@ class SingleColor extends Component {
     }
 
     changeBackgroundColor = (color) => {
-        this.setState(prevState => ({
+        this.setState({
             background: color
-        }));
+        });
     }
 
     selectColor = (color) => {
@@ -293,9 +297,16 @@ class SingleColor extends Component {
                     <Card aria-label="Recipe" className={props.classes.cardStyle} style={{ backgroundColor: props.color.color }} title={props.color.title}>
                         <CardActions style={{ padding: '0px' }}>
                             <IconButton className={props.classes.iconButtonStyle} aria-label="Select" onClick={() => props.action(props.color)} />
+                            {
+                                !this.state.docked && 
+                                <Typography style={{ fontSize: '22px', paddingLeft: '20px', color: 'black' }} variant="headline" component="h2">
+                                    {props.color.title}
+                                </Typography>
+                            }
                         </CardActions>
                     </Card>
                 </div>
+               
             );
         }
         else {
@@ -329,16 +340,16 @@ class SingleColor extends Component {
             <div style={{ display: display, alignItems: 'center', justifyContent: 'center', width: '80%', margin: '0 auto' }} >
 
                 <div className={props.classes.colorPicker} style={{ width: colorPickerWidth, marginBottom: '40px' }}>
-                    <Typography style={{ color: props.textColor, textAlign: 'center' }} type="headline" component="h3">
+                    <Typography style={{ textAlign: 'center' }} type="subheading" component="h3">
                         Pick to set a solid color. You can save a color as a preset
                     </Typography>
                     <br />
                 </div>
-
+                
                 <div className={props.classes.presetColorStyle} style={{ width: presetColorWidth, marginBottom: '40px' }}>
                     <Grid container className={props.classes.root}>
                         <Grid item xs={8} className={props.classes.divStyle}>
-                            <Grid container justify="center" spacing={Number(8)}>
+                            <Grid container style={ this.state.docked ? { display: 'flex' } : { display: 'block' }} justify="center" spacing={Number(8)}>
                                 {
                                     this.state.colors.map((color, key) =>
                                         <Grid key={key} item>
@@ -380,7 +391,7 @@ class SingleColor extends Component {
         const { textColor, background } = this.state;
 
         return (
-            <div className={classes.root} style={{ backgroundColor: this.state.background }}>
+            <div className={classes.root}>
 
                 <Dialog classes={{ paper: classes.paper }} open={this.state.displayColorPicker} onRequestClose={this.handleClose} aria-labelledby="form-dialog-title">
                     <CustomPicker
@@ -445,7 +456,20 @@ class SingleColor extends Component {
 
                 <br />
                 <br />
-
+                <Input
+                    disableUnderline={true}
+                    disabled 
+                    style={{ 
+                        background: this.state.background, 
+                        borderRadius: '10px', 
+                        height: '40px', 
+                        width: '80%', 
+                        margin: '0 auto', 
+                        display: 'flex' 
+                    }} 
+                />
+                <br />
+                <br />
                 { /* Color picker */}
                 <this.colorPickerCom classes={classes} background={background} textColor={textColor} />
 

@@ -1,7 +1,6 @@
 import AddIcon from 'material-ui-icons/Add';
 import Button from 'material-ui/Button';
 import Card, { CardActions} from 'material-ui/Card';
-import Input from 'material-ui/Input';
 import React from 'react';
 import { withStyles } from 'material-ui/styles';
 
@@ -15,10 +14,14 @@ const styles = theme => ({
     },
     cardStyle: {
       boxShadow: 'none'
+    },
+    canvas: {
+        width: '100%',
+        height: '260px'
     }
 });
 
-class ColorPickerPalette extends React.Component {
+class CustomPicker extends React.Component {
     constructor() {
         super();
         this.drawingContext = null;
@@ -61,7 +64,8 @@ class ColorPickerPalette extends React.Component {
     }
     
     getDrawingContex() {
-        this.drawingContext = this.refs.previewColorCanvas.getContext('2d');
+        if(this.refs.previewColorCanvas)
+            this.drawingContext = this.refs.previewColorCanvas.getContext('2d');
     }
 
     componentToHex(color) {
@@ -74,6 +78,9 @@ class ColorPickerPalette extends React.Component {
     }
 
     createColorPalette() {
+        this.drawingContext.canvas.width= this.styles.previewColorCanvas.width
+        this.drawingContext.canvas.height= this.styles.previewColorCanvas.height
+
         let gradient = this.drawingContext.createLinearGradient(0, 0, this.styles.previewColorCanvas.width, 0);
         gradient.addColorStop(0, 'rgb(255, 0, 0)');
         gradient.addColorStop(0.15, 'rgb(255, 0, 255)');
@@ -178,23 +185,12 @@ class ColorPickerPalette extends React.Component {
         });
     }
 
-    handleInputMouseClick(event) {
-        let target = event.currentTarget,
-            value = target.value;
-        target.setSelectionRange(0, value.length);
-    }
-
     getDimensionsPalette() {
-        var canvas = this.refs.previewColorCanvas.getBoundingClientRect();
-        
-        this.styles.previewColorCanvas.width = canvas.width;
-        this.styles.previewColorCanvas.height = canvas.height;
-    }
-
-    getDimensionsMarker() {
-        var rect = this.refs.previewColorMarker.getBoundingClientRect();
-        this.styles.marker.width = rect.width;
-        this.styles.marker.height = rect.height;
+        if(this.refs.previewColorCanvas){
+            var canvas = this.refs.previewColorCanvas.getBoundingClientRect();
+            this.styles.previewColorCanvas.width = canvas.width;
+            this.styles.previewColorCanvas.height = canvas.height;
+        }
     }
 
     handleMouseDown() {
@@ -209,7 +205,6 @@ class ColorPickerPalette extends React.Component {
     
     logic() {
         this.getDimensionsPalette();
-        this.getDimensionsMarker();
         this.getDrawingContex();
         this.createColorPalette();
     }
@@ -217,6 +212,10 @@ class ColorPickerPalette extends React.Component {
     componentDidMount() {
         this.logic();
         
+        window.onresize = ()=> {
+            this.logic();
+        }
+
         document.addEventListener('mousedown', () => this.handleMouseDown());
         document.addEventListener('mouseup', () => this.handleMouseUp());
     }
@@ -247,8 +246,7 @@ class ColorPickerPalette extends React.Component {
                 <canvas
                     ref='previewColorCanvas'
                     id={previewColorCanvasId}
-                    width="350"
-                    height="260"
+                    className={this.props.classes.canvas}
                     onMouseMove={this.handlePaletteMouseMove.bind(this)}
                     onTouchMove={this.handlePaletteTouchMove.bind(this)}
                     onClick={this.handlePaletteMouseClick.bind(this)}
@@ -258,7 +256,12 @@ class ColorPickerPalette extends React.Component {
                 <Card className={this.props.classes.cardStyle}>
                     <CardActions style = {{ float : 'right' }}>
                         <div className={this.props.classes.buttonStyle}>
-                            <Button fab mini onClick = { () => this.props.action(this.state.hoveredColor.rgb) } color = 'primary' style = {{ color: this.state.textColor, background : this.state.selectedColor.hex }}>
+                            <Button 
+                                fab 
+                                mini 
+                                style = {{ color: this.state.textColor, background : this.state.hoveredColor.hex }}
+                                onClick = { () => this.props.action(this.state.hoveredColor.rgb) }
+                            >
                                 <AddIcon />
                             </Button>
                         </div>
@@ -269,4 +272,4 @@ class ColorPickerPalette extends React.Component {
     }
 }
 
-export default withStyles(styles)(ColorPickerPalette);
+export default withStyles(styles)(CustomPicker);
