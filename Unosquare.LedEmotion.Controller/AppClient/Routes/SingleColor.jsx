@@ -178,10 +178,7 @@ class SingleColor extends Component {
         this.changeBackgroundColor(color.color);
     }
 
-    handleClose = () => {
-        this.setState({ displayColorPicker: false });
-        this.resetValues();
-    }
+    
 
     hexToRGB = (a) => {
         var first = a[1] + a[2];
@@ -386,20 +383,28 @@ class SingleColor extends Component {
         )
     }
 
+    handleClose = () => {
+        this.setState({ displayColorPicker: false });
+        this.resetValues();
+    }
+
+    colorPickerDialog = (props) => (
+        <Dialog id={'colorPickerDialog'} classes={{ paper: props.classes.paper }} open={this.state.displayColorPicker} onRequestClose={this.handleClose} aria-labelledby="form-dialog-title">
+            <CustomPicker
+                action={this.handleAddDialogOpen.bind(this)}
+                onChangeComplete={this.handleChange.bind(this)}
+                id='colorPicker'
+            />
+        </Dialog>
+    )
+
     render() {
         const { classes } = this.props;
         const { textColor, background } = this.state;
 
         return (
             <div className={classes.root}>
-
-                <Dialog classes={{ paper: classes.paper }} open={this.state.displayColorPicker} onRequestClose={this.handleClose} aria-labelledby="form-dialog-title">
-                    <CustomPicker
-                        action={this.handleAddDialogOpen.bind(this)}
-                        onChangeComplete={this.handleChange.bind(this)}
-                        id='colorPicker'
-                    />
-                </Dialog>
+                {this.state.displayColorPicker && <this.colorPickerDialog classes={classes}/>}
 
                 <Dialog
                     open={this.state.addOpen}
