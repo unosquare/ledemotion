@@ -16,6 +16,7 @@ import Tooltip from 'material-ui/Tooltip';
 import Snackbar from 'material-ui/Snackbar';
 import Avatar from 'material-ui/Avatar';
 import CardHeader from 'material-ui/Card/CardHeader';
+import { debounce } from 'lodash';
 
 const styles = theme => ({
     root: {
@@ -108,6 +109,7 @@ class SingleColor extends Component {
 
     componentWillMount() {
         mql.addListener(this.mediaQueryChanged.bind(this));
+        this.handleChange = debounce(this.handleChange, 300);
         this.setState({ mql: mql, docked: mql.matches });
     }
 
@@ -178,11 +180,6 @@ class SingleColor extends Component {
         this.changeBackgroundColor(color.color);
     }
 
-    handleClose = () => {
-        this.setState({ displayColorPicker: false });
-        this.resetValues();
-    }
-
     hexToRGB = (a) => {
         var first = a[1] + a[2];
         var second = a[3] + a[4];
@@ -206,14 +203,19 @@ class SingleColor extends Component {
         this.setState({ presetName: '', color: [], origin: '' });
     }
 
-    handleChange = (color, event) => {
+    handleClose = () => {
+        this.setState({ displayColorPicker: false });
+        this.resetValues();
+    }
+
+    handleChange = (color) => {
         this.changeTextColor(color.rgb);
         this.changeBackgroundColor(color.hex);
         this.setState({
             activeColor: { r: color.rgb.r, g: color.rgb.g, b: color.rgb.b },
             origin: 'Json'
         },  () => {
-            this.setColor()
+            this.setColor();
         });
     }
 
@@ -337,9 +339,9 @@ class SingleColor extends Component {
         }
 
         return (
-            <div style={{ display: display, alignItems: 'center', justifyContent: 'center', width: '80%', margin: '0 auto' }} >
+            <div style={{ display: display, alignItems: 'center', justifyContent: 'center', width: '80%', margin: '0 auto', paddingBottom: '40px' }} >
 
-                <div className={props.classes.colorPicker} style={{ width: colorPickerWidth, marginBottom: '40px' }}>
+                <div className={props.classes.colorPicker} style={{ width: colorPickerWidth, marginBottom: '15px' }}>
                     <Typography style={{ textAlign: 'center' }} type="subheading" component="h3">
                         Pick to set a solid color. You can save a color as a preset
                     </Typography>
@@ -386,90 +388,104 @@ class SingleColor extends Component {
         )
     }
 
+    colorPickerDialog = (props) => (
+        <Dialog id={'colorPickerDialog'} classes={{ paper: props.classes.paper }} open={this.state.displayColorPicker} onRequestClose={this.handleClose} aria-labelledby="form-dialog-title">
+            <CustomPicker
+                action={this.handleAddDialogOpen.bind(this)}
+                onChangeComplete={this.handleChange.bind(this)}
+                id='colorPicker'
+            />
+        </Dialog>
+    )
+
+    addColorDialog = () => (
+        <Dialog
+            open={this.state.addOpen}
+            onRequestClose={this.handleAddDialogClose}
+            aria-labelledby="form-dialog-title"
+        >
+            <DialogContent>
+                <TextField
+                    autoFocus
+                    margin="dense"
+                    id="name"
+                    label="Preset Name"
+                    type="text"
+                    fullWidth
+                    onChange={(event) => this.setState({ presetName: event.target.value })}
+                />
+            </DialogContent>
+            <DialogActions>
+                <Button onClick={this.handleAddDialogClose} color="primary">
+                    Cancel
+                    </Button>
+                <Button onClick={this.addColor} color="primary">
+                    Save
+                    </Button>
+            </DialogActions>
+        </Dialog>
+    )
+
+    deleteColorDialog = (props) => (
+        <Dialog
+            open={this.state.deleteOpen}
+            onRequestClose={this.handleDeleteDialogClose}
+            aria-labelledby="form-dialog-title"
+        >
+            <DialogContent style={{padding:'24px 24px 15px 24px'}}>
+                <Card style={{boxShadow:'none'}}>
+                    <CardHeader
+                    style={{padding:'0px', paddingBottom:'0px'}}
+                    avatar={<Avatar className={props.classes.avatarStyle} style={{background: props.background, color: props.textColor}}/>}
+                    title={<Typography style={{ fontSize: '20px'}} type="headline" component="h3">
+                        Are you sure you want to delete this color?
+                    </Typography>}
+                    />
+                </Card>
+                
+            </DialogContent>
+            <DialogActions style={{paddingBottom:'10px'}}>
+                <Button onClick={this.handleDeleteDialogClose} color="primary">
+                    Cancel
+                </Button>
+                <Button onClick={this.deleteColor} color="primary">
+                    Delete
+                </Button>
+            </DialogActions>
+        </Dialog>
+    )
+
     render() {
         const { classes } = this.props;
         const { textColor, background } = this.state;
-
+        const padding = this.state.docked === true ? '30px' : '35px';
         return (
             <div className={classes.root}>
+                {this.state.displayColorPicker && <this.colorPickerDialog classes={classes}/>}
 
-                <Dialog classes={{ paper: classes.paper }} open={this.state.displayColorPicker} onRequestClose={this.handleClose} aria-labelledby="form-dialog-title">
-                    <CustomPicker
-                        action={this.handleAddDialogOpen.bind(this)}
-                        onChangeComplete={this.handleChange.bind(this)}
-                        id='colorPicker'
+                {this.state.addOpen && <this.addColorDialog/>}
+
+                {this.state.deleteOpen && 
+                    <this.deleteColorDialog 
+                        classes={classes} 
+                        background={background} 
+                        textColor={textColor}/>}
+
+                <div style={{ paddingBottom: padding, paddingTop: '30px' }} >
+                    <Input
+                        disableUnderline={true}
+                        disabled 
+                        style={{ 
+                            background: this.state.background, 
+                            borderRadius: '10px', 
+                            height: '40px', 
+                            width: '80%', 
+                            margin: '0 auto', 
+                            display: 'flex' 
+                        }} 
                     />
-                </Dialog>
+                </div>
 
-                <Dialog
-                    open={this.state.addOpen}
-                    onRequestClose={this.handleAddDialogClose}
-                    aria-labelledby="form-dialog-title"
-                >
-                    <DialogContent>
-                        <TextField
-                            autoFocus
-                            margin="dense"
-                            id="name"
-                            label="Preset Name"
-                            type="text"
-                            fullWidth
-                            onChange={(event) => this.setState({ presetName: event.target.value })}
-                        />
-                    </DialogContent>
-                    <DialogActions>
-                        <Button onClick={this.handleAddDialogClose} color="primary">
-                            Cancel
-                            </Button>
-                        <Button onClick={this.addColor} color="primary">
-                            Save
-                            </Button>
-                    </DialogActions>
-                </Dialog>
-
-                <Dialog
-                    open={this.state.deleteOpen}
-                    onRequestClose={this.handleDeleteDialogClose}
-                    aria-labelledby="form-dialog-title"
-                >
-                    <DialogContent style={{padding:'24px 24px 15px 24px'}}>
-                        <Card style={{boxShadow:'none'}}>
-                            <CardHeader
-                            style={{padding:'0px', paddingBottom:'0px'}}
-                            avatar={<Avatar className={classes.avatarStyle} style={{background: background, color: textColor}}/>}
-                            title={<Typography style={{ fontSize: '20px'}} type="headline" component="h3">
-                                Are you sure you want to delete this color?
-                            </Typography>}
-                            />
-                        </Card>
-                        
-                    </DialogContent>
-                    <DialogActions style={{paddingBottom:'10px'}}>
-                        <Button onClick={this.handleDeleteDialogClose} color="primary">
-                            Cancel
-                        </Button>
-                        <Button onClick={this.deleteColor} color="primary">
-                            Delete
-                        </Button>
-                    </DialogActions>
-                </Dialog>
-
-                <br />
-                <br />
-                <Input
-                    disableUnderline={true}
-                    disabled 
-                    style={{ 
-                        background: this.state.background, 
-                        borderRadius: '10px', 
-                        height: '40px', 
-                        width: '80%', 
-                        margin: '0 auto', 
-                        display: 'flex' 
-                    }} 
-                />
-                <br />
-                <br />
                 { /* Color picker */}
                 <this.colorPickerCom classes={classes} background={background} textColor={textColor} />
 
@@ -493,8 +509,6 @@ class SingleColor extends Component {
                     deleteColor={this.handleDeleteDialogOpen}
                     origin={this.state.origin}
                 />
-
-                <br />
             </div>
         );
     }

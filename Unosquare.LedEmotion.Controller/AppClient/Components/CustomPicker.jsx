@@ -22,8 +22,8 @@ const styles = theme => ({
 });
 
 class CustomPicker extends React.Component {
-    constructor() {
-        super();
+    constructor(props) {
+        super(props);
         this.drawingContext = null;
         this.styles = {
             previewColorCanvas: {
@@ -42,14 +42,6 @@ class CustomPicker extends React.Component {
             }
         };
         this.state = {
-            selectedColor: {
-                rgb: {
-                    r: 0,
-                    g: 0,
-                    b: 0
-                },
-                hex: '#ffffff'
-            },
             hoveredColor: {
                 rgb: {
                     r: 0,
@@ -78,8 +70,8 @@ class CustomPicker extends React.Component {
     }
 
     createColorPalette() {
-        this.drawingContext.canvas.width= this.styles.previewColorCanvas.width
-        this.drawingContext.canvas.height= this.styles.previewColorCanvas.height
+        this.drawingContext.canvas.width = this.styles.previewColorCanvas.width
+        this.drawingContext.canvas.height = this.styles.previewColorCanvas.height
 
         let gradient = this.drawingContext.createLinearGradient(0, 0, this.styles.previewColorCanvas.width, 0);
         gradient.addColorStop(0, 'rgb(255, 0, 0)');
@@ -138,16 +130,14 @@ class CustomPicker extends React.Component {
     
     handlePaletteTouchMove(event) {
         const rgb = this.selectColor(event, 'TouchMove');
+
+        this.props.onChangeComplete({ rgb: rgb, hex: this.rgbToHex(rgb.r, rgb.g, rgb.b) })
+
         this.setState({
             hoveredColor: {
                 rgb: rgb,
                 hex: this.rgbToHex(rgb.r, rgb.g, rgb.b)
             }
-        }, () =>{
-            this.props.onChangeComplete({ rgb: this.state.hoveredColor.rgb, hex: this.state.hoveredColor.hex })
-            this.setState({
-                selectedColor: this.state.hoveredColor
-            });
         });
     }
 
@@ -156,32 +146,27 @@ class CustomPicker extends React.Component {
             return
         
         const rgb = this.selectColor(event, 'MouseMove');
+
+        this.props.onChangeComplete({ rgb: rgb, hex: this.rgbToHex(rgb.r, rgb.g, rgb.b) })
+
         this.setState({
             hoveredColor: {
                 rgb: rgb,
                 hex: this.rgbToHex(rgb.r, rgb.g, rgb.b)
             }
-        }, () =>{
-            this.props.onChangeComplete({ rgb: this.state.hoveredColor.rgb, hex: this.state.hoveredColor.hex })
-            this.setState({
-                selectedColor: this.state.hoveredColor
-            });
         });
     }
 
     handlePaletteMouseClick(event) {
         const rgb = this.selectColor(event, 'Click');
         
+        this.props.onChangeComplete({ rgb: rgb, hex: this.rgbToHex(rgb.r, rgb.g, rgb.b) })
+
         this.setState({
             hoveredColor: {
                 rgb: rgb,
                 hex: this.rgbToHex(rgb.r, rgb.g, rgb.b)
             }
-        }, () =>{
-            this.props.onChangeComplete({ rgb: this.state.hoveredColor.rgb, hex: this.state.hoveredColor.hex })
-            this.setState({
-                selectedColor: this.state.hoveredColor
-            });
         });
     }
 
@@ -228,7 +213,6 @@ class CustomPicker extends React.Component {
     render() {
         let id = this.props.id,
             colorPickerId = `colorpicker-${id}`,
-            previewColorMarkerId = `preview-color-marker-${id}`,
             previewColorCanvasId = `preview-color-canvas-${id}`;
 
         return (
@@ -236,12 +220,6 @@ class CustomPicker extends React.Component {
                 ref='colorPicker'
                 id={colorPickerId}
                 className="colorPickerPalette">
-                <div
-                    ref='previewColorMarker'
-                    id={previewColorMarkerId}
-                    className="colorPickerPalette--previewColorMarker"
-                    >
-                </div>
 
                 <canvas
                     ref='previewColorCanvas'
@@ -260,7 +238,7 @@ class CustomPicker extends React.Component {
                                 fab 
                                 mini 
                                 style = {{ color: this.state.textColor, background : this.state.hoveredColor.hex }}
-                                onClick = { () => this.props.action(this.state.hoveredColor.rgb) }
+                                onClick = {() => this.props.action(this.state.hoveredColor.rgb)}
                             >
                                 <AddIcon />
                             </Button>
