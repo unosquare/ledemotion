@@ -34,14 +34,8 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <None Remove="node_modules\**" />
-  </ItemGroup>
-
-  <ItemGroup>
     <None Remove="npm-debug.log" />
   </ItemGroup>    
-  <ItemGroup>
-    <DotNetCliToolReference Include="dotnet-sshdeploy" Version="0.1.6-r1" />
-  </ItemGroup>
 
   <Target Name="NpmInstall" BeforeTargets="Build" Condition="!Exists('.\package-lock.json') AND '$(Configuration)' == 'Debug'">
     <!-- Ensure Node.js is installed -->
