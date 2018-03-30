@@ -1,4 +1,4 @@
-[![Build Status](https://travis-ci.org/unosquare/ledemotion.svg?branch=LedEmotion-UI)](https://travis-ci.org/unosquare/ledemotion)
+[![Build Status](https://travis-ci.org/unosquare/ledemotion.svg?branch=master)](https://travis-ci.org/unosquare/ledemotion)
 
 # LedEmotion
 
