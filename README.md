@@ -1,3 +1,4 @@
+[![Codacy Badge](https://api.codacy.com/project/badge/Grade/52d34bd13bda418f936e3fdbb3a6581d)](https://app.codacy.com/app/UnosquareLabs/ledemotion?utm_source=github.com&utm_medium=referral&utm_content=unosquare/ledemotion&utm_campaign=Badge_Grade_Settings)
 [![Build Status](https://travis-ci.org/unosquare/ledemotion.svg?branch=master)](https://travis-ci.org/unosquare/ledemotion)
 
 # LedEmotion
