@@ -16,7 +16,7 @@
     "file-loader": "^3.0.1",
     "font-awesome": "^4.7.0",
     "html-webpack-plugin": "^3.2.0",
-    "lodash": "^4.17.11",
+    "lodash": "^4.17.13",
     "material-ui": "1.0.0-beta.23",
     "material-ui-icons": "1.0.0-beta.36",
     "rc-slider": "^8.6.4",
