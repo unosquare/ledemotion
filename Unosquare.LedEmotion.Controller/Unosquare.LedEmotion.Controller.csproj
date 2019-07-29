@@ -23,7 +23,7 @@
     <Reference Include="System.Data" />
     <Reference Include="System.Net.Http" />
     <Reference Include="System.Xml" />
-    <PackageReference Include="EmbedIO" Version="1.11.3" />
+    <PackageReference Include="EmbedIO" Version="2.9.2" />
     <PackageReference Include="StyleCop.Analyzers" Version="1.1.118" />
     <PackageReference Include="Unosquare.Raspberry.IO" Version="0.13.0" />
     <DotNetCliToolReference Include="dotnet-sshdeploy" Version="0.1.6-r1" />
